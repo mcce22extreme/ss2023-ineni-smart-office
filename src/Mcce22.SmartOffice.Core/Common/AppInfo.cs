@@ -1,20 +1,22 @@
-﻿using System.Reflection;
-
-namespace Mcce22.SmartOffice.Core.Common
+﻿namespace Mcce22.SmartOffice.Core.Common
 {
-    public class AppInfo
+    public interface IAppInfo
+    {
+        public string AppName { get; }
+
+        public string AppVersion { get; }
+    }
+
+    public class AppInfo : IAppInfo
     {
         public string AppName { get; }
 
         public string AppVersion { get; }
 
-        public static AppInfo Current { get; } = new AppInfo();
-
-        private AppInfo()
+        public AppInfo(string appName, string appVersion)
         {
-            var assemblyName = Assembly.GetEntryAssembly().GetName();
-            AppName = assemblyName.Name;
-            AppVersion = assemblyName.Version.ToString();
+            AppName = appName;
+            AppVersion = appVersion;
         }
     }
 }

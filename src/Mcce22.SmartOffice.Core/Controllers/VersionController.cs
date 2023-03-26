@@ -6,10 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 namespace Mcce22.SmartOffice.Core.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/[controller]")]
     public class VersionController : ControllerBase
     {
+        private readonly IAppInfo _appInfo;
+
+        public VersionController(IAppInfo appInfo)
+        {
+            _appInfo = appInfo;
+        }
+
         /// <summary>
         /// Returns version information of the application.
         /// </summary>
@@ -17,11 +23,11 @@ namespace Mcce22.SmartOffice.Core.Controllers
         [HttpGet]
         [AllowAnonymous]        
         public IActionResult GetVersionInfo()
-        {
+        {           
             return Ok(new VersionInfo
             {
-                AppName = AppInfo.Current.AppName,
-                AppVersion = AppInfo.Current.AppVersion
+                AppName = _appInfo.AppName,
+                AppVersion = _appInfo.AppVersion
             });
         }
     }

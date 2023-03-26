@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Mcce22.SmartOffice.Management.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/[controller]")]
     public class UserWorkspaceController : ControllerBase
     {
         private readonly IUserWorkspaceManager _userWorkspaceManager;

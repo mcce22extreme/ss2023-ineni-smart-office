@@ -60,7 +60,7 @@ namespace Mcce22.SmartOffice.Core.Handlers
                     return new ErrorModel
                     {
                         StatusCode = HttpStatusCode.InternalServerError,
-                        ErrorMessage = exception.Message
+                        ErrorMessage = exception.Message + ", " + exception.StackTrace
                     };
             }
         }
