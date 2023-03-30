@@ -11,5 +11,7 @@ namespace Mcce22.SmartOffice.Management.Entities
         public Room Room { get; }
 
         public List<UserWorkspace> UserWorkspaces { get; }
+
+        public List<Booking> Bookings { get; set; }
     }
 }

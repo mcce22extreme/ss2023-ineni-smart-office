@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using Amazon;
-using Amazon.Runtime;
-using Amazon.Runtime.CredentialManagement;
 using FluentValidation;
 using Mcce22.SmartOffice.Core.Attributes;
 using Mcce22.SmartOffice.Core.Common;
+using Mcce22.SmartOffice.Core.Handlers;
 using Mcce22.SmartOffice.Core.Providers;
 using Mcce22.SmartOffice.Management.Managers;
+using Mcce22.SmartOffice.Management.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -16,6 +15,8 @@ namespace Mcce22.SmartOffice.Management
 {
     public class Program
     {
+        private const string CORS_POLICY = "CORS_POLICY";
+
         public static void Main(string[] args)
         {
             var assembly = typeof(Program).Assembly;
@@ -63,17 +64,24 @@ namespace Mcce22.SmartOffice.Management
             builder.Services.AddSwaggerGen();
 
             // Configure dependency injection
-            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(AppSettings.Current.ConnectionString));
+            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(AppSettings.Current.ConnectionString));
+            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("smartofficedb"));
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
-            builder.Services.AddScoped<IRoomManager, RoomManager>();
 
             builder.Services.AddScoped<IWorkspaceManager, WorkspaceManager>();
 
             builder.Services.AddScoped<IUserManager, UserManager>();
 
             builder.Services.AddScoped<IUserWorkspaceManager, UserWorkspaceManager>();
+
+            builder.Services.AddScoped<IBookingManager, BookingManager>();
+
+            builder.Services.AddSingleton<StorageConfiguration>(AppSettings.Current.StorageConfiguration);
+
+            builder.Services.AddScoped<ISlideshowItemManager, SlideshowItemManager>();
+
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddSingleton<IValidationProvider, ValidationProvider>();
 
@@ -102,6 +110,10 @@ namespace Mcce22.SmartOffice.Management
 
             app.UseAuthorization();
 
+            app.UseCors(CORS_POLICY);
+
+            app.ConfigureExceptionHandler();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
@@ -112,10 +124,10 @@ namespace Mcce22.SmartOffice.Management
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Check if we can migrate database automatically
-            if (dbContext.Database.IsRelational())
-            {
-                dbContext.Database.Migrate();
-            }
+            //if (!dbContext.Database.IsInMemory())
+            //{
+            //    dbContext.Database.Migrate();
+            //}
 
             app.Run();
         }
