@@ -1,11 +1,10 @@
-﻿using System.Reflection;
+﻿using Amazon.SecretsManager.Model;
 using Amazon.SecretsManager;
-using Amazon.SecretsManager.Model;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Serilog;
+using System.Reflection;
 
-namespace Mcce22.SmartOffice.Core.Common
+namespace Mcce22.SmartOffice.Management
 {
     public class AppSettings
     {
@@ -15,7 +14,7 @@ namespace Mcce22.SmartOffice.Core.Common
                 .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true, reloadOnChange: true)
-                .Build();            
+                .Build();
 
             Current = Config.Get<AppSettings>();
         }

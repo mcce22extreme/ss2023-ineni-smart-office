@@ -66,10 +66,14 @@ namespace Mcce22.SmartOffice.Management
             builder.Services.AddSwaggerGen();
 
             // Configure dependency injection
-            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(AppSettings.Current.ConnectionString));
-            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("smartofficedb"));
+            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(AppSettings.Current.ConnectionString));
+            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("smartofficedb"));
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+            builder.Services.AddSingleton(AppSettings.Current.StorageConfiguration);
+
+            builder.Services.AddSingleton(AppSettings.Current.SmptConfiguration);
 
             builder.Services.AddScoped<IWorkspaceManager, WorkspaceManager>();
 
@@ -78,8 +82,6 @@ namespace Mcce22.SmartOffice.Management
             builder.Services.AddScoped<IUserWorkspaceManager, UserWorkspaceManager>();
 
             builder.Services.AddScoped<IBookingManager, BookingManager>();
-
-            builder.Services.AddSingleton<StorageConfiguration>(AppSettings.Current.StorageConfiguration);
 
             builder.Services.AddScoped<ISlideshowItemManager, SlideshowItemManager>();
 
