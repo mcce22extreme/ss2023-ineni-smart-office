@@ -1,5 +1,9 @@
 ﻿using System.Reflection;
+using Amazon.SecretsManager;
+using Amazon.SecretsManager.Model;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace Mcce22.SmartOffice.Core.Common
 {
@@ -11,13 +15,6 @@ namespace Mcce22.SmartOffice.Core.Common
                 .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .AddSecretsManager(
-                    configurator: opt =>
-                    {
-                        opt.SecretFilter = e => e.Name == "mcce22-smart-office-management-db";
-                        opt.KeyGenerator = (e, s) => "ConnectionString";
-                    })
                 .Build();            
 
             Current = Config.Get<AppSettings>();
@@ -29,13 +26,36 @@ namespace Mcce22.SmartOffice.Core.Common
 
         public string BaseAddress { get; set; }
 
-        public string StorageBaseAddress { get; set; }
-
         public string ConnectionString { get; set; }
 
         public SmptConfiguration SmptConfiguration { get; set; } = new SmptConfiguration();
 
         public StorageConfiguration StorageConfiguration { get; set; } = new StorageConfiguration();
+
+        public async Task LoadConfigFromAWSSecretsManager()
+        {
+            using var client = new AmazonSecretsManagerClient();
+
+            var request = new GetSecretValueRequest
+            {
+                SecretId = "mcce22-smart-office-management"
+            };
+
+            try
+            {
+                var response = await client.GetSecretValueAsync(request);
+
+                var settings = JsonConvert.DeserializeObject<AppSettings>(response.SecretString);
+
+                ConnectionString = settings.ConnectionString;
+                SmptConfiguration = settings.SmptConfiguration;
+                StorageConfiguration = settings.StorageConfiguration;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, ex.Message);
+            }
+        }
     }
 
     public class SmptConfiguration

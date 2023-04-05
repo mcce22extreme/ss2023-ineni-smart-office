@@ -17,11 +17,13 @@ namespace Mcce22.SmartOffice.Management
     {
         private const string CORS_POLICY = "CORS_POLICY";
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var assembly = typeof(Program).Assembly;
             var assemblyName = assembly.GetName();
             var appInfo = new AppInfo(assemblyName.Name, assemblyName.Version.ToString());
+
+            await AppSettings.Current.LoadConfigFromAWSSecretsManager();
 
             // Configure serilog
             Log.Logger = new LoggerConfiguration()
@@ -124,10 +126,10 @@ namespace Mcce22.SmartOffice.Management
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // Check if we can migrate database automatically
-            //if (!dbContext.Database.IsInMemory())
-            //{
-            //    dbContext.Database.Migrate();
-            //}
+            if (dbContext.Database.IsRelational())
+            {
+                dbContext.Database.Migrate();
+            }
 
             app.Run();
         }
