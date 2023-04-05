@@ -12,12 +12,12 @@ namespace Mcce22.SmartOffice.Core.Common
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
-                //.AddSecretsManager(
-                //    configurator: opt =>
-                //    {
-                //        opt.SecretFilter = e => e.Name == "mcce22-smart-office-management-db";
-                //        opt.KeyGenerator = (e, s) => "ConnectionString";
-                //    })
+                .AddSecretsManager(
+                    configurator: opt =>
+                    {
+                        opt.SecretFilter = e => e.Name == "mcce22-smart-office-management-db";
+                        opt.KeyGenerator = (e, s) => "ConnectionString";
+                    })
                 .Build();            
 
             Current = Config.Get<AppSettings>();

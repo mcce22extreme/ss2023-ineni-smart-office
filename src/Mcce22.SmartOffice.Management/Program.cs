@@ -64,8 +64,8 @@ namespace Mcce22.SmartOffice.Management
             builder.Services.AddSwaggerGen();
 
             // Configure dependency injection
-            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(AppSettings.Current.ConnectionString));
-            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("smartofficedb"));
+            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(AppSettings.Current.ConnectionString));
+            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("smartofficedb"));
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

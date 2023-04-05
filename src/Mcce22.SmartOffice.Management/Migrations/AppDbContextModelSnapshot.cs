@@ -42,10 +42,10 @@ namespace Mcce22.SmartOffice.Management.Migrations
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkspaceId")
+                    b.Property<int>("WorkspaceId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -57,7 +57,7 @@ namespace Mcce22.SmartOffice.Management.Migrations
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("Mcce22.SmartOffice.Management.Entities.Room", b =>
+            modelBuilder.Entity("Mcce22.SmartOffice.Management.Entities.SlideshowItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,12 +65,20 @@ namespace Mcce22.SmartOffice.Management.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Number")
+                    b.Property<bool>("HasContent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ResourceKey")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SlideshowItems");
                 });
 
             modelBuilder.Entity("Mcce22.SmartOffice.Management.Entities.User", b =>
@@ -82,18 +90,25 @@ namespace Mcce22.SmartOffice.Management.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -108,9 +123,6 @@ namespace Mcce22.SmartOffice.Management.Migrations
 
                     b.Property<long>("DeskHeight")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("SlideshowResourceKey")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -135,15 +147,29 @@ namespace Mcce22.SmartOffice.Management.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Number")
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Left")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoomNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int>("Top")
                         .HasColumnType("int");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WorkspaceNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("WorkspaceNumber")
+                        .IsUnique();
 
                     b.ToTable("Workspaces");
                 });
@@ -152,15 +178,30 @@ namespace Mcce22.SmartOffice.Management.Migrations
                 {
                     b.HasOne("Mcce22.SmartOffice.Management.Entities.User", "User")
                         .WithMany("Bookings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Mcce22.SmartOffice.Management.Entities.Workspace", "Workspace")
                         .WithMany("Bookings")
-                        .HasForeignKey("WorkspaceId");
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
 
                     b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("Mcce22.SmartOffice.Management.Entities.SlideshowItem", b =>
+                {
+                    b.HasOne("Mcce22.SmartOffice.Management.Entities.User", "User")
+                        .WithMany("SlideshowItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Mcce22.SmartOffice.Management.Entities.UserWorkspace", b =>
@@ -182,25 +223,11 @@ namespace Mcce22.SmartOffice.Management.Migrations
                     b.Navigation("Workspace");
                 });
 
-            modelBuilder.Entity("Mcce22.SmartOffice.Management.Entities.Workspace", b =>
-                {
-                    b.HasOne("Mcce22.SmartOffice.Management.Entities.Room", "Room")
-                        .WithMany("Workspaces")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("Mcce22.SmartOffice.Management.Entities.Room", b =>
-                {
-                    b.Navigation("Workspaces");
-                });
-
             modelBuilder.Entity("Mcce22.SmartOffice.Management.Entities.User", b =>
                 {
                     b.Navigation("Bookings");
+
+                    b.Navigation("SlideshowItems");
 
                     b.Navigation("UserWorkspaces");
                 });

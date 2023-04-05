@@ -6,34 +6,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Mcce22.SmartOffice.Management.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,16 +33,35 @@ namespace Mcce22.SmartOffice.Management.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
-                    Number = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    WorkspaceNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoomNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Top = table.Column<int>(type: "int", nullable: false),
+                    Left = table.Column<int>(type: "int", nullable: false),
+                    Width = table.Column<int>(type: "int", nullable: false),
+                    Height = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Workspaces", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SlideshowItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ResourceKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    HasContent = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SlideshowItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Workspaces_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
+                        name: "FK_SlideshowItems_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -68,8 +74,8 @@ namespace Mcce22.SmartOffice.Management.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true),
-                    WorkspaceId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    WorkspaceId = table.Column<int>(type: "int", nullable: false),
                     Activated = table.Column<bool>(type: "bit", nullable: false),
                     InvitationSent = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -80,12 +86,14 @@ namespace Mcce22.SmartOffice.Management.Migrations
                         name: "FK_Bookings_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Bookings_Workspaces_WorkspaceId",
                         column: x => x.WorkspaceId,
                         principalTable: "Workspaces",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -94,10 +102,9 @@ namespace Mcce22.SmartOffice.Management.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    WorkspaceId = table.Column<int>(type: "int", nullable: false),
                     DeskHeight = table.Column<long>(type: "bigint", nullable: false),
-                    SlideshowResourceKey = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    WorkspaceId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,6 +134,17 @@ namespace Mcce22.SmartOffice.Management.Migrations
                 column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SlideshowItems_UserId",
+                table: "SlideshowItems",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserName",
+                table: "Users",
+                column: "UserName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserWorkspaces_UserId",
                 table: "UserWorkspaces",
                 column: "UserId");
@@ -137,9 +155,10 @@ namespace Mcce22.SmartOffice.Management.Migrations
                 column: "WorkspaceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Workspaces_RoomId",
+                name: "IX_Workspaces_WorkspaceNumber",
                 table: "Workspaces",
-                column: "RoomId");
+                column: "WorkspaceNumber",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -149,6 +168,9 @@ namespace Mcce22.SmartOffice.Management.Migrations
                 name: "Bookings");
 
             migrationBuilder.DropTable(
+                name: "SlideshowItems");
+
+            migrationBuilder.DropTable(
                 name: "UserWorkspaces");
 
             migrationBuilder.DropTable(
@@ -156,9 +178,6 @@ namespace Mcce22.SmartOffice.Management.Migrations
 
             migrationBuilder.DropTable(
                 name: "Workspaces");
-
-            migrationBuilder.DropTable(
-                name: "Rooms");
         }
     }
 }
