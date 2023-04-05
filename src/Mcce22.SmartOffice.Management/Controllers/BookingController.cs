@@ -16,6 +16,7 @@ namespace Mcce22.SmartOffice.Management.Controllers
             _bookingManager = bookingManager;
         }
 
+        [HttpGet]
         public async Task<BookingModel[]> GetBookings([FromQuery] BookingQuery query)
         {
             return await _bookingManager.GetBookings(query);
