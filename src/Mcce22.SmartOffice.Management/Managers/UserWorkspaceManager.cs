@@ -8,7 +8,9 @@ namespace Mcce22.SmartOffice.Management.Managers
 {
     public interface IUserWorkspaceManager
     {
-        Task<UserWorkspaceModel> GetUserWorkspace(int userId, int workspaceId);
+        Task<UserWorkspaceModel[]> GetUserWorkspaces(int userId, int workspaceId);
+
+        Task<UserWorkspaceModel> GetUserWorkspace(int userWorkspaceId);
 
         Task<UserWorkspaceModel> CreateUserWorkspace(SaveUserWorkspaceModel model);
 
@@ -28,32 +30,78 @@ namespace Mcce22.SmartOffice.Management.Managers
             _mapper = mapper;
         }
 
-        public async Task<UserWorkspaceModel> GetUserWorkspace(int userId, int workspaceId)
+        public async Task<UserWorkspaceModel[]> GetUserWorkspaces(int userId, int workspaceId)
         {
-            var userWorkspace = await _dbContext.UserWorkspaces.FirstOrDefaultAsync(x => x.UserId == userId && x.WorkspaceId == workspaceId);
+            var userWorkspaceQuery = _dbContext.UserWorkspaces
+                .Select(x => new UserWorkspaceModel
+                {
+                    Id = x.Id,
+                    DeskHeight = x.DeskHeight,
+                    FirstName = x.User.FirstName,
+                    LastName = x.User.LastName,
+                    UserName = x.User.UserName,
+                    UserId = x.User.Id,
+                    WorkspaceId = x.Workspace.Id,
+                    WorkspaceNumber = x.Workspace.WorkspaceNumber,
+                    RoomNumber = x.Workspace.RoomNumber
+                });
+
+            if(userId > 0)
+            {
+                userWorkspaceQuery = userWorkspaceQuery.Where(x => x.UserId == userId);
+            }
+
+            if(workspaceId > 0)
+            {
+                userWorkspaceQuery = userWorkspaceQuery.Where(x => x.WorkspaceId == workspaceId);
+            }
+
+            var userWorkspaces = await userWorkspaceQuery.ToListAsync();
+            return userWorkspaces.ToArray();
+        }
+
+        public async Task<UserWorkspaceModel> GetUserWorkspace(int userWorkspaceId)
+        {
+            var userWorkspace = await _dbContext.UserWorkspaces
+                .Select(x => new UserWorkspaceModel
+                {
+                    Id = x.Id,
+                    DeskHeight = x.DeskHeight,
+                    FirstName = x.User.FirstName,
+                    LastName = x.User.LastName,
+                    UserName = x.User.UserName,
+                    UserId = x.User.Id,
+                    WorkspaceId = x.Workspace.Id,
+                    WorkspaceNumber = x.Workspace.WorkspaceNumber,
+                    RoomNumber = x.Workspace.RoomNumber
+                })
+                .FirstOrDefaultAsync(x => x.Id == userWorkspaceId);
 
             if (userWorkspace == null)
             {
-                throw new NotFoundException($"Could not find user workspace for user with id '{userId}' and workspace with id '{workspaceId}'!");
+                throw new NotFoundException($"Could not find user workspace for with id '{userWorkspaceId}'!");
             }
 
-            return _mapper.Map<UserWorkspaceModel>(userWorkspace);
+            return userWorkspace;
         }
 
         public async Task<UserWorkspaceModel> CreateUserWorkspace(SaveUserWorkspaceModel model)
         {
             var userWorkspace = _mapper.Map<UserWorkspace>(model);
 
+            userWorkspace.Workspace = await _dbContext.Workspaces.FirstOrDefaultAsync(x => x.Id == model.WorkspaceId);
+            userWorkspace.User = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == model.UserId);
+
             await _dbContext.UserWorkspaces.AddAsync(userWorkspace);
 
             await _dbContext.SaveChangesAsync();
 
-            return await GetUserWorkspace(userWorkspace.UserId, userWorkspace.WorkspaceId);
+            return await GetUserWorkspace(userWorkspace.Id);
         }
 
         public async Task<UserWorkspaceModel> UpdateUserWorkspace(SaveUserWorkspaceModel model)
         {
-            var userWorkspace = await _dbContext.UserWorkspaces.FirstOrDefaultAsync(x => x.UserId == model.UserId && x.WorkspaceId == model.WorkspaceId);
+            var userWorkspace = await _dbContext.UserWorkspaces.FirstOrDefaultAsync(x => x.User.Id == model.UserId && x.Workspace.Id == model.WorkspaceId);
 
             if (userWorkspace == null)
             {
@@ -62,14 +110,17 @@ namespace Mcce22.SmartOffice.Management.Managers
 
             _mapper.Map(model, userWorkspace);
 
+            userWorkspace.Workspace = await _dbContext.Workspaces.FirstOrDefaultAsync(x => x.Id == model.WorkspaceId);
+            userWorkspace.User = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == model.UserId);
+
             await _dbContext.SaveChangesAsync();
 
-            return await GetUserWorkspace(userWorkspace.UserId, userWorkspace.WorkspaceId);
+            return await GetUserWorkspace(userWorkspace.Id);
         }
 
         public async Task DeleteUserWorkspace(int userId, int workspaceId)
         {
-            var userWorkspace = await _dbContext.UserWorkspaces.FirstOrDefaultAsync(x => x.UserId == userId && x.WorkspaceId == workspaceId);
+            var userWorkspace = await _dbContext.UserWorkspaces.FirstOrDefaultAsync(x => x.User.Id == userId && x.Workspace.Id == workspaceId);
 
             if (userWorkspace == null)
             {

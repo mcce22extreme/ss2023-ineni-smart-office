@@ -17,9 +17,15 @@ namespace Mcce22.SmartOffice.Management.Controllers
         }
 
         [HttpGet]
-        public async Task<UserWorkspaceModel> GetUserWorkspace([FromQuery] UserWorkspaceQuery query)
+        public async Task<UserWorkspaceModel[]> GetUserWorkspaces([FromQuery] UserWorkspaceQuery query)
         {
-            return await _userWorkspaceManager.GetUserWorkspace(query.UserId, query.WorkspaceId);
+            return await _userWorkspaceManager.GetUserWorkspaces(query.UserId, query.WorkspaceId);
+        }
+
+        [HttpGet("{userWorkspaceId}")]
+        public async Task<UserWorkspaceModel> GetUserWorkspaces(int userWorkspaceId)
+        {
+            return await _userWorkspaceManager.GetUserWorkspace(userWorkspaceId);
         }
 
         [HttpPost]
