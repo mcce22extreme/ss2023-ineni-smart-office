@@ -1,4 +1,6 @@
-﻿namespace Mcce22.SmartOffice.Management.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Mcce22.SmartOffice.Management.Models
 {
     public class UserModel
     {
@@ -15,12 +17,16 @@
 
     public class SaveUserModel
     {
+        [Required]
         public string UserName { get; set; }
 
+        [Required]
         public string FirstName { get; set; }
 
+        [Required]
         public string LastName { get; set; }
 
+        [Required]
         public string Email { get; set; }
     }
 }

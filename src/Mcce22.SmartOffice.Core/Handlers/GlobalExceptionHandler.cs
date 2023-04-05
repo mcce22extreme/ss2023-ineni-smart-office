@@ -48,7 +48,7 @@ namespace Mcce22.SmartOffice.Core.Handlers
                     return new ValidationErrorModel
                     {
                         StatusCode = HttpStatusCode.BadRequest,
-                        ErrorMessage = "One or more validation errors occured!",
+                        ErrorMessage = vex.Message ?? "One or more validation errors occured!",
                         Errors = vex.Errors.Select(e => new ValidationError
                         {
                             ErrorCode = e.ErrorCode,

@@ -1,7 +1,9 @@
-﻿using Mcce22.SmartOffice.Management.Entities;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MailKit.Security;
+using Mcce22.SmartOffice.Core.Common;
+using Mcce22.SmartOffice.Management.Entities;
 using MimeKit;
+using Serilog;
 
 namespace Mcce22.SmartOffice.Management.Services
 {
@@ -12,20 +14,16 @@ namespace Mcce22.SmartOffice.Management.Services
 
     public class EmailService : IEmailService
     {
-        private const string HOST = "smtp.gmail.com";
-        private const int PORT = 587;        
-        private const string USERNAME = "";
-        private const string PASSWORD = "";
-        private const string SENDERNAME = "MCCE22 Smart Office";
-        private const string SENDERADDRESS = "mcce22smartoffice@gmail.com";
         private const string TITLE = "[MCCE22-Smart-Office] Workspace ready for activation!";
 
         public async Task SendMail(User user, Workspace workspace)
         {
             try
             {
+                var smtpConfig = AppSettings.Current.SmptConfiguration;
+
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(SENDERNAME, SENDERADDRESS));
+                message.From.Add(new MailboxAddress(smtpConfig.SenderName, smtpConfig.UserName));
                 message.To.Add(new MailboxAddress($"{user.FirstName} {user.LastName}", user.Email));
                 message.Subject = TITLE;
 
@@ -33,15 +31,15 @@ namespace Mcce22.SmartOffice.Management.Services
 
                 using var client = new SmtpClient();
 
-                await client.ConnectAsync(HOST, PORT, SecureSocketOptions.Auto);
-                await client.AuthenticateAsync(USERNAME, PASSWORD);
+                await client.ConnectAsync(smtpConfig.Host, smtpConfig.Port, SecureSocketOptions.Auto);
+                await client.AuthenticateAsync(smtpConfig.UserName, smtpConfig.Password);
 
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
             catch(Exception ex)
             {
-
+                Log.Error(ex, ex.Message);
             }
         }
     }

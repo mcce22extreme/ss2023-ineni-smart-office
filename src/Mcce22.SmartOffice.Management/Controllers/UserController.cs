@@ -6,7 +6,7 @@ namespace Mcce22.SmartOffice.Management.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController
+    public class UserController : ControllerBase
     {
         private readonly IUserManager _userManager;
 

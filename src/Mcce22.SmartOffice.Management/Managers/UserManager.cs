@@ -39,7 +39,9 @@ namespace Mcce22.SmartOffice.Management.Managers
 
         public async Task<UserModel> GetUser(int userId)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _dbContext.Users
+                .OrderBy(x => x.LastName)
+                .FirstOrDefaultAsync(x => x.Id == userId);
 
             if (user == null)
             {

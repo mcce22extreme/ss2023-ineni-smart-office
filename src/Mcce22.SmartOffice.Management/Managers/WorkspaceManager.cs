@@ -32,14 +32,17 @@ namespace Mcce22.SmartOffice.Management.Managers
 
         public async Task<WorkspaceModel[]> GetWorkspaces()
         {
-            var workspaces = await _dbContext.Workspaces.ToListAsync();
+            var workspaces = await _dbContext.Workspaces
+                .OrderBy(x => x.WorkspaceNumber)
+                .ToListAsync();
 
             return workspaces.Select(_mapper.Map<WorkspaceModel>).ToArray();
         }
 
         public async Task<WorkspaceModel> GetWorkspace(int workspaceId)
         {
-            var workspace = await _dbContext.Workspaces.FirstOrDefaultAsync(x => x.Id == workspaceId);
+            var workspace = await _dbContext.Workspaces
+                .FirstOrDefaultAsync(x => x.Id == workspaceId);
 
             if (workspace == null)
             {
