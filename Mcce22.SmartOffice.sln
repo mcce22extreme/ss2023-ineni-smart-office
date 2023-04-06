@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{5805A17B-151A-4474-81DE-FF214703BBDB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{FE00756B-C0F7-4FBF-BB30-BB221D4A2A9C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mcce22.SmartOffice.Core", "src\Mcce22.SmartOffice.Core\Mcce22.SmartOffice.Core.csproj", "{242C87BE-D260-44D6-B47F-13ECBC19FA8D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mcce22.SmartOffice.Management", "src\Mcce22.SmartOffice.Management\Mcce22.SmartOffice.Management.csproj", "{BA56A21B-6727-4971-8337-81E5AC02A637}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E1BF4690-EAE6-4FC4-8B69-5F84EC17CDEF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mcce22.SmartOffice.Management.Tests", "src\Mcce22.SmartOffice.Management.Tests\Mcce22.SmartOffice.Management.Tests.csproj", "{3DA99F27-194E-45EA-99F3-251AEABBAA67}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{242C87BE-D260-44D6-B47F-13ECBC19FA8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{242C87BE-D260-44D6-B47F-13ECBC19FA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{242C87BE-D260-44D6-B47F-13ECBC19FA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{242C87BE-D260-44D6-B47F-13ECBC19FA8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA56A21B-6727-4971-8337-81E5AC02A637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA56A21B-6727-4971-8337-81E5AC02A637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA56A21B-6727-4971-8337-81E5AC02A637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA56A21B-6727-4971-8337-81E5AC02A637}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DA99F27-194E-45EA-99F3-251AEABBAA67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DA99F27-194E-45EA-99F3-251AEABBAA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DA99F27-194E-45EA-99F3-251AEABBAA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DA99F27-194E-45EA-99F3-251AEABBAA67}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{242C87BE-D260-44D6-B47F-13ECBC19FA8D} = {5805A17B-151A-4474-81DE-FF214703BBDB}
+		{BA56A21B-6727-4971-8337-81E5AC02A637} = {5805A17B-151A-4474-81DE-FF214703BBDB}
+		{3DA99F27-194E-45EA-99F3-251AEABBAA67} = {E1BF4690-EAE6-4FC4-8B69-5F84EC17CDEF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B4406B8-0A6E-4D84-9828-BCF8BDD1781C}
+	EndGlobalSection
+EndGlobal
