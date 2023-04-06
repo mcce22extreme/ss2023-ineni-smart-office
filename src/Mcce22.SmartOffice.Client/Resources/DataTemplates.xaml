@@ -1,0 +1,72 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:v="clr-namespace:Mcce22.SmartOffice.Client.Views"
+    xmlns:vm="clr-namespace:Mcce22.SmartOffice.Client.ViewModels">
+    <DataTemplate x:Key="MenuItemTemplate" DataType="{x:Type mah:HamburgerMenuIconItem}">
+        <Grid Height="45">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Viewbox Width="25" Height="25">
+                <ContentControl Content="{Binding Icon}" />
+            </Viewbox>
+            <TextBlock
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                FontSize="16"
+                Foreground="White"
+                Text="{Binding Label}" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:LoginViewModel}">
+        <v:LoginView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:UserListViewModel}">
+        <v:UserListView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:UserDetailViewModel}">
+        <v:UserDetailView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:WorkspaceListViewModel}">
+        <v:WorkspaceListView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:WorkspaceDetailViewModel}">
+        <v:WorkspaceDetailView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BookingListViewModel}">
+        <v:BookingListView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BookingDetailViewModel}">
+        <v:BookingDetailView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ConfirmDeleteViewModel}">
+        <v:ConfirmView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ErrorViewModel}">
+        <v:ErrorView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+        <v:DashboardView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:BookingViewModel}">
+        <v:BookingView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:UserWorkspaceListViewModel}">
+        <v:UserWorkspaceListView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:UserWorkspaceDetailViewModel}">
+        <v:UserWorkspaceDetailView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SlideshowItemListViewModel}">
+        <v:SlideshowItemListView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SeedDataViewModel}">
+        <v:SeedDataView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SlideshowDetailViewModel}">
+        <v:SlideshowDetailView />
+    </DataTemplate>
+</ResourceDictionary>

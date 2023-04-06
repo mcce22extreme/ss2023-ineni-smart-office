@@ -20,6 +20,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E1BF4690
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mcce22.SmartOffice.Management.Tests", "src\Mcce22.SmartOffice.Management.Tests\Mcce22.SmartOffice.Management.Tests.csproj", "{3DA99F27-194E-45EA-99F3-251AEABBAA67}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{9D747313-CB04-4C7F-95BE-4083BE7A893A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mcce22.SmartOffice.Client", "src\Mcce22.SmartOffice.Client\Mcce22.SmartOffice.Client.csproj", "{964BD78C-5D6F-4FCA-929D-E4059262994C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,10 @@ Global
 		{3DA99F27-194E-45EA-99F3-251AEABBAA67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DA99F27-194E-45EA-99F3-251AEABBAA67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DA99F27-194E-45EA-99F3-251AEABBAA67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{964BD78C-5D6F-4FCA-929D-E4059262994C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{964BD78C-5D6F-4FCA-929D-E4059262994C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{964BD78C-5D6F-4FCA-929D-E4059262994C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{964BD78C-5D6F-4FCA-929D-E4059262994C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +54,7 @@ Global
 		{242C87BE-D260-44D6-B47F-13ECBC19FA8D} = {5805A17B-151A-4474-81DE-FF214703BBDB}
 		{BA56A21B-6727-4971-8337-81E5AC02A637} = {5805A17B-151A-4474-81DE-FF214703BBDB}
 		{3DA99F27-194E-45EA-99F3-251AEABBAA67} = {E1BF4690-EAE6-4FC4-8B69-5F84EC17CDEF}
+		{964BD78C-5D6F-4FCA-929D-E4059262994C} = {9D747313-CB04-4C7F-95BE-4083BE7A893A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B4406B8-0A6E-4D84-9828-BCF8BDD1781C}
