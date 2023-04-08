@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Mcce22.SmartOffice.Client.Models;
+using Newtonsoft.Json;
 
 namespace Mcce22.SmartOffice.Client.Managers
 {

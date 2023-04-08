@@ -39,8 +39,8 @@
     <DataTemplate DataType="{x:Type vm:BookingListViewModel}">
         <v:BookingListView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:BookingDetailViewModel}">
-        <v:BookingDetailView />
+    <DataTemplate DataType="{x:Type vm:CreateBookingViewModel}">
+        <v:CreateBookingView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:ConfirmDeleteViewModel}">
         <v:ConfirmView />
@@ -50,9 +50,6 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
         <v:DashboardView />
-    </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:BookingViewModel}">
-        <v:BookingView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:UserWorkspaceListViewModel}">
         <v:UserWorkspaceListView />

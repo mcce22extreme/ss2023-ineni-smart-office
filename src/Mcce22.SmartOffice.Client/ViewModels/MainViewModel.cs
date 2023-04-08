@@ -17,34 +17,34 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         public LoginViewModel Login { get; }
         public DashboardViewModel Dashboard { get; }
         public UserWorkspaceListViewModel UserWorkspaceList { get; }
-        public BookingViewModel Booking { get; }
         public UserListViewModel UserList { get; }        
         public WorkspaceListViewModel WorkspaceList { get; }
         public BookingListViewModel BookingList { get; }
         public SlideshowItemListViewModel SlideshowItemList { get; }
         public SeedDataViewModel SeedData { get; }
+        public CreateBookingViewModel CreateBooking { get; }
 
         public MainViewModel(
             INavigationService navigationService,
             LoginViewModel login,
             DashboardViewModel dashboard,
-            BookingViewModel booking,
             UserWorkspaceListViewModel userWorkspaceList,
             UserListViewModel userList,            
             WorkspaceListViewModel workspaceList,
             BookingListViewModel bookingList,
             SlideshowItemListViewModel slideshowItemList,
-            SeedDataViewModel seedData)
+            SeedDataViewModel seedData,
+            CreateBookingViewModel createBooking)
         {
             Login = login;
             Dashboard = dashboard;
-            Booking = booking;
             UserWorkspaceList = userWorkspaceList;
             UserList = userList;            
             WorkspaceList = workspaceList;
             BookingList = bookingList;
             SlideshowItemList = slideshowItemList;
             SeedData = seedData;
+            CreateBooking = createBooking;
             Login.LoginChanged += OnLoginChanged;
             navigationService.NavigationRequested += OnNavigationRequested;
         }

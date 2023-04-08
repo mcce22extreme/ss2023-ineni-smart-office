@@ -58,16 +58,6 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             }
         }
 
-        protected override async Task OnAdd()
-        {
-            await DialogService.ShowDialog(new BookingDetailViewModel(
-                _bookingManager,
-                _userManager,
-                _workspaceManager,
-                DialogService));
-
-        }
-
         protected override bool CanEdit()
         {
             return !IsBusy && SelectedItem != null && !SelectedItem.InvitationSent;

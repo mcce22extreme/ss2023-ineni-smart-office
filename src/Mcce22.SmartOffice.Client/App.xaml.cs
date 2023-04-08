@@ -27,11 +27,10 @@ namespace Mcce22.SmartOffice.Client
             _container.Register(Component.For<UserListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<WorkspaceListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<BookingListViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<BookingDetailViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<BookingViewModel>().LifestyleSingleton());
             _container.Register(Component.For<UserWorkspaceListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<SlideshowItemListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<SeedDataViewModel>().LifestyleSingleton());
+            _container.Register(Component.For<CreateBookingViewModel>().LifestyleSingleton());
 
             _container.Register(Component.For<IUserManager>()
                 .ImplementedBy<UserManager>()

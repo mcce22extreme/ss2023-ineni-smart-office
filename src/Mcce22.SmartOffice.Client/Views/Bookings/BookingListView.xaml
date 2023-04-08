@@ -19,12 +19,6 @@
             Margin="5"
             Orientation="Horizontal">
             <Button
-                Command="{Binding AddCommand}"
-                Foreground="Green"
-                Style="{StaticResource ToolbarButtonStyle}">
-                <iconPacks:FontAwesome Kind="PlusSolid" />
-            </Button>
-            <Button
                 Command="{Binding EditCommand}"
                 Foreground="Orange"
                 Style="{StaticResource ToolbarButtonStyle}">

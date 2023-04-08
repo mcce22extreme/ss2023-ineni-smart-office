@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:local="clr-namespace:Mcce22.SmartOffice.Client"
     xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow2"
@@ -12,6 +11,7 @@
     Height="600"
     Margin="0"
     Padding="0"
+    ResizeMode="CanResize"
     SnapsToDevicePixels="True"
     mc:Ignorable="d">
     <WindowChrome.WindowChrome>
@@ -109,10 +109,10 @@
             Executed="CommandBinding_Executed_Restore" />
     </Window.CommandBindings>
     <Grid x:Name="parentContainer">
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!--  Window chrome  -->
@@ -197,7 +197,7 @@
                         <mah:HamburgerMenuIconItem
                             Icon="{iconPacks:FontAwesome Kind=CalendarPlusSolid}"
                             Label="Create Booking"
-                            Tag="{Binding Booking}" />
+                            Tag="{Binding CreateBooking}" />
                         <mah:HamburgerMenuIconItem
                             Icon="{iconPacks:FontAwesome Kind=UserCogSolid}"
                             Label="Configurations"
@@ -259,6 +259,12 @@
             </ContentControl>
             <ContentControl Content="{Binding Login}" Visibility="{Binding Login.LoginVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
         </Grid>
+
+        <!--  Window footer  -->
+        <Grid
+            Grid.Row="2"
+            Height="25"
+            Background="#444" />
     </Grid>
 </Window>
 

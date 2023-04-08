@@ -8,6 +8,8 @@
 
         public string RoomNumber { get; set; }
 
+        public bool? IsAvailable { get; set; }
+
         public int Top { get; set; }
 
         public int Left { get; set; }

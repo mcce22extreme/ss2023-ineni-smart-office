@@ -12,6 +12,7 @@
                 <!--  Theme setting  -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Steel.xaml" />
 
+                <ResourceDictionary Source="Resources/Brushes.xaml" />
                 <ResourceDictionary Source="Resources/ValueConverters.xaml" />
                 <ResourceDictionary Source="Resources/DataTemplates.xaml" />
                 <ResourceDictionary Source="Resources/Styles.xaml" />
