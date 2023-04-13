@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Mcce22.SmartOffice.Core.Entities;
 
-namespace Mcce22.SmartOffice.Management.Entities
+namespace Mcce22.SmartOffice.Users.Entities
 {
     public class User : EntityBase
     {
@@ -16,11 +16,5 @@ namespace Mcce22.SmartOffice.Management.Entities
 
         [Required]
         public string Email { get; set; }
-
-        public List<UserWorkspace> UserWorkspaces { get; set; }
-
-        public List<Booking> Bookings { get; set; }
-
-        public List<SlideshowItem> SlideshowItems { get; set; }
     }
 }

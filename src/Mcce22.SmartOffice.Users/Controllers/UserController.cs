@@ -1,11 +1,11 @@
-﻿using Mcce22.SmartOffice.Management.Managers;
-using Mcce22.SmartOffice.Management.Models;
+﻿using Mcce22.SmartOffice.Users.Managers;
+using Mcce22.SmartOffice.Users.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mcce22.SmartOffice.Management.Controllers
+namespace Mcce22.SmartOffice.Users.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserManager _userManager;

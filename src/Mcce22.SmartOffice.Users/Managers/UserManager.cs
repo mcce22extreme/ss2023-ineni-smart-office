@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Mcce22.SmartOffice.Core.Exceptions;
-using Mcce22.SmartOffice.Management.Entities;
-using Mcce22.SmartOffice.Management.Models;
+using Mcce22.SmartOffice.Users.Entities;
+using Mcce22.SmartOffice.Users.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Mcce22.SmartOffice.Management.Managers
+namespace Mcce22.SmartOffice.Users.Managers
 {
     public interface IUserManager
     {

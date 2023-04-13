@@ -2,10 +2,8 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Transform": "AWS::Serverless-2016-10-31",
   "Description": "An AWS Serverless Application that uses the ASP.NET Core framework running in Amazon Lambda.",
-  "Parameters": {},
-  "Conditions": {},
   "Resources": {
-    "mcce22smartofficemanagementlambda": {
+    "Mcce22SmartOfficeUsersLambda": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "CodeUri": "",
@@ -13,36 +11,27 @@
           "ProxyResource": {
             "Type": "Api",
             "Properties": {
-              "Path": "/{proxy+}",
+              "Path": "/usersapi/{proxy+}",
               "Method": "ANY"
             }
           },
           "RootResource": {
             "Type": "Api",
             "Properties": {
-              "Path": "/",
-              "Method": "ANY"
+                "Path": "/usersapi",
+                "Method": "ANY"
             }
           }
         },
-        "FunctionName": "mcce22-smart-office-management-lambda",
-        "Handler": "Mcce22.SmartOffice.Management",
+        "FunctionName": "mcce22-smart-office-users",
+        "Handler": "Mcce22.SmartOffice.Users",
         "MemorySize": 256,
         "Policies": [
           "AWSLambda_FullAccess"
         ],
         "Role": "arn:aws:iam::064088109127:role/LabRole",
         "Runtime": "dotnet6",
-        "Timeout": 30,
-        "VpcConfig": {
-          "SecurityGroupIds": [
-            "sg-0f43d9da0ecb0ab54"
-          ],
-          "SubnetIds": [
-            "subnet-000b0521a75d47d6e",
-            "subnet-0047d95e2cb873bb5"
-          ]
-        }
+        "Timeout": 30
       }
     }
   },
