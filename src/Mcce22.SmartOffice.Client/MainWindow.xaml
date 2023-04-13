@@ -224,9 +224,9 @@
                             Tag="{Binding UserList}" />
                         <mah:HamburgerMenuIconItem
                             Icon="{iconPacks:FontAwesome Kind=ChartBarRegular}"
-                            IsEnabled="False"
                             IsVisible="{Binding Login.IsAdmin}"
-                            Label="Analytics" />
+                            Label="Analytics"
+                            Tag="{Binding WorkspaceDataList}" />
                         <mah:HamburgerMenuIconItem
                             Icon="{iconPacks:Material Kind=DatabaseRefresh}"
                             IsVisible="{Binding Login.IsAdmin}"

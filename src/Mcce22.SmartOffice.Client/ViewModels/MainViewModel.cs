@@ -20,9 +20,10 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         public UserListViewModel UserList { get; }        
         public WorkspaceListViewModel WorkspaceList { get; }
         public BookingListViewModel BookingList { get; }
-        public SlideshowItemListViewModel SlideshowItemList { get; }
+        public UserImageListViewModel SlideshowItemList { get; }
         public SeedDataViewModel SeedData { get; }
         public CreateBookingViewModel CreateBooking { get; }
+        public WorkspaceDataListViewModel WorkspaceDataList { get; }
 
         public MainViewModel(
             INavigationService navigationService,
@@ -32,9 +33,10 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             UserListViewModel userList,            
             WorkspaceListViewModel workspaceList,
             BookingListViewModel bookingList,
-            SlideshowItemListViewModel slideshowItemList,
+            UserImageListViewModel slideshowItemList,
             SeedDataViewModel seedData,
-            CreateBookingViewModel createBooking)
+            CreateBookingViewModel createBooking,
+            WorkspaceDataListViewModel workspaceDataList)
         {
             Login = login;
             Dashboard = dashboard;
@@ -45,6 +47,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             SlideshowItemList = slideshowItemList;
             SeedData = seedData;
             CreateBooking = createBooking;
+            WorkspaceDataList = workspaceDataList;
             Login.LoginChanged += OnLoginChanged;
             navigationService.NavigationRequested += OnNavigationRequested;
         }

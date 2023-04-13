@@ -57,13 +57,16 @@
     <DataTemplate DataType="{x:Type vm:UserWorkspaceDetailViewModel}">
         <v:UserWorkspaceDetailView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:SlideshowItemListViewModel}">
-        <v:SlideshowItemListView />
+    <DataTemplate DataType="{x:Type vm:UserImageListViewModel}">
+        <v:UserImageListView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SeedDataViewModel}">
         <v:SeedDataView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:SlideshowDetailViewModel}">
-        <v:SlideshowDetailView />
+    <DataTemplate DataType="{x:Type vm:UserImageDetailViewModel}">
+        <v:UserImageDetailView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:WorkspaceDataListViewModel}">
+        <v:WorkspaceDataListView />
     </DataTemplate>
 </ResourceDictionary>

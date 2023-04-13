@@ -1,6 +1,6 @@
 ﻿namespace Mcce22.SmartOffice.Client.Models
 {
-    public class SlideshowItemModel : IModel
+    public class UserImageModel : IModel
     {
         public int Id { get; set; }
 

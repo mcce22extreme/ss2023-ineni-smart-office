@@ -5,11 +5,11 @@ using Mcce22.SmartOffice.Client.ViewModels;
 namespace Mcce22.SmartOffice.Client.Views
 {
     /// <summary>
-    /// Interaction logic for SlideshotDetailViewModel.xaml
+    /// Interaction logic for UserImageListView.xaml
     /// </summary>
-    public partial class SlideshowDetailView : UserControl
+    public partial class UserImageListView : UserControl
     {
-        public SlideshowDetailView()
+        public UserImageListView()
         {
             InitializeComponent();
 
@@ -18,9 +18,7 @@ namespace Mcce22.SmartOffice.Client.Views
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            CBUsers.Focus();
-
-            ((IDialogViewModel)DataContext).Load();
+            ((IListViewModel)DataContext).Reload();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
@@ -11,36 +12,41 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 {
     public class SeedDataViewModel : ViewModelBase
     {
+        private static readonly Random Random = new Random();
+
         private readonly IUserManager _userManager;
         private readonly IWorkspaceManager _workspaceManager;
-        private readonly ISlideshowItemManager _slideshowItemManager;
+        private readonly IUserImageManager _userImageManager;
+        private readonly IWorkspaceDataManager _workspaceDataManager;
         private readonly IDialogService _dialogService;
 
-        public RelayCommand SeedAllCommand { get; }
+        public RelayCommand SeedDataCommand { get; }
 
-        public RelayCommand DeleteAllCommand { get; }
+        public RelayCommand DeleteDataCommand { get; }
 
         public SeedDataViewModel(
             IUserManager userManager,
             IWorkspaceManager workspaceManager,
-            ISlideshowItemManager slideshowItemManager,
+            IUserImageManager userImageManager,
+            IWorkspaceDataManager workspaceDataManager,
             IDialogService dialogService)
         {
             _userManager = userManager;
             _workspaceManager = workspaceManager;
-            _slideshowItemManager = slideshowItemManager;
+            _userImageManager = userImageManager;
+            _workspaceDataManager = workspaceDataManager;
             _dialogService = dialogService;
 
-            SeedAllCommand = new RelayCommand(SeedAll, CanSeed);
-            DeleteAllCommand = new RelayCommand(DeleteAll, CanDelete);
+            SeedDataCommand = new RelayCommand(SeedData, CanSeed);
+            DeleteDataCommand = new RelayCommand(DeleteData, CanDelete);
         }
 
         protected override void UpdateCommandStates()
         {
             base.UpdateCommandStates();
 
-            SeedAllCommand.NotifyCanExecuteChanged();
-            DeleteAllCommand.NotifyCanExecuteChanged();
+            SeedDataCommand.NotifyCanExecuteChanged();
+            DeleteDataCommand.NotifyCanExecuteChanged();
         }
 
         private bool CanSeed()
@@ -48,7 +54,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             return !IsBusy;
         }
 
-        private async void SeedAll()
+        private async void SeedData()
         {
             try
             {
@@ -56,7 +62,8 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
                 await SeedUsers();
                 await SeedWorkspaces();
-                await SeedSlideshowItems();
+                await SeedUserImages();
+                await SeedWorkspaceData();
             }
             finally
             {
@@ -86,7 +93,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             }
         }
 
-        private async Task SeedSlideshowItems()
+        private async Task SeedUserImages()
         {
             var users = await _userManager.GetList();
             var user = users.FirstOrDefault();
@@ -94,7 +101,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             var filePaths = Directory.GetFiles("sampleimages");
             foreach (var filePath in filePaths)
             {
-                var item = await _slideshowItemManager.Save(new SlideshowItemModel
+                var item = await _userImageManager.Save(new UserImageModel
                 {
                     FileName = Path.GetFileName(filePath),
                     UserId = user.Id
@@ -102,7 +109,31 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
                 using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
-                await _slideshowItemManager.StoreContent(item.Id, fs);
+                await _userImageManager.StoreContent(item.Id, fs);
+            }
+        }
+
+        private async Task SeedWorkspaceData()
+        {
+            for (int i = 1; i <= 30; i++)
+            {
+                for (int j = 1; j < 24; j++)
+                {
+                    for (int k = 1; k < 4; k++)
+                    {
+                        var model = new WorkspaceDataModel
+                        {
+                            WorkspaceId = 1,
+                            Timestamp = new DateTime(2023,03,i, j, k*15, 0),
+                            Temperature = Random.Next(15, 25),
+                            Noise = Random.Next(60, 70),
+                            Humidity= Random.Next(40, 60),
+                            Co2 = Random.Next(400, 999),
+                            Luminosity = Random.Next(100, 400)
+                        };
+                        await _workspaceDataManager.Save(model);
+                    }                    
+                }
             }
         }
 
@@ -111,17 +142,18 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             return !IsBusy;
         }
 
-        private async void DeleteAll()
+        private async void DeleteData()
         {
             try
             {
                 IsBusy = true;
 
-                if (await ConfirmDelete("users, workspaces and slideshowitems"))
+                if (await ConfirmDelete("users, user images, workspaces and workspace data"))
                 {
-                    await DeleteSlideshowItems();
+                    await DeleteUserImages();
                     await DeleteUsers();
                     await DeleteWorkspaces();
+                    await DeleteWorkspaceData();
                 }
             }
             finally
@@ -150,13 +182,23 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             }
         }
 
-        private async Task DeleteSlideshowItems()
+        private async Task DeleteUserImages()
         {
-            var slideshowItems = await _slideshowItemManager.GetList();
+            var userImages = await _userImageManager.GetList();
 
-            foreach (var item in slideshowItems)
+            foreach (var item in userImages)
             {
-                await _slideshowItemManager.Delete(item.Id);
+                await _userImageManager.Delete(item.Id);
+            }
+        }
+
+        private async Task DeleteWorkspaceData()
+        {
+            var workspaceData = await _workspaceDataManager.GetList();
+
+            foreach (var data in workspaceData)
+            {
+                await _workspaceDataManager.Delete(data.Id);
             }
         }
 

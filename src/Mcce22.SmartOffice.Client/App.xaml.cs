@@ -28,31 +28,40 @@ namespace Mcce22.SmartOffice.Client
             _container.Register(Component.For<WorkspaceListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<BookingListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<UserWorkspaceListViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<SlideshowItemListViewModel>().LifestyleSingleton());
+            _container.Register(Component.For<UserImageListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<SeedDataViewModel>().LifestyleSingleton());
             _container.Register(Component.For<CreateBookingViewModel>().LifestyleSingleton());
+            _container.Register(Component.For<WorkspaceDataListViewModel>().LifestyleSingleton());
 
             _container.Register(Component.For<IUserManager>()
                 .ImplementedBy<UserManager>()
                 .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddress)));          
+                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressUsers)));          
+
             _container.Register(Component.For<IWorkspaceManager>()
                 .ImplementedBy<WorkspaceManager>()
                 .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddress)));
+                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressWorkspaces)));
+
             _container.Register(Component.For<IBookingManager>()
                 .ImplementedBy<BookingManager>()
                 .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddress)));
+                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressBookings)));
+
             _container.Register(Component.For<IUserWorkspaceManager>()
                 .ImplementedBy<UserWorkspaceManager>()
                 .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddress)));
+                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressWorkspaces)));
 
-            _container.Register(Component.For<ISlideshowItemManager>()
-                .ImplementedBy<SlideshowItemManager>()
+            _container.Register(Component.For<IUserImageManager>()
+                .ImplementedBy<UserImageManager>()
                 .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddress)));
+                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressUsers)));
+
+            _container.Register(Component.For<IWorkspaceDataManager>()
+                .ImplementedBy<WorkspaceDataManager>()
+                .LifestyleSingleton()
+                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressWorkspaces)));
 
             MainWindow = _container.Resolve<MainWindow>();
             MainWindow.Show();

@@ -10,9 +10,9 @@ using Microsoft.Win32;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    internal class SlideshowDetailViewModel : DialogViewModelBase
+    internal class UserImageDetailViewModel : DialogViewModelBase
     {
-        private readonly ISlideshowItemManager _slideshowItemManager;
+        private readonly IUserImageManager _userImageManager;
         private readonly IUserManager _userManager;
 
         private ObservableCollection<UserModel> _users = new ObservableCollection<UserModel>();
@@ -38,11 +38,11 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         public RelayCommand SelectFileCommand { get; }
 
-        public SlideshowDetailViewModel(ISlideshowItemManager slideshowItemManager, IUserManager userManager, IDialogService dialogService)
+        public UserImageDetailViewModel(IUserImageManager userImageManager, IUserManager userManager, IDialogService dialogService)
             : base(dialogService)
         {
-            Title = "Add slideshow item";
-            _slideshowItemManager = slideshowItemManager;
+            Title = "Add user image";
+            _userImageManager = userImageManager;
             _userManager = userManager;
 
             SelectFileCommand = new RelayCommand(SelectFile);
@@ -77,7 +77,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         protected override async Task OnSave()
         {
-            var item = await _slideshowItemManager.Save(new SlideshowItemModel
+            var item = await _userImageManager.Save(new UserImageModel
             {
                 FileName = Path.GetFileName(FilePath),
                 UserId = SelectedUser.Id
@@ -85,7 +85,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
             using var fs = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
 
-            await _slideshowItemManager.StoreContent(item.Id, fs);
+            await _userImageManager.StoreContent(item.Id, fs);
         }
     }
 }

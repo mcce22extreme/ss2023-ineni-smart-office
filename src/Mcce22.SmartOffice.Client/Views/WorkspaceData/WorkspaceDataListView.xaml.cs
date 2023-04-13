@@ -4,9 +4,12 @@ using Mcce22.SmartOffice.Client.ViewModels;
 
 namespace Mcce22.SmartOffice.Client.Views
 {
-    public partial class UserListView : UserControl
+    /// <summary>
+    /// Interaction logic for WorkspaceDataListView.xaml
+    /// </summary>
+    public partial class WorkspaceDataListView : UserControl
     {
-        public UserListView()
+        public WorkspaceDataListView()
         {
             InitializeComponent();
 

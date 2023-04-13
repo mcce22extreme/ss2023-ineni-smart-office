@@ -35,24 +35,24 @@
         <Button
             Grid.Row="2"
             Background="DarkRed"
-            Command="{Binding DeleteAllCommand}">
+            Command="{Binding DeleteDataCommand}">
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial
                     Width="24"
                     Height="24"
                     Margin="0,0,10,0"
                     Kind="DatabaseRemove" />
-                <TextBlock Text="Delete all items" />
+                <TextBlock Text="Delete Data" />
             </StackPanel>
         </Button>
-        <Button Grid.Row="3" Command="{Binding SeedAllCommand}">
+        <Button Grid.Row="3" Command="{Binding SeedDataCommand}">
             <StackPanel Orientation="Horizontal">
                 <iconPacks:PackIconMaterial
                     Width="24"
                     Height="24"
                     Margin="0,0,10,0"
                     Kind="DatabaseRefresh" />
-                <TextBlock Text="Seed all items" />
+                <TextBlock Text="Seed Data" />
             </StackPanel>
         </Button>
         <mah:ProgressRing Grid.RowSpan="5" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" />
