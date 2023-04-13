@@ -1,12 +1,11 @@
-﻿using Mcce22.SmartOffice.Management.Managers;
-using Mcce22.SmartOffice.Management.Models;
-using Mcce22.SmartOffice.Management.Queries;
+﻿using Mcce22.SmartOffice.Bookings.Managers;
+using Mcce22.SmartOffice.Bookings.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mcce22.SmartOffice.Management.Controllers
+namespace Mcce22.SmartOffice.Bookings.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class BookingController
     {
         private readonly IBookingManager _bookingManager;
@@ -17,9 +16,9 @@ namespace Mcce22.SmartOffice.Management.Controllers
         }
 
         [HttpGet]
-        public async Task<BookingModel[]> GetBookings([FromQuery] BookingQuery query)
+        public async Task<BookingModel[]> GetBookings()
         {
-            return await _bookingManager.GetBookings(query);
+            return await _bookingManager.GetBookings();
         }
 
         [HttpGet("{bookingId}")]
@@ -40,16 +39,10 @@ namespace Mcce22.SmartOffice.Management.Controllers
             await _bookingManager.DeleteBooking(bookingId);
         }
 
-        [HttpGet("checkavailability")]
-        public async Task<CheckAvailabilityModel> CheckAvailability([FromQuery] CheckAvailabilityQuery query)
-        {
-            return await _bookingManager.CheckAvailability(query);
-        }
-
         [HttpPost("activate/{bookingid}")]
-        public async Task ActivateBooking(int bookingId)
+        public async Task<BookingModel> ActivateBooking(int bookingId)
         {
-            await _bookingManager.ActivateBooking(bookingId);
+            return await _bookingManager.ActivateBooking(bookingId);
         }
 
         [HttpPost("process")]

@@ -1,12 +1,12 @@
 {
   "profiles": {
-    "Mcce22.SmartOffice.Management": {
+    "Mcce22.SmartOffice.Bookings": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:63167;http://localhost:63168"
+      "applicationUrl": "https://localhost:56058;http://localhost:56062"
     }
   }
 }

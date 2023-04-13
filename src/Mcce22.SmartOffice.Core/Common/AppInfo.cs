@@ -1,4 +1,6 @@
-﻿namespace Mcce22.SmartOffice.Core.Common
+﻿using System.Reflection;
+
+namespace Mcce22.SmartOffice.Core.Common
 {
     public interface IAppInfo
     {
@@ -13,10 +15,15 @@
 
         public string AppVersion { get; }
 
-        public AppInfo(string appName, string appVersion)
+        public AppInfo( string appName, string appVersion)
         {
             AppName = appName;
             AppVersion = appVersion;
+        }
+
+        public AppInfo(AssemblyName assemblyName)
+            :this(assemblyName?.Name, $"{assemblyName?.Version?.Major}.{assemblyName?.Version?.Minor}.{assemblyName?.Version?.Build}")
+        {
         }
     }
 }

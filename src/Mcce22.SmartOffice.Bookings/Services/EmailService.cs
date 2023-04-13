@@ -1,15 +1,14 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
-using Mcce22.SmartOffice.Core.Common;
-using Mcce22.SmartOffice.Management.Entities;
+using Mcce22.SmartOffice.Bookings.Entities;
 using MimeKit;
 using Serilog;
 
-namespace Mcce22.SmartOffice.Management.Services
+namespace Mcce22.SmartOffice.Bookings.Services
 {
     public interface IEmailService
     {
-        Task SendMail(User user, Workspace workspace);
+        Task SendMail(Booking booking);
     }
 
     public class EmailService : IEmailService
@@ -22,13 +21,13 @@ namespace Mcce22.SmartOffice.Management.Services
             _config = config;
         }
 
-        public async Task SendMail(User user, Workspace workspace)
+        public async Task SendMail(Booking booking)
         {
             try
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(_config.SenderName, _config.UserName));
-                message.To.Add(new MailboxAddress($"{user.FirstName} {user.LastName}", user.Email));
+                message.To.Add(new MailboxAddress($"{booking.FirstName} {booking.LastName}", booking.Email));
                 message.Subject = TITLE;
 
                 message.Body = new TextPart("plain") { Text = "Your workspace '' is ready for activation!" };
