@@ -1,0 +1,78 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Description": "Deploys the MCCE22 Smart Office AWS environment",
+
+    "Parameters": {
+        "DbAdminUsername": {
+            "Type": "String",
+            "MinLength": "1",
+            "MaxLength": "16",
+            "AllowedPattern": "[a-zA-Z0-9]*"
+        },
+        "DbAdminPassword": {
+            "Type": "String",
+            "NoEcho": true,
+            "MinLength": "8",
+            "MaxLength": "41",
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "must contain only alphanumeric characters."
+        },
+        "DbName": {
+            "Type": "String",
+            "Default": "smartofficedb"
+        },
+        "SmtpHost": {
+            "Type": "String",
+            "Default": "smtp.gmail.com"
+        },
+        "SmtpPort": {
+            "Type": "Number",
+            "Default": 587
+        },
+        "SmtpUsername": {
+            "Type": "String"
+        },
+        "SmtpPassword": {
+            "Type": "String",
+            "NoEcho": true
+        },
+        "SmtpSendername": {
+            "Type": "String"
+        }
+    },
+
+    "Resources": {
+        "Mcce22SmartOfficeUsersLambda": {
+            "Type": "AWS::Serverless::Function",
+            "Properties": {
+                "CodeUri": "../Mcce22.SmartOffice.Users/",
+                "Events": {
+                    "ProxyResource": {
+                        "Type": "Api",
+                        "Properties": {
+                            "Path": "/{proxy+}",
+                            "Method": "ANY"
+                        }
+                    },
+                    "RootResource": {
+                        "Type": "Api",
+                        "Properties": {
+                            "Path": "/",
+                            "Method": "ANY"
+                        }
+                    }
+                },
+                "FunctionName": "mcce22-smart-office-users",
+                "Handler": "Mcce22.SmartOffice.Users",
+                "MemorySize": 256,
+                "Policies": [
+                    "AWSLambda_FullAccess"
+                ],
+                "Role": "arn:aws:iam::064088109127:role/LabRole",
+                "Runtime": "dotnet6",
+                "Timeout": 30
+            }
+        }
+    }
+}

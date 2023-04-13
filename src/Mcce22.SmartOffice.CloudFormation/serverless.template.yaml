@@ -1,0 +1,246 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Deploys the MCCE22 Smart Office AWS environment
+
+Parameters:
+  DbAdminUsername:
+    Type: String    
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z0-9]*'
+
+  DbAdminPassword:
+    Type: String
+    NoEcho: true    
+    MinLength: '8'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: must contain only alphanumeric characters.
+
+  DbName:
+    Type: String
+    Default: smartofficedb
+
+  SmtpHost:
+     Type: String
+     Default: smtp.gmail.com
+
+  SmtpPort:
+    Type: Number
+    Default: 587
+
+  SmtpUsername:
+    Type: String
+  
+  SmtpPassword:
+    Type: String
+    NoEcho: true
+
+  SmtpSendername:
+    Type: String    
+
+Resources:
+
+  Mcce22SmartOfficeVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+      - Key: Name
+        Value: mcce22-smartoffice-vpc
+
+  Mcce22SmartOfficeSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: mcce22-smartoffice-sg
+      GroupDescription: Allows http traffic
+      VpcId: !Ref Mcce22SmartOfficeVpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 1433
+          ToPort: 1433
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: mcce22-smartoffice-sg
+
+  Mcce22SmartOfficeIgw:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: mcce22-smartoffice-igw
+
+  Mcce22SmartOfficeAttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref Mcce22SmartOfficeVpc
+      InternetGatewayId: !Ref Mcce22SmartOfficeIgw
+
+  Mcce22SmartOfficePublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Mcce22SmartOfficeVpc
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: us-east-1a
+      Tags:
+        - Key: Name
+          Value: mcce22-smartoffice-public-subnet1
+
+  Mcce22SmartOfficePublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Mcce22SmartOfficeVpc
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: us-east-1b
+      Tags:
+        - Key: Name
+          Value: mcce22-smartoffice-public-subnet2           
+
+  Mcce22SmartOfficeRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref Mcce22SmartOfficeVpc
+      Tags:
+        - Key: Name
+          Value: mcce22-smartoffice-public-routetable
+
+  Mcce22SmartOfficePublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref Mcce22SmartOfficeRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref Mcce22SmartOfficeIgw
+
+  Mcce22SmartOfficeSubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Mcce22SmartOfficePublicSubnet1
+      RouteTableId: !Ref Mcce22SmartOfficeRouteTable
+
+  Mcce22SmartOfficeSubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Mcce22SmartOfficePublicSubnet2
+      RouteTableId: !Ref Mcce22SmartOfficeRouteTable      
+
+  Mcce22SmartOfficeVpcEndpointS3:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal: '*'
+          Action: '*'
+          Resource: '*'
+      RouteTableIds:
+        - !Ref Mcce22SmartOfficeRouteTable
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
+      VpcId: !Ref Mcce22SmartOfficeVpc
+
+  Mcce22SmartOfficeVpcEndpointSecretsManager:
+    Type: 'AWS::EC2::VPCEndpoint'
+    Properties:
+      VpcEndpointType: Interface
+      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.secretsmanager'
+      PrivateDnsEnabled: true
+      VpcId: !Ref Mcce22SmartOfficeVpc
+      SubnetIds: 
+        - !Ref Mcce22SmartOfficePublicSubnet1
+        - !Ref Mcce22SmartOfficePublicSubnet2       
+      SecurityGroupIds:
+        - !Ref Mcce22SmartOfficeSG
+
+  Mcce22SmartOfficeUsersImageBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: mcce22-smartoffice-images
+      AccessControl: PublicRead
+
+  Mcce22SmartOfficeDatabaseSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: mcce22-smart-office-subnet-group
+      DBSubnetGroupDescription: Subnet Group for MCCE22 SmartOffice database
+      SubnetIds:
+        - !Ref Mcce22SmartOfficePublicSubnet1
+        - !Ref Mcce22SmartOfficePublicSubnet2
+
+  Mcce22SmartOfficeDatabase:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: mcce22-smart-office-db
+      DBInstanceClass: db.t3.small
+      Engine: sqlserver-ex
+      EngineVersion: 15.00.4236.7.v1
+      MasterUsername: !Ref DbAdminUsername
+      MasterUserPassword: !Ref DbAdminPassword
+      AllowMajorVersionUpgrade: false
+      AutoMinorVersionUpgrade: false
+      StorageType: gp2
+      AllocatedStorage: 20
+      LicenseModel: license-included
+      MultiAZ: false
+      MonitoringInterval: 0
+      PubliclyAccessible: true
+      BackupRetentionPeriod: 0
+      DBSubnetGroupName: !Ref Mcce22SmartOfficeDatabaseSubnetGroup
+      VPCSecurityGroups:
+        - !Ref Mcce22SmartOfficeSG
+      Tags:
+        - Key: Name
+          Value: mcce22-smart-office-db
+
+  Mcce22SmartOfficeSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: mcce22-smart-office-secret
+      SecretString: !Sub |         
+          {
+             "ConnectionString": "Server=${Mcce22SmartOfficeDatabase.Endpoint.Address},1433;Database=${DbName};User Id=${DbAdminUsername};Password=${DbAdminPassword};TrustServerCertificate=true;",
+             "SmptConfiguration": {
+               "host": "${SmtpHost}",
+               "port": ${SmtpPort},
+               "username": "${SmtpUsername}",
+               "password": "${SmtpPassword}",
+               "sendername": "${SmtpSendername}"
+             },
+             "StorageConfiguration": {
+               "BucketName": "${Mcce22SmartOfficeUsersImageBucket}",
+               "BaseUrl": "https://${Mcce22SmartOfficeUsersImageBucket}.s3.amazonaws.com"
+             }
+          }
+
+  Mcce22SmartOfficeUsersLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: mcce22-smart-office-user
+      CodeUri: '../Mcce22.SmartOffice.Users'
+      Handler: Mcce22.SmartOffice.Users
+      MemorySize: 256
+      Policies:
+        - AWSLambda_FullAccess
+      Role: arn:aws:iam::064088109127:role/LabRole
+      Runtime: dotnet6
+      Timeout: 30
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /userapi/{proxy+}
+            Method: ANY
+        RootResource:
+          Type: Api
+          Properties:
+            Path: /userapi
+            Method: ANY
+          
+                        
+
