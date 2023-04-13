@@ -2,7 +2,6 @@
 using FluentValidation;
 using Mcce22.SmartOffice.Core.Exceptions;
 using Mcce22.SmartOffice.Management.Entities;
-using Mcce22.SmartOffice.Management.Exceptions;
 using Mcce22.SmartOffice.Management.Models;
 using Mcce22.SmartOffice.Management.Queries;
 using Mcce22.SmartOffice.Management.Services;
@@ -120,9 +119,9 @@ namespace Mcce22.SmartOffice.Management.Managers
         public async Task<BookingModel> CreateBooking(SaveBookingModel model)
         {
             // Validate booking
-            if (model.StartDateTime < DateTime.Now || model.EndDateTime < DateTime.Now)
+            if(model.StartDateTime.Day != model.EndDateTime.Day && model.StartDateTime.Month != model.EndDateTime.Month)
             {
-                throw new ValidationException("Start or end date of booking must not be in the past!");
+                throw new ValidationException("The booking must not span over several days!");
             }
 
             if (model.StartDateTime > model.EndDateTime)

@@ -1,0 +1,154 @@
+[
+    {
+        "height": 43,
+        "left": 33,
+        "roomnumber": "room-001",
+        "top": 16,
+        "width": 24,
+        "workspacenumber": "workpsace-001"
+    },
+    {
+        "height": 43,
+        "left": 59,
+        "roomnumber": "room-001",
+        "top": 16,
+        "width": 24,
+        "workspacenumber": "workpsace-002"
+    },
+    {
+        "height": 43,
+        "left": 33,
+        "roomnumber": "room-001",
+        "top": 86,
+        "width": 24,
+        "workspacenumber": "workpsace-003"
+    },
+    {
+        "height": 43,
+        "left": 59,
+        "roomnumber": "room-001",
+        "top": 86,
+        "width": 24,
+        "workspacenumber": "workpsace-004"
+    },
+    {
+        "height": 43,
+        "left": 150,
+        "roomnumber": "room-001",
+        "top": 16,
+        "width": 24,
+        "workspacenumber": "workpsace-005"
+    },
+    {
+        "height": 43,
+        "left": 176,
+        "roomnumber": "room-001",
+        "top": 16,
+        "width": 24,
+        "workspacenumber": "workpsace-006"
+    },
+    {
+        "height": 43,
+        "left": 150,
+        "roomnumber": "room-001",
+        "top": 86,
+        "width": 24,
+        "workspacenumber": "workpsace-007"
+    },
+    {
+        "height": 43,
+        "left": 33,
+        "roomnumber": "room-002",
+        "top": 198,
+        "width": 24,
+        "workspacenumber": "workpsace-008"
+    },
+    {
+        "height": 43,
+        "left": 59,
+        "roomnumber": "room-002",
+        "top": 198,
+        "width": 24,
+        "workspacenumber": "workpsace-009"
+    },
+    {
+        "height": 43,
+        "left": 33,
+        "roomnumber": "room-002",
+        "top": 268,
+        "width": 24,
+        "workspacenumber": "workpsace-010"
+    },
+    {
+        "height": 43,
+        "left": 59,
+        "roomnumber": "room-002",
+        "top": 268,
+        "width": 24,
+        "workspacenumber": "workpsace-011"
+    },
+    {
+        "height": 43,
+        "left": 150,
+        "roomnumber": "room-002",
+        "top": 198,
+        "width": 24,
+        "workspacenumber": "workpsace-012"
+    },
+    {
+        "height": 43,
+        "left": 150,
+        "roomnumber": "room-002",
+        "top": 268,
+        "width": 24,
+        "workspacenumber": "workpsace-013"
+    },
+    {
+        "height": 43,
+        "left": 176,
+        "roomnumber": "room-002",
+        "top": 268,
+        "width": 24,
+        "workspacenumber": "workpsace-014"
+    },
+    {
+        "height": 43,
+        "left": 249,
+        "roomnumber": "room-003",
+        "top": 268,
+        "width": 24,
+        "workspacenumber": "workpsace-015"
+    },
+    {
+        "height": 43,
+        "left": 275,
+        "roomnumber": "room-003",
+        "top": 268,
+        "width": 24,
+        "workspacenumber": "workpsace-016"
+    },
+    {
+        "height": 43,
+        "left": 339,
+        "roomnumber": "room-003",
+        "top": 268,
+        "width": 24,
+        "workspacenumber": "workpsace-017"
+    },
+    {
+        "height": 43,
+        "left": 314,
+        "roomnumber": "room-003",
+        "top": 197,
+        "width": 24,
+        "workspacenumber": "workpsace-018"
+    },
+    {
+        "height": 43,
+        "left": 341,
+        "roomnumber": "room-003",
+        "top": 197,
+        "width": 24,
+        "workspacenumber": "workpsace-019"
+    }
+]
