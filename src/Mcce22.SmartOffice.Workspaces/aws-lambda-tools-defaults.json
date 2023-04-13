@@ -1,0 +1,9 @@
+{
+    "configuration": "Release",    
+    "profile": "default",
+    "region": "us-east-1",
+    "s3-bucket": "mcce22-smart-office",
+    "s3-prefix": "mcce22-smart-office-workspaces/",
+    "stack-name": "mcce22-smart-office-stack",
+    "template": "serverless.template.json"
+}
