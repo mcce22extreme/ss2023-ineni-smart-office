@@ -83,7 +83,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                     SelectedIndex = 7;
                     break;
                 case NavigationType.SeedData:
-                    SelectedIndex = 8;
+                    SelectedIndex = 9;
                     break;
             }
         }

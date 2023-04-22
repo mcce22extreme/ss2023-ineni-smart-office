@@ -1,42 +1,22 @@
-AWSTemplateFormatVersion: 2010-09-09
-Description: Deploys the MCCE22 Smart Office AWS environment
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Deploys the MCCE22 Smart Office AWS infrastructure
 
 Parameters:
-  DbAdminUsername:
-    Type: String    
-    MinLength: '1'
-    MaxLength: '16'
-    AllowedPattern: '[a-zA-Z0-9]*'
-
-  DbAdminPassword:
-    Type: String
-    NoEcho: true    
-    MinLength: '8'
-    MaxLength: '41'
-    AllowedPattern: '[a-zA-Z0-9]*'
-    ConstraintDescription: must contain only alphanumeric characters.
-
-  DbName:
-    Type: String
-    Default: smartofficedb
 
   SmtpHost:
-     Type: String
-     Default: smtp.gmail.com
-
+    Type: String
+    Default: smtp.gmail.com
   SmtpPort:
     Type: Number
     Default: 587
-
   SmtpUsername:
     Type: String
-  
   SmtpPassword:
     Type: String
     NoEcho: true
-
   SmtpSendername:
-    Type: String    
+    Type: String
 
 Resources:
 
@@ -161,75 +141,168 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
     Properties:
-      BucketName: mcce22-smartoffice-images
+      BucketName: mcce22-smart-office-images
       AccessControl: PublicRead
 
-  Mcce22SmartOfficeDatabaseSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
+  Mcce22SmartOfficeUsersImageBucketPolicy:
+    Type: AWS::S3::BucketPolicy
     Properties:
-      DBSubnetGroupName: mcce22-smart-office-subnet-group
-      DBSubnetGroupDescription: Subnet Group for MCCE22 SmartOffice database
-      SubnetIds:
-        - !Ref Mcce22SmartOfficePublicSubnet1
-        - !Ref Mcce22SmartOfficePublicSubnet2
+      Bucket: !Ref Mcce22SmartOfficeUsersImageBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - 's3:GetObject'
+            Effect: Allow
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref Mcce22SmartOfficeUsersImageBucket
+                - /*
+            Principal: '*'    
 
-  Mcce22SmartOfficeDatabase:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      DBInstanceIdentifier: mcce22-smart-office-db
-      DBInstanceClass: db.t3.small
-      Engine: sqlserver-ex
-      EngineVersion: 15.00.4236.7.v1
-      MasterUsername: !Ref DbAdminUsername
-      MasterUserPassword: !Ref DbAdminPassword
-      AllowMajorVersionUpgrade: false
-      AutoMinorVersionUpgrade: false
-      StorageType: gp2
-      AllocatedStorage: 20
-      LicenseModel: license-included
-      MultiAZ: false
-      MonitoringInterval: 0
-      PubliclyAccessible: true
-      BackupRetentionPeriod: 0
-      DBSubnetGroupName: !Ref Mcce22SmartOfficeDatabaseSubnetGroup
-      VPCSecurityGroups:
-        - !Ref Mcce22SmartOfficeSG
-      Tags:
-        - Key: Name
-          Value: mcce22-smart-office-db
+  # Mcce22SmartOfficeUsersSecret:
+  #   Type: AWS::SecretsManager::Secret
+  #   Properties:
+  #     Name: mcce22-smart-office
+  #     SecretString: !Sub |         
+  #       {
+  #         "BucketName": "${Mcce22SmartOfficeUsersImageBucket}",  
+  #         "SmptConfiguration": {
+  #           "host": "${SmtpHost}",
+  #           "port": ${SmtpPort},
+  #           "username": "${SmtpUsername}",
+  #           "password": "${SmtpPassword}",
+  #           "sendername": "${SmtpSendername}"
+  #         }  
+  #       }
 
-  Mcce22SmartOfficeSecret:
-    Type: AWS::SecretsManager::Secret
+  Mcce22SmartOfficeUsersTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete
     Properties:
-      Name: mcce22-smart-office-secret
-      SecretString: !Sub |         
-          {
-             "ConnectionString": "Server=${Mcce22SmartOfficeDatabase.Endpoint.Address},1433;Database=${DbName};User Id=${DbAdminUsername};Password=${DbAdminPassword};TrustServerCertificate=true;",
-             "SmptConfiguration": {
-               "host": "${SmtpHost}",
-               "port": ${SmtpPort},
-               "username": "${SmtpUsername}",
-               "password": "${SmtpPassword}",
-               "sendername": "${SmtpSendername}"
-             },
-             "StorageConfiguration": {
-               "BucketName": "${Mcce22SmartOfficeUsersImageBucket}",
-               "BaseUrl": "https://${Mcce22SmartOfficeUsersImageBucket}.s3.amazonaws.com"
-             }
-          }
+      TableName: "mcce22-smart-office-users"
+      AttributeDefinitions: 
+        - AttributeName: "Id"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+
+  Mcce22SmartOfficeWorkspacesTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete
+    Properties:
+      TableName: "mcce22-smart-office-workspaces"
+      AttributeDefinitions: 
+        - AttributeName: "Id"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"   
+
+  Mcce22SmartOfficeWorkspaceConfigurationsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete
+    Properties:
+      TableName: "mcce22-smart-office-workspace-configurations"
+      AttributeDefinitions: 
+        - AttributeName: "Id"
+          AttributeType: "S"
+        - AttributeName: "WorkspaceId" 
+          AttributeType: "S"              
+        - AttributeName: "UserId"
+          AttributeType: "S"          
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      GlobalSecondaryIndexes:
+        - IndexName: WorkspaceId-index
+          KeySchema:
+            - AttributeName: "WorkspaceId"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+        - IndexName: UserId-index
+          KeySchema:
+            - AttributeName: "UserId"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"                        
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+
+  Mcce22SmartOfficeWorkspaceDataTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete
+    Properties:
+      TableName: "mcce22-smart-office-workspace-data"
+      AttributeDefinitions: 
+        - AttributeName: "Id"
+          AttributeType: "S"
+        - AttributeName: "Timestamp" 
+          AttributeType: "S"         
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      GlobalSecondaryIndexes:
+        - IndexName: Timestamp-index
+          KeySchema:
+            - AttributeName: "Timestamp"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+
+  Mcce22SmartOfficeBookingsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete
+    Properties:
+      TableName: "mcce22-smart-office-bookings"
+      AttributeDefinitions: 
+        - AttributeName: "Id"
+          AttributeType: "S"
+        - AttributeName: "StartDate" 
+          AttributeType: "S"         
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"          
+      GlobalSecondaryIndexes:
+        - IndexName: StartDate-index
+          KeySchema:
+            - AttributeName: "StartDate"
+              KeyType: "HASH"    
+          Projection:
+            ProjectionType: "ALL"        
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
 
   Mcce22SmartOfficeUsersLambda:
-    Type: AWS::Lambda::Function
+    Type: AWS::Serverless::Function
     Properties:
-      FunctionName: mcce22-smart-office-user
-      CodeUri: '../Mcce22.SmartOffice.Users'
-      Handler: Mcce22.SmartOffice.Users
-      MemorySize: 256
-      Policies:
-        - AWSLambda_FullAccess
-      Role: arn:aws:iam::064088109127:role/LabRole
-      Runtime: dotnet6
-      Timeout: 30
+      CodeUri: ../Mcce22.SmartOffice.Users/
       Events:
         ProxyResource:
           Type: Api
@@ -241,6 +314,59 @@ Resources:
           Properties:
             Path: /userapi
             Method: ANY
-          
-                        
+      FunctionName: mcce22-smart-office-users
+      Handler: Mcce22.SmartOffice.Users
+      MemorySize: 256
+      Policies:
+        - AWSLambda_FullAccess
+      Role: arn:aws:iam::064088109127:role/LabRole
+      Runtime: dotnet6
+      Timeout: 30
 
+  Mcce22SmartOfficeWorkspacesLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.Workspaces/
+        Events:
+          ProxyResource:
+            Type: Api
+            Properties:
+              Path: /workspaceapi/{proxy+}
+              Method: ANY
+          RootResource:
+            Type: Api
+            Properties:
+              Path: /workspaceapi
+              Method: ANY
+        FunctionName: mcce22-smart-office-workspaces
+        Handler: Mcce22.SmartOffice.Workspaces
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::064088109127:role/LabRole
+        Runtime: dotnet6
+        Timeout: 30
+
+  Mcce22SmartOfficeBookingsLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.Bookings/
+        Events:
+          ProxyResource:
+            Type: Api
+            Properties:
+              Path: /bookingapi/{proxy+}
+              Method: ANY
+          RootResource:
+            Type: Api
+            Properties:
+              Path: /bookingapi
+              Method: ANY
+        FunctionName: mcce22-smart-office-bookings
+        Handler: Mcce22.SmartOffice.Bookings
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::064088109127:role/LabRole
+        Runtime: dotnet6
+        Timeout: 30         

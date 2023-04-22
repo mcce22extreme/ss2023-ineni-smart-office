@@ -2,7 +2,7 @@
 {
     public class WorkspaceDataQuery
     {
-        public int WorkspaceId { get; set; }
+        public string WorkspaceId { get; set; }
 
         public DateTime? StartDate { get; set; }
 

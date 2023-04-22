@@ -1,17 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Mcce22.SmartOffice.Core.Entities;
+﻿using Amazon.DynamoDBv2.DataModel;
 
 namespace Mcce22.SmartOffice.Workspaces.Entities
 {
-    public class WorkspaceConfiguration : EntityBase
+    [DynamoDBTable("mcce22-smart-office-workspace-configurations")]
+    public class WorkspaceConfiguration
     {
-        [Required]
+        [DynamoDBHashKey()]
+        public string Id { get; set; }
+
+        [DynamoDBProperty]
         public long DeskHeight { get; set; }
 
-        [Required]
-        public int UserId { get; set; }
+        [DynamoDBProperty]
+        public string UserId { get; set; }
 
-        [Required]
-        public int WorkspaceId { get; set; }
+        [DynamoDBProperty]
+        public string WorkspaceId { get; set; }
     }
 }

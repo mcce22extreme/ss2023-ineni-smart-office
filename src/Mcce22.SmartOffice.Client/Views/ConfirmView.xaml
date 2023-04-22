@@ -24,12 +24,12 @@
             <Button
                 Width="100"
                 Margin="5"
+                Background="DarkRed"
                 Command="{Binding SaveCommand}"
-                Content="Ok" />
+                Content="Confirm" />
             <Button
                 Width="100"
                 Margin="5"
-                Background="Red"
                 Command="{Binding CancelCommand}"
                 Content="Cancel" />
         </StackPanel>

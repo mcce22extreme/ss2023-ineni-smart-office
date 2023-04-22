@@ -9,7 +9,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
     {
         private readonly IUserManager _userManager;
 
-        public int UserId { get; }
+        public string UserId { get; }
 
         private string _firstName;
         public string FirstName

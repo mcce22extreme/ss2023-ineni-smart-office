@@ -13,8 +13,8 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         private readonly IWorkspaceManager _workspaceManager;
         private readonly IUserManager _userManager;
 
-        private readonly int _workspaceId;
-        private readonly int _userId;
+        private readonly string _workspaceId;
+        private readonly string _userId;
 
         private long _deskHeight;
         public long DeskHeight
@@ -58,7 +58,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             set { SetProperty(ref _selectedUser, value); }
         }
 
-        public int UserWorkspaceId { get; }
+        public string UserWorkspaceId { get; }
 
         public UserWorkspaceDetailViewModel(
             IUserWorkspaceManager userWorkspaceManager,
@@ -103,8 +103,8 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                 Workspaces = new ObservableCollection<WorkspaceModel>(workspaces);
                 Users = new ObservableCollection<UserModel>(users);
 
-                SelectedWorkspace = _workspaceId > 0 ? workspaces.FirstOrDefault(x => x.Id == _workspaceId) : null;
-                SelectedUser = _userId > 0 ? users.FirstOrDefault(x => x.Id == _userId) : null;
+                SelectedWorkspace = string.IsNullOrEmpty(_workspaceId) ? null : workspaces.FirstOrDefault(x => x.Id == _workspaceId);
+                SelectedUser = string.IsNullOrEmpty(_userId) ? null : users.FirstOrDefault(x => x.Id == _userId);
             }
             finally
             {

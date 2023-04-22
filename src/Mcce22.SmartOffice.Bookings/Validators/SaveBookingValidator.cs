@@ -7,9 +7,19 @@ namespace Mcce22.SmartOffice.Bookings.Validators
     {
         public SaveBookingValidator()
         {
-            RuleFor(x => x.UserId).GreaterThan(0);
+            RuleFor(x => x.UserId).NotEmpty();
 
-            RuleFor(x => x.WorkspaceId).GreaterThan(0);
+            RuleFor(x => x.WorkspaceId).NotEmpty();
+
+            RuleFor(x => x.Firstname).NotEmpty();
+
+            RuleFor(x => x.Lastname).NotEmpty();
+
+            RuleFor(x => x.Email).NotEmpty();
+
+            RuleFor(x => x.WorkspaceNumber).NotEmpty();
+
+            RuleFor(x => x.RoomNumber).NotEmpty();
         }
     }
 }

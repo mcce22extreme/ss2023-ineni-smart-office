@@ -9,7 +9,7 @@ namespace Mcce22.SmartOffice.Client.Managers
 
         Task<UserModel> Save(UserModel user);
 
-        Task Delete(int userId);
+        Task Delete(string userId);
     }
 
     public class UserManager : ManagerBase<UserModel>, IUserManager

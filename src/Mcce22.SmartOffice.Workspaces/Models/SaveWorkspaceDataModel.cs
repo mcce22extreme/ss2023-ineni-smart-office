@@ -5,7 +5,7 @@ namespace Mcce22.SmartOffice.Workspaces.Models
     public class SaveWorkspaceDataModel
     {
         [Required]
-        public int WorkspaceId { get; set; }
+        public string WorkspaceId { get; set; }
 
         public DateTime? Timestamp { get; set; }
 

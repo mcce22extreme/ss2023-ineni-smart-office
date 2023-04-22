@@ -1,7 +1,7 @@
-﻿using Mcce22.SmartOffice.Bookings.Managers;
+﻿using Amazon.DynamoDBv2;
+using Mcce22.SmartOffice.Bookings.Managers;
 using Mcce22.SmartOffice.Core;
 using Mcce22.SmartOffice.Workspaces.Managers;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -16,7 +16,6 @@ namespace Mcce22.SmartOffice.Workspaces
             await base.ConfigureBuilder(builder);
 
             var appSettings = Configuration.Get<AppSettings>();
-            await appSettings.LoadConfigFromAWSSecretsManager();
 
             Log.Debug("Application Configuration:");
             Log.Debug(JsonConvert.SerializeObject(appSettings, Formatting.Indented, new JsonSerializerSettings
@@ -31,27 +30,15 @@ namespace Mcce22.SmartOffice.Workspaces
             builder.WebHost.UseUrls(appSettings.BaseAddress);
 #endif
             //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("workspacedb"));
-            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(appSettings.ConnectionString));
+            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(appSettings.ConnectionString));
+
+            builder.Services.AddScoped<IAmazonDynamoDB>(s => new AmazonDynamoDBClient());
 
             builder.Services.AddScoped<IWorkspaceManager, WorkspaceManager>();
 
             builder.Services.AddScoped<IWorkspaceConfigurationManager, WorkspaceConfigurationManager>();
 
             builder.Services.AddScoped<IWorkspaceDataManager, WorkspaceDataManager>();
-        }
-
-        protected override async Task ConfigureApp(WebApplication app)
-        {
-            await base.ConfigureApp(app);
-
-            using var scope = app.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            // Check if we can migrate database automatically
-            if (dbContext.Database.IsRelational())
-            {
-                dbContext.Database.Migrate();
-            }
         }
     }
 }

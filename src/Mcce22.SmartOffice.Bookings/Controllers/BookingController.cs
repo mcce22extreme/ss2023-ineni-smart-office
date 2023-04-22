@@ -22,7 +22,7 @@ namespace Mcce22.SmartOffice.Bookings.Controllers
         }
 
         [HttpGet("{bookingId}")]
-        public async Task<BookingModel> GetBooking(int bookingId)
+        public async Task<BookingModel> GetBooking(string bookingId)
         {
             return await _bookingManager.GetBooking(bookingId);
         }
@@ -34,21 +34,21 @@ namespace Mcce22.SmartOffice.Bookings.Controllers
         }
 
         [HttpDelete("{bookingId}")]
-        public async Task DeleteBooking(int bookingId)
+        public async Task DeleteBooking(string bookingId)
         {
             await _bookingManager.DeleteBooking(bookingId);
         }
 
-        [HttpPost("activate/{bookingid}")]
-        public async Task<BookingModel> ActivateBooking(int bookingId)
-        {
-            return await _bookingManager.ActivateBooking(bookingId);
-        }
+        //[HttpPost("activate/{bookingid}")]
+        //public async Task<BookingModel> ActivateBooking(string bookingId)
+        //{
+        //    return await _bookingManager.ActivateBooking(bookingId);
+        //}
 
-        [HttpPost("process")]
-        public async Task ProcessBookings()
-        {
-            await _bookingManager.ProcessBookings();
-        }
+        //[HttpPost("process")]
+        //public async Task ProcessBookings()
+        //{
+        //    await _bookingManager.ProcessBookings();
+        //}
     }
 }

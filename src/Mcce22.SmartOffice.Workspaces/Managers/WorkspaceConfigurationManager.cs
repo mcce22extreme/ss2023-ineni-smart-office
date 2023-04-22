@@ -1,58 +1,71 @@
-﻿using AutoMapper;
+﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using AutoMapper;
 using Mcce22.SmartOffice.Core.Exceptions;
-using Mcce22.SmartOffice.Workspaces;
+using Mcce22.SmartOffice.Core.Generators;
 using Mcce22.SmartOffice.Workspaces.Entities;
 using Mcce22.SmartOffice.Workspaces.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Mcce22.SmartOffice.Bookings.Managers
 {
     public interface IWorkspaceConfigurationManager
     {
-        Task<WorkspaceConfigurationModel[]> GetWorkspaceConfigurations(int userId, int workspaceId);
+        Task<WorkspaceConfigurationModel[]> GetWorkspaceConfigurations(string userId, string workspaceId);
 
-        Task<WorkspaceConfigurationModel> GetWorkspaceConfiguration(int configurationId);
+        Task<WorkspaceConfigurationModel> GetWorkspaceConfiguration(string configurationId);
 
         Task<WorkspaceConfigurationModel> CreateWorkspaceConfiguration(SaveWorkspaceConfigurationModel model);
 
-        Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(int configurationId, SaveWorkspaceConfigurationModel model);
+        Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(string configurationId, SaveWorkspaceConfigurationModel model);
 
-        Task DeleteWorkspaceConfiguration(int configurationId);
+        Task DeleteWorkspaceConfiguration(string configurationId);
+
+        Task DeleteWorkspaceConfigurationsForUser(string userId);
+
+        Task DeleteWorkspaceConfigurationsForWorkspace(string workspaceId);
     }
 
     public class WorkspaceConfigurationManager : IWorkspaceConfigurationManager
     {
-        private readonly AppDbContext _dbContext;
+        private readonly IAmazonDynamoDB _dynamoDbClient;
         private readonly IMapper _mapper;
+        private readonly IIdGenerator _idGenerator;
 
-        public WorkspaceConfigurationManager(AppDbContext dbContext, IMapper mapper)
+        public WorkspaceConfigurationManager(IAmazonDynamoDB dynamoDbClient, IMapper mapper, IIdGenerator idGenerator)
         {
-            _dbContext = dbContext;
+            _dynamoDbClient = dynamoDbClient;
             _mapper = mapper;
+            _idGenerator = idGenerator;
         }
 
-        public async Task<WorkspaceConfigurationModel[]> GetWorkspaceConfigurations(int userId, int workspaceId)
+        public async Task<WorkspaceConfigurationModel[]> GetWorkspaceConfigurations(string userId, string workspaceId)
         {
-            var configurationsQuery = _dbContext.WorkspaceConfigurations.AsQueryable();
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            if (userId > 0)
+            var workspaceConfigurations = await context
+                .ScanAsync<WorkspaceConfiguration>(Array.Empty<ScanCondition>())
+                .GetRemainingAsync();
+
+            var filteredResult = workspaceConfigurations.AsQueryable();
+
+            if (!string.IsNullOrEmpty(userId))
             {
-                configurationsQuery = configurationsQuery.Where(x => x.UserId == userId);
+                filteredResult = filteredResult.Where(x => x.UserId == userId);
             }
 
-            if (workspaceId > 0)
+            if (!string.IsNullOrEmpty(workspaceId))
             {
-                configurationsQuery = configurationsQuery.Where(x => x.WorkspaceId == workspaceId);
+                filteredResult = filteredResult.Where(y => y.WorkspaceId == workspaceId);
             }
 
-            var configurations = await configurationsQuery.ToListAsync();
-
-            return configurations.Select(_mapper.Map<WorkspaceConfigurationModel>).ToArray();
+            return filteredResult.Select(_mapper.Map<WorkspaceConfigurationModel>).ToArray();
         }
 
-        public async Task<WorkspaceConfigurationModel> GetWorkspaceConfiguration(int configurationId)
+        public async Task<WorkspaceConfigurationModel> GetWorkspaceConfiguration(string configurationId)
         {
-            var configuration = await _dbContext.WorkspaceConfigurations.FirstOrDefaultAsync(x => x.Id == configurationId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
+            var configuration = await context.LoadAsync<WorkspaceConfiguration>(configurationId);
 
             if (configuration == null)
             {
@@ -64,18 +77,22 @@ namespace Mcce22.SmartOffice.Bookings.Managers
 
         public async Task<WorkspaceConfigurationModel> CreateWorkspaceConfiguration(SaveWorkspaceConfigurationModel model)
         {
-            var user = _mapper.Map<WorkspaceConfiguration>(model);
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            await _dbContext.WorkspaceConfigurations.AddAsync(user);
+            var configuration = _mapper.Map<WorkspaceConfiguration>(model);
 
-            await _dbContext.SaveChangesAsync();
+            configuration.Id = _idGenerator.GenerateId();
 
-            return await GetWorkspaceConfiguration(user.Id);
+            await context.SaveAsync(configuration);
+
+            return await GetWorkspaceConfiguration(configuration.Id);
         }
 
-        public async Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(int configurationId, SaveWorkspaceConfigurationModel model)
+        public async Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(string configurationId, SaveWorkspaceConfigurationModel model)
         {
-            var configuration = await _dbContext.WorkspaceConfigurations.FirstOrDefaultAsync(x => x.Id == configurationId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
+            var configuration = await context.LoadAsync<WorkspaceConfiguration>(configurationId);
 
             if (configuration == null)
             {
@@ -84,23 +101,36 @@ namespace Mcce22.SmartOffice.Bookings.Managers
 
             _mapper.Map(model, configuration);
 
-            await _dbContext.SaveChangesAsync();
+            await context.SaveAsync(configuration);
 
             return await GetWorkspaceConfiguration(configurationId);
         }
 
-        public async Task DeleteWorkspaceConfiguration(int configurationId)
+        public async Task DeleteWorkspaceConfiguration(string configurationId)
         {
-            var configuration = await _dbContext.WorkspaceConfigurations.FirstOrDefaultAsync(x => x.Id == configurationId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            if (configuration == null)
+            await context.DeleteAsync<WorkspaceConfiguration>(configurationId);
+        }
+
+        public async Task DeleteWorkspaceConfigurationsForUser(string userId)
+        {
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
+            await context.DeleteAsync<WorkspaceConfiguration>(userId, new DynamoDBOperationConfig
             {
-                throw new NotFoundException($"Could not find configuration with id '{configurationId}'!");
-            }
+                IndexName = "UserId-index"
+            });
+        }
 
-            _dbContext.WorkspaceConfigurations.Remove(configuration);
+        public async Task DeleteWorkspaceConfigurationsForWorkspace(string workspaceId)
+        {
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            await _dbContext.SaveChangesAsync();
+            await context.DeleteAsync<WorkspaceConfiguration>(workspaceId, new DynamoDBOperationConfig
+            {
+                IndexName = "WorkspaceId-index"
+            });
         }
     }
 }

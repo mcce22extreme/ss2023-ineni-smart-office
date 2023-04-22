@@ -1,9 +1,9 @@
 ﻿namespace Mcce22.SmartOffice.Workspaces.Queries
 {
     public class WorkspaceConfigurationQuery
-    {   
-        public int UserId { get; set; }
-        
-        public int WorkspaceId { get; set; }
+    {
+        public string UserId { get; set; }
+
+        public string WorkspaceId { get; set; }
     }
 }

@@ -1,6 +1,7 @@
-﻿using Mcce22.SmartOffice.Core;
+﻿using Amazon.DynamoDBv2;
+using Amazon.S3;
+using Mcce22.SmartOffice.Core;
 using Mcce22.SmartOffice.Users.Managers;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -17,6 +18,8 @@ namespace Mcce22.SmartOffice.Users
             var appSettings = Configuration.Get<AppSettings>();
             await appSettings.LoadConfigFromAWSSecretsManager();
 
+            builder.Services.AddSingleton<IAppSettings>(s => appSettings);
+
             Log.Debug("Application Configuration:");
             Log.Debug(JsonConvert.SerializeObject(appSettings, Formatting.Indented, new JsonSerializerSettings
             {
@@ -29,28 +32,16 @@ namespace Mcce22.SmartOffice.Users
             // Configure urls (only for local debugging)
             builder.WebHost.UseUrls(appSettings.BaseAddress);
 #endif
-            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("usersdb"));
-            builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(appSettings.ConnectionString));
 
-            builder.Services.AddSingleton(appSettings.StorageConfiguration);
+            builder.Services.AddSingleton(appSettings);
+
+            builder.Services.AddScoped<IAmazonDynamoDB>(s => new AmazonDynamoDBClient());
+
+            builder.Services.AddScoped<IAmazonS3>(s => new AmazonS3Client());
 
             builder.Services.AddScoped<IUserManager, UserManager>();
 
             builder.Services.AddScoped<IUserImageManager, UserImageManager>();
-        }
-
-        protected override async Task ConfigureApp(WebApplication app)
-        {
-            await base.ConfigureApp(app);
-
-            using var scope = app.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            // Check if we can migrate database automatically
-            if (dbContext.Database.IsRelational())
-            {
-                dbContext.Database.Migrate();
-            }
         }
     }
 }

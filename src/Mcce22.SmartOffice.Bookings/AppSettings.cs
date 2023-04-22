@@ -1,46 +1,37 @@
-﻿using Amazon.SecretsManager;
-using Amazon.SecretsManager.Model;
-using Newtonsoft.Json;
-using Serilog;
-
-namespace Mcce22.SmartOffice.Bookings
+﻿namespace Mcce22.SmartOffice.Bookings
 {
     public class AppSettings
     {
         public string BaseAddress { get; set; }
 
-        public string ConnectionString { get; set; }
+        //public SmptConfiguration SmptConfiguration { get; set; } = new SmptConfiguration();
 
-        public string SecretId { get; set; }
+        //public async Task LoadConfigFromAWSSecretsManager()
+        //{
+        //    if (!string.IsNullOrEmpty(SecretId))
+        //    {
+        //        using var client = new AmazonSecretsManagerClient();
 
-        public SmptConfiguration SmptConfiguration { get; set; } = new SmptConfiguration();
+        //        var request = new GetSecretValueRequest
+        //        {
+        //            SecretId = SecretId
+        //        };
 
-        public async Task LoadConfigFromAWSSecretsManager()
-        {
-            if (!string.IsNullOrEmpty(SecretId))
-            {
-                using var client = new AmazonSecretsManagerClient();
+        //        try
+        //        {
+        //            var response = await client.GetSecretValueAsync(request);
 
-                var request = new GetSecretValueRequest
-                {
-                    SecretId = SecretId
-                };
+        //            var settings = JsonConvert.DeserializeObject<AppSettings>(response.SecretString);
 
-                try
-                {
-                    var response = await client.GetSecretValueAsync(request);
-
-                    var settings = JsonConvert.DeserializeObject<AppSettings>(response.SecretString);
-
-                    ConnectionString = settings.ConnectionString;
-                    SmptConfiguration = settings.SmptConfiguration;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, ex.Message);
-                }
-            }
-        }
+        //            ConnectionString = settings.ConnectionString;
+        //            SmptConfiguration = settings.SmptConfiguration;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Log.Error(ex, ex.Message);
+        //        }
+        //    }
+        //}
     }
 
     public class SmptConfiguration

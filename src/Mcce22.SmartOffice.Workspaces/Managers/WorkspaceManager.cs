@@ -1,9 +1,10 @@
-﻿using AutoMapper;
-using Mcce22.SmartOffice.Bookings.Managers;
+﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using AutoMapper;
 using Mcce22.SmartOffice.Core.Exceptions;
+using Mcce22.SmartOffice.Core.Generators;
 using Mcce22.SmartOffice.Workspaces.Entities;
 using Mcce22.SmartOffice.Workspaces.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Mcce22.SmartOffice.Workspaces.Managers
 {
@@ -11,40 +12,47 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
     {
         Task<WorkspaceModel[]> GetWorkspaces();
 
-        Task<WorkspaceModel> GetWorkspace(int workspaceId);
+        Task<WorkspaceModel> GetWorkspace(string workspaceId);
 
         Task<WorkspaceModel> CreateWorkspace(SaveWorkspaceModel model);
 
-        Task<WorkspaceModel> UpdateWorkspace(int workspaceId, SaveWorkspaceModel model);
+        Task<WorkspaceModel> UpdateWorkspace(string workspaceId, SaveWorkspaceModel model);
 
-        Task DeleteWorkspace(int workspaceId);
+        Task DeleteWorkspace(string workspaceId);
     }
 
     public class WorkspaceManager : IWorkspaceManager
     {
-        private readonly AppDbContext _dbContext;
+        private readonly IAmazonDynamoDB _dynamoDbClient;
         private readonly IMapper _mapper;
-        private readonly IWorkspaceConfigurationManager _workspaceConfigurationManager;
+        private readonly IIdGenerator _idGenerator;
 
-        public WorkspaceManager(AppDbContext dbContext, IMapper mapper, IWorkspaceConfigurationManager workspaceConfigurationManager)
+        public WorkspaceManager(IAmazonDynamoDB dynamoDbClient, IMapper mapper, IIdGenerator idGenerator)
         {
-            _dbContext = dbContext;
+            _dynamoDbClient = dynamoDbClient;
             _mapper = mapper;
-            _workspaceConfigurationManager = workspaceConfigurationManager;
+            _idGenerator = idGenerator;
         }
 
         public async Task<WorkspaceModel[]> GetWorkspaces()
         {
-            var workspaces = await _dbContext.Workspaces
-                .OrderBy(x => x.WorkspaceNumber)
-                .ToListAsync();
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            return workspaces.Select(_mapper.Map<WorkspaceModel>).ToArray();
+            var workspaces = await context
+                .ScanAsync<Workspace>(Array.Empty<ScanCondition>())
+                .GetRemainingAsync();
+
+            return workspaces
+                .OrderBy(x => x.WorkspaceNumber)
+                .Select(_mapper.Map<WorkspaceModel>)
+                .ToArray();
         }
 
-        public async Task<WorkspaceModel> GetWorkspace(int workspaceId)
+        public async Task<WorkspaceModel> GetWorkspace(string workspaceId)
         {
-            var workspace = await _dbContext.Workspaces.FirstOrDefaultAsync(x => x.Id == workspaceId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
+            var workspace = await context.LoadAsync<Workspace>(workspaceId);
 
             if (workspace == null)
             {
@@ -56,18 +64,22 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
 
         public async Task<WorkspaceModel> CreateWorkspace(SaveWorkspaceModel model)
         {
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
             var workspace = _mapper.Map<Workspace>(model);
 
-            await _dbContext.Workspaces.AddAsync(workspace);
+            workspace.Id = _idGenerator.GenerateId();
 
-            await _dbContext.SaveChangesAsync();
+            await context.SaveAsync(workspace);
 
             return await GetWorkspace(workspace.Id);
         }
 
-        public async Task<WorkspaceModel> UpdateWorkspace(int workspaceId, SaveWorkspaceModel model)
+        public async Task<WorkspaceModel> UpdateWorkspace(string workspaceId, SaveWorkspaceModel model)
         {
-            var workspace = await _dbContext.Workspaces.FirstOrDefaultAsync(x => x.Id == workspaceId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
+            var workspace = await context.LoadAsync<Workspace>(workspaceId);
 
             if (workspace == null)
             {
@@ -76,30 +88,16 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
 
             _mapper.Map(model, workspace);
 
-            await _dbContext.SaveChangesAsync();
+            await context.SaveAsync(workspace);
 
             return await GetWorkspace(workspaceId);
         }
 
-        public async Task DeleteWorkspace(int workspaceId)
+        public async Task DeleteWorkspace(string workspaceId)
         {
-            var workspace = await _dbContext.Workspaces.FirstOrDefaultAsync(x => x.Id == workspaceId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            if (workspace == null)
-            {
-                throw new NotFoundException($"Could not find workspace with id '{workspaceId}'!");
-            }
-
-            var configurations = _dbContext.WorkspaceConfigurations.Where(x => x.WorkspaceId == workspaceId).ToList();
-
-            _dbContext.Workspaces.Remove(workspace);
-
-            foreach (var configuration in configurations)
-            {
-                _dbContext.WorkspaceConfigurations.Remove(configuration);
-            }
-
-            await _dbContext.SaveChangesAsync();
+            await context.DeleteAsync<Workspace>(workspaceId);
         }
     }
 }

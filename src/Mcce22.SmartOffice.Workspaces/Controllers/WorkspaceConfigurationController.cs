@@ -23,7 +23,7 @@ namespace Mcce22.SmartOffice.Workspaces.Controllers
         }
 
         [HttpGet("{configurationId}")]
-        public async Task<WorkspaceConfigurationModel> GetWorkspaceConfiguration(int configurationId)
+        public async Task<WorkspaceConfigurationModel> GetWorkspaceConfiguration(string configurationId)
         {
             return await _configurationManager.GetWorkspaceConfiguration(configurationId);
         }
@@ -35,13 +35,13 @@ namespace Mcce22.SmartOffice.Workspaces.Controllers
         }
 
         [HttpPut("{configurationId}")]
-        public async Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(int configurationId, [FromBody] SaveWorkspaceConfigurationModel model)
+        public async Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(string configurationId, [FromBody] SaveWorkspaceConfigurationModel model)
         {
             return await _configurationManager.UpdateWorkspaceConfiguration(configurationId, model);
         }
 
         [HttpDelete("{configurationId}")]
-        public async Task DeleteWorkspaceConfiguration(int configurationId)
+        public async Task DeleteWorkspaceConfiguration(string configurationId)
         {
             await _configurationManager.DeleteWorkspaceConfiguration(configurationId);
         }

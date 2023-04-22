@@ -2,13 +2,13 @@
 {
     public class UserImageModel : IModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string ResourceUrl { get; set; }
 
         public string FileName { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public bool HasContent { get; set; }
     }

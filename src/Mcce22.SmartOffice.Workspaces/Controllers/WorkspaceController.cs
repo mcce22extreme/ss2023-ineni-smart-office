@@ -1,4 +1,5 @@
-﻿using Mcce22.SmartOffice.Workspaces.Managers;
+﻿using Mcce22.SmartOffice.Bookings.Managers;
+using Mcce22.SmartOffice.Workspaces.Managers;
 using Mcce22.SmartOffice.Workspaces.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace Mcce22.SmartOffice.Workspaces.Controllers
     public class WorkspaceController : ControllerBase
     {
         private readonly IWorkspaceManager _workspaceManager;
+        private readonly IWorkspaceConfigurationManager _configurationManager;
 
-        public WorkspaceController(IWorkspaceManager workspaceManager)
+        public WorkspaceController(IWorkspaceManager workspaceManager, IWorkspaceConfigurationManager configurationManager)
         {
             _workspaceManager = workspaceManager;
+            _configurationManager = configurationManager;
         }
 
         [HttpGet]
@@ -22,7 +25,7 @@ namespace Mcce22.SmartOffice.Workspaces.Controllers
         }
 
         [HttpGet("{workspaceId}")]
-        public async Task<WorkspaceModel> GetWorkspace(int workspaceId)
+        public async Task<WorkspaceModel> GetWorkspace(string workspaceId)
         {
             return await _workspaceManager.GetWorkspace(workspaceId);
         }
@@ -34,15 +37,16 @@ namespace Mcce22.SmartOffice.Workspaces.Controllers
         }
 
         [HttpPut("{workspaceId}")]
-        public async Task<WorkspaceModel> UpdateWorkspace(int workspaceId, [FromBody] SaveWorkspaceModel model)
+        public async Task<WorkspaceModel> UpdateWorkspace(string workspaceId, [FromBody] SaveWorkspaceModel model)
         {
             return await _workspaceManager.UpdateWorkspace(workspaceId, model);
         }
 
         [HttpDelete("{workspaceId}")]
-        public async Task DeleteWorkspace(int workspaceId)
+        public async Task DeleteWorkspace(string workspaceId)
         {
             await _workspaceManager.DeleteWorkspace(workspaceId);
+            await _configurationManager.DeleteWorkspaceConfigurationsForWorkspace(workspaceId);
         }
     }
 }

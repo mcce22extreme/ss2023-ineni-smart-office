@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.IO;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using Mcce22.SmartOffice.Client.Managers;
@@ -77,15 +75,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         protected override async Task OnSave()
         {
-            var item = await _userImageManager.Save(new UserImageModel
-            {
-                FileName = Path.GetFileName(FilePath),
-                UserId = SelectedUser.Id
-            });
-
-            using var fs = new FileStream(FilePath, FileMode.Open, FileAccess.Read);
-
-            await _userImageManager.StoreContent(item.Id, fs);
+            await _userImageManager.Save(SelectedUser.Id, FilePath);
         }
     }
 }

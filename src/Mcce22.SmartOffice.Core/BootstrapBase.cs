@@ -2,6 +2,7 @@
 using FluentValidation;
 using Mcce22.SmartOffice.Core.Attributes;
 using Mcce22.SmartOffice.Core.Common;
+using Mcce22.SmartOffice.Core.Generators;
 using Mcce22.SmartOffice.Core.Handlers;
 using Mcce22.SmartOffice.Core.Providers;
 using Microsoft.AspNetCore.Builder;
@@ -74,6 +75,8 @@ namespace Mcce22.SmartOffice.Core
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddSingleton<IAppInfo>(appInfo);
+
+            builder.Services.AddSingleton<IIdGenerator, IdGenerator>();
 
             // Configure dependency injection
             builder.Services.AddSingleton<IAppInfo>(appInfo);

@@ -29,7 +29,7 @@ namespace Mcce22.SmartOffice.Workspaces.Controllers
         }
 
         [HttpDelete("{workspaceDataId}")]
-        public async Task DeleteWorkspaceData(int workspaceDataId)
+        public async Task DeleteWorkspaceData(string workspaceDataId)
         {
             await _workspaceDataManager.DeleteWorkspaceData(workspaceDataId);
         }

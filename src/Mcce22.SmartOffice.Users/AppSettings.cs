@@ -5,25 +5,28 @@ using Serilog;
 
 namespace Mcce22.SmartOffice.Users
 {
-    public class AppSettings
+    public interface IAppSettings
+    {
+        string BucketName { get; set; }
+    }
+
+    public class AppSettings : IAppSettings
     {
         public string BaseAddress { get; set; }
 
-        public string ConnectionString { get; set; }
+        public string SecretName { get; set; }
 
-        public string SecretId { get; set; }
-
-        public StorageConfiguration StorageConfiguration { get; set; } = new StorageConfiguration();
+        public string BucketName { get; set; }
 
         public async Task LoadConfigFromAWSSecretsManager()
         {
-            if (!string.IsNullOrEmpty(SecretId))
+            if (!string.IsNullOrEmpty(SecretName))
             {
                 using var client = new AmazonSecretsManagerClient();
 
                 var request = new GetSecretValueRequest
                 {
-                    SecretId = SecretId
+                    SecretId = SecretName
                 };
 
                 try
@@ -32,8 +35,7 @@ namespace Mcce22.SmartOffice.Users
 
                     var settings = JsonConvert.DeserializeObject<AppSettings>(response.SecretString);
 
-                    ConnectionString = settings.ConnectionString;
-                    StorageConfiguration = settings.StorageConfiguration;
+                    BucketName = settings.BucketName;
                 }
                 catch (Exception ex)
                 {
@@ -41,12 +43,5 @@ namespace Mcce22.SmartOffice.Users
                 }
             }
         }
-    }
-
-    public class StorageConfiguration
-    {
-        public string BucketName { get; set; }
-
-        public string BaseUrl { get; set; }
     }
 }

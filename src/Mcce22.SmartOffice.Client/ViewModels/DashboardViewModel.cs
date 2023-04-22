@@ -29,38 +29,5 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         {
             _navigationService.Navigate(type);
         }
-
-        //public ISeries[] Series1 { get; set; }
-        //    = new ISeries[]
-        //    {
-        //        new LineSeries<double>
-        //        {
-        //            Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
-        //            Fill = null
-        //        }
-        //    };
-
-        //public ISeries[] Series2 { get; set; }
-        //    = new ISeries[]
-        //    {
-        //        new PieSeries<double> { Values = new double[] { 2 } },
-        //        new PieSeries<double> { Values = new double[] { 4 } },
-        //        new PieSeries<double> { Values = new double[] { 1 } },
-        //        new PieSeries<double> { Values = new double[] { 4 } },
-        //        new PieSeries<double> { Values = new double[] { 3 } }
-        //    };
-
-        //public ISeries[] Series3 { get; set; }
-        //    = new ISeries[]
-        //    {
-        //        new LineSeries<int>
-        //        {
-        //            Values = new int[] { 4, 6, 5, 3, -3, -1, 2 }
-        //        },
-        //        new ColumnSeries<double>
-        //        {
-        //            Values = new double[] { 2, 5, 4, -2, 4, -3, 5 }
-        //        }
-        //    };
     }
 }

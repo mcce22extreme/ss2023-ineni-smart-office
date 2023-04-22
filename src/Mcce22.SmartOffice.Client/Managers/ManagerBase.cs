@@ -29,7 +29,7 @@ namespace Mcce22.SmartOffice.Client.Managers
 
         public async Task<T> Save(T model)
         {
-            if (model.Id == 0)
+            if (string.IsNullOrEmpty(model.Id))
             {
                 var response = await HttpClient.PostAsJsonAsync(BaseUrl, model);
 
@@ -47,7 +47,7 @@ namespace Mcce22.SmartOffice.Client.Managers
             }
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(string id)
         {
             await EnsureSuccessStatusCode(await HttpClient.DeleteAsync($"{BaseUrl}/{id}"));
         }

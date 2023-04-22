@@ -1,98 +1,59 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using AutoMapper;
-using Mcce22.SmartOffice.Core.Exceptions;
-using Mcce22.SmartOffice.Users.Entities;
 using Mcce22.SmartOffice.Users.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Mcce22.SmartOffice.Users.Managers
 {
     public interface IUserImageManager
     {
-        Task<UserImageModel[]> GetUserImages(int userId);
+        Task<UserImageModel[]> GetUserImages(string userId);
 
-        Task<UserImageModel> CreateUserImage(SaveUserImageModel model);
+        Task<UserImageModel> StoreUserImage(string userId, IFormFile file);
 
-        Task<UserImageModel> StoreUserImageContent(int userImageId, Stream stream);
+        Task DeleteAllUserImage(string userId);
 
-        Task DeleteUserImage(int userImageId);
-
-        Task DeleteUserImageOfUser(int userId);
+        Task DeleteUserImage(string userId, string userImageId);                
     }
 
     public class UserImageManager : IUserImageManager
     {
-        private readonly string _baseUrl;
+        private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
-        private readonly AppDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public UserImageManager(StorageConfiguration storageConfiguration, AppDbContext dbContext, IMapper mapper)
+        public UserImageManager(IAmazonS3 s3Client, IAppSettings appSettings)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
-
-            _baseUrl = storageConfiguration.BaseUrl;
-            _bucketName = storageConfiguration.BucketName;
+            _s3Client = s3Client;
+            _bucketName = appSettings.BucketName;
         }
 
-        private UserImageModel CreateModel(UserImage userImage)
+        public async Task<UserImageModel[]> GetUserImages(string userId)
         {
-            var model = _mapper.Map<UserImageModel>(userImage);
+            var items = await _s3Client.ListObjectsAsync(_bucketName, userId);
 
-            model.ResourceUrl = $"{_baseUrl}/{userImage.ResourceKey}";
-
-            return model;
+            return items.S3Objects
+                .Where(x => x.Size > 0)
+                .Select(x => new UserImageModel
+                {
+                    Id = x.Key,
+                    ResourceUrl = CreateResourceKey(_bucketName, userId, x.Key),
+                    Size = x.Size
+                })
+                .ToArray();
         }
 
-        public async Task<UserImageModel[]> GetUserImages(int userId)
+        public async Task<UserImageModel> StoreUserImage(string userId, IFormFile file)
         {
-            var userImageQuery = _dbContext.UserImages.AsQueryable();
-
-            if (userId > 0)
-            {
-                userImageQuery = userImageQuery.Where(x => x.UserId == userId);
-            }
-
-            var userImages = await userImageQuery.ToListAsync();
-
-            return userImages.Select(x => _mapper.Map(x, CreateModel(x))).ToArray();
-        }
-
-        public async Task<UserImageModel> CreateUserImage(SaveUserImageModel model)
-        {
-            var userImage = _mapper.Map<UserImage>(model);
-
-            userImage.ResourceKey = $"{Guid.NewGuid()}{Path.GetExtension(model.FileName)}";
-
-            await _dbContext.UserImages.AddAsync(userImage);
-
-            await _dbContext.SaveChangesAsync();
-
-            return CreateModel(userImage);
-        }
-
-        public async Task<UserImageModel> StoreUserImageContent(int userImageId, Stream stream)
-        {
-            var userImage = await _dbContext.UserImages.FirstOrDefaultAsync(x => x.Id == userImageId);
-
-            if (userImage == null)
-            {
-                throw new NotFoundException($"Could not find user image with id '{userImageId}'!");
-            }
-
-            using var s3Client = new AmazonS3Client();
             using var ms = new MemoryStream();
 
-            await stream.CopyToAsync(ms);
+            await file.CopyToAsync(ms);
 
-            var utility = new TransferUtility(s3Client);
+            var key = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var utility = new TransferUtility(_s3Client);
             var request = new TransferUtilityUploadRequest
             {
                 BucketName = _bucketName,
-                Key = userImage.ResourceKey,
+                Key = $"{userId}/{key}",
                 InputStream = ms,
                 AutoCloseStream = true,
                 AutoResetStreamPosition = true
@@ -100,52 +61,40 @@ namespace Mcce22.SmartOffice.Users.Managers
 
             await utility.UploadAsync(request);
 
-            userImage.HasContent = true;
-
-            await _dbContext.SaveChangesAsync();
-
-            return CreateModel(userImage);
+            return new UserImageModel
+            {
+                Id = key,
+                ResourceUrl = CreateResourceKey(_bucketName, userId, key),
+                Size = file.Length
+            };
         }
 
-        public async Task DeleteUserImage(int userImageId)
+        private string CreateResourceKey(string bucketName, string userId, string objectKey)
         {
-            var userImage = await _dbContext.UserImages.FirstOrDefaultAsync(x => x.Id == userImageId);
+            return $"https://{bucketName}.s3.amazonaws.com/{userId}/{objectKey}";
+        }
 
-            if (userImage == null)
-            {
-                throw new NotFoundException($"Could not find user image with id '{userImageId}'!");
-            }
-
-            _dbContext.UserImages.Remove(userImage);
-
-            using var s3Client = new AmazonS3Client();
-
-            await s3Client.DeleteObjectAsync(new DeleteObjectRequest
+        public async Task DeleteUserImage(string userId, string userImageId)
+        {
+            await _s3Client.DeleteObjectAsync(new DeleteObjectRequest
             {
                 BucketName = _bucketName,
-                Key = userImage.ResourceKey
+                Key = $"{userId}/{userImageId}"
             });
         }
 
-        public async Task DeleteUserImageOfUser(int userId)
+        public async Task DeleteAllUserImage(string userId)
         {
-            var userImages = await _dbContext.UserImages
-                .Where(x => x.UserId == userId)
-                .ToListAsync();
+            var items = await _s3Client.ListObjectsAsync(_bucketName, userId);
 
-            foreach (var userImage in userImages)
+            foreach(var item in items.S3Objects)
             {
-                _dbContext.UserImages.Remove(userImage);
-
-                await _dbContext.SaveChangesAsync();
-                using var s3Client = new AmazonS3Client();
-
-                await s3Client.DeleteObjectAsync(new DeleteObjectRequest
+                await _s3Client.DeleteObjectAsync(new DeleteObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = userImage.ResourceKey
+                    Key = item.Key
                 });
-            }
+            }            
         }
     }
 }

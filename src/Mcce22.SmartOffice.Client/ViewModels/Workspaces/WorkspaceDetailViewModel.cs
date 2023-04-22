@@ -9,7 +9,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
     {
         private readonly IWorkspaceManager _workspaceManager;
 
-        public int WorkspaceId { get; set; }
+        public string WorkspaceId { get; set; }
 
         private string _workspaceNumber;
         public string WorkspaceNumber

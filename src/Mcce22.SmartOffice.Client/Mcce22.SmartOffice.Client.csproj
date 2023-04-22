@@ -14,6 +14,7 @@
     <None Remove="Images\floorplan.png" />
     <None Remove="Images\floorplan2.png" />
     <None Remove="Images\floorplan3.png" />
+    <None Remove="Images\home_bg.png" />
     <None Remove="Images\icon.png" />
     <None Remove="Images\logo.jpg" />
     <None Remove="Images\logo.png" />
@@ -28,6 +29,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\floorplan.png" />
+    <Resource Include="Images\home_bg.png" />
     <Resource Include="Images\icon.png" />
     <Resource Include="Images\logo.jpg" />
   </ItemGroup>

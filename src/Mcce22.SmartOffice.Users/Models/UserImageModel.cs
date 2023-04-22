@@ -6,8 +6,6 @@
 
         public string ResourceUrl { get; set; }
 
-        public string UserId { get; set; }
-
-        public bool HasContent { get; set; }
+        public long Size { get; set; }
     }
 }

@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using AutoMapper;
 using Mcce22.SmartOffice.Core.Exceptions;
+using Mcce22.SmartOffice.Core.Generators;
 using Mcce22.SmartOffice.Users.Entities;
 using Mcce22.SmartOffice.Users.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Mcce22.SmartOffice.Users.Managers
 {
@@ -10,38 +12,47 @@ namespace Mcce22.SmartOffice.Users.Managers
     {
         Task<UserModel[]> GetUsers();
 
-        Task<UserModel> GetUser(int userId);
+        Task<UserModel> GetUser(string userId);
 
         Task<UserModel> CreateUser(SaveUserModel model);
 
-        Task<UserModel> UpdateUser(int userId, SaveUserModel model);
+        Task<UserModel> UpdateUser(string userId, SaveUserModel model);
 
-        Task DeleteUser(int userId);
+        Task DeleteUser(string userId);
     }
 
     public class UserManager : IUserManager
     {
-        private readonly AppDbContext _dbContext;
+        private readonly IAmazonDynamoDB _dynamoDbClient;
         private readonly IMapper _mapper;
+        private readonly IIdGenerator _idGenerator;
 
-        public UserManager(AppDbContext dbContext, IMapper mapper)
+        public UserManager(IAmazonDynamoDB dynamoDbClient, IMapper mapper, IIdGenerator idGenerator)
         {
-            _dbContext = dbContext;
+            _dynamoDbClient = dynamoDbClient;
             _mapper = mapper;
+            _idGenerator = idGenerator;
         }
 
         public async Task<UserModel[]> GetUsers()
         {
-            var users = await _dbContext.Users.ToListAsync();
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            return users.Select(_mapper.Map<UserModel>).ToArray();
+            var users = await context
+                .ScanAsync<User>(Array.Empty<ScanCondition>())
+                .GetRemainingAsync();
+
+            return users
+                .OrderBy(x => x.UserName)
+                .Select(_mapper.Map<UserModel>)
+                .ToArray();
         }
 
-        public async Task<UserModel> GetUser(int userId)
+        public async Task<UserModel> GetUser(string userId)
         {
-            var user = await _dbContext.Users
-                .OrderBy(x => x.LastName)
-                .FirstOrDefaultAsync(x => x.Id == userId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
+            var user = await context.LoadAsync<User>(userId);
 
             if (user == null)
             {
@@ -53,18 +64,22 @@ namespace Mcce22.SmartOffice.Users.Managers
 
         public async Task<UserModel> CreateUser(SaveUserModel model)
         {
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
             var user = _mapper.Map<User>(model);
 
-            await _dbContext.Users.AddAsync(user);
+            user.Id = _idGenerator.GenerateId();
 
-            await _dbContext.SaveChangesAsync();
+            await context.SaveAsync(user);
 
             return await GetUser(user.Id);
         }
 
-        public async Task<UserModel> UpdateUser(int userId, SaveUserModel model)
+        public async Task<UserModel> UpdateUser(string userId, SaveUserModel model)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
+            var user = await context.LoadAsync<User>(userId);
 
             if (user == null)
             {
@@ -73,23 +88,16 @@ namespace Mcce22.SmartOffice.Users.Managers
 
             _mapper.Map(model, user);
 
-            await _dbContext.SaveChangesAsync();
+            await context.SaveAsync(user);
 
             return await GetUser(userId);
         }
 
-        public async Task DeleteUser(int userId)
+        public async Task DeleteUser(string userId)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            if (user == null)
-            {
-                throw new NotFoundException($"Could not find user with id '{userId}'!");
-            }
-
-            _dbContext.Users.Remove(user);
-
-            await _dbContext.SaveChangesAsync();
+            await context.DeleteAsync<User>(userId);
         }
     }
 }

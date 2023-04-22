@@ -20,9 +20,28 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         private readonly IWorkspaceDataManager _workspaceDataManager;
         private readonly IDialogService _dialogService;
 
-        public RelayCommand SeedDataCommand { get; }
+        private int _progress;
+        public int Progress
+        {
+            get { return _progress; }
+            set { SetProperty(ref _progress, value); }
+        }
 
-        public RelayCommand DeleteDataCommand { get; }
+        private int _stepProgress;
+        public int StepProgress
+        {
+            get { return _stepProgress; }
+            set { SetProperty(ref _stepProgress, value); }
+        }
+
+        private string _progressText;
+        public string ProgressText
+        {
+            get { return _progressText; }
+            set { SetProperty(ref _progressText, value); }
+        }
+
+        public RelayCommand SeedDataCommand { get; }
 
         public SeedDataViewModel(
             IUserManager userManager,
@@ -38,7 +57,6 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             _dialogService = dialogService;
 
             SeedDataCommand = new RelayCommand(SeedData, CanSeed);
-            DeleteDataCommand = new RelayCommand(DeleteData, CanDelete);
         }
 
         protected override void UpdateCommandStates()
@@ -46,7 +64,6 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             base.UpdateCommandStates();
 
             SeedDataCommand.NotifyCanExecuteChanged();
-            DeleteDataCommand.NotifyCanExecuteChanged();
         }
 
         private bool CanSeed()
@@ -58,12 +75,49 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         {
             try
             {
-                IsBusy = true;
+                var confirmDelete = new ConfirmDeleteViewModel("Caution!", $"This operation will erase all existing data. Are you sure you want to continue?", _dialogService);
 
-                await SeedUsers();
-                await SeedWorkspaces();
-                await SeedUserImages();
-                await SeedWorkspaceData();
+                await _dialogService.ShowDialog(confirmDelete);
+
+                if (confirmDelete.Confirmed)
+                {
+                    IsBusy = true;
+
+                    Progress = 0;
+                    ProgressText = "Delete user images...";
+                    await DeleteUserImages();
+
+                    Progress = 10;
+                    ProgressText = "Delete users...";
+                    await DeleteUsers();
+
+                    Progress = 20;
+                    ProgressText = "Delete workspaces...";
+                    await DeleteWorkspaces();
+
+                    Progress = 40;
+                    ProgressText = "Delete workspace data...";
+                    await DeleteWorkspaceData();
+
+                    Progress = 50;
+                    ProgressText = "Seed users...";
+                    await SeedUsers();
+
+                    Progress = 60;
+                    ProgressText = "Seed workspaces...";
+                    await SeedWorkspaces();
+
+                    Progress = 70;
+                    ProgressText = "Seed user images...";
+                    await SeedUserImages();
+
+                    Progress = 80;
+                    ProgressText = "Seed workspace data...";
+                    await SeedWorkspaceData();
+
+                    Progress = 100;
+                    ProgressText = "Done";
+                }
             }
             finally
             {
@@ -76,10 +130,17 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             var json = File.ReadAllText("seeddata\\users.json");
             var users = JsonConvert.DeserializeObject<UserModel[]>(json);
 
+            StepProgress = 0;
+            var count = 0;
             foreach (var user in users)
             {
                 await _userManager.Save(user);
+
+                count++;
+                StepProgress = count * 100 / users.Length;
             }
+
+            StepProgress = 100;
         }
 
         private async Task SeedWorkspaces()
@@ -87,10 +148,16 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             var json = File.ReadAllText("seeddata\\workspaces.json");
             var workspaces = JsonConvert.DeserializeObject<WorkspaceModel[]>(json);
 
+            StepProgress = 0;
+            var count = 0;
             foreach (var workspace in workspaces)
             {
                 await _workspaceManager.Save(workspace);
+
+                count++;
+                StepProgress = count * 100 / workspaces.Length;
             }
+            StepProgress = 100;
         }
 
         private async Task SeedUserImages()
@@ -99,31 +166,42 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             var user = users.FirstOrDefault();
 
             var filePaths = Directory.GetFiles("sampleimages");
+
+            StepProgress = 0;
+            var count = 0;
             foreach (var filePath in filePaths)
             {
-                var item = await _userImageManager.Save(new UserImageModel
-                {
-                    FileName = Path.GetFileName(filePath),
-                    UserId = user.Id
-                });
+                await _userImageManager.Save(user.Id, filePath);
 
-                using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-
-                await _userImageManager.StoreContent(item.Id, fs);
+                count++;
+                StepProgress = count * 100 / filePaths.Length;
             }
+            StepProgress = 100;
         }
 
         private async Task SeedWorkspaceData()
         {
-            for (int i = 1; i <= 30; i++)
+            var workspaces = await _workspaceManager.GetList();
+            var workspace = workspaces.FirstOrDefault();
+
+            var days= 30;
+            var hours = 24;
+            var quaters = 4;
+
+            StepProgress = 0;
+            var count = 0;
+            var maxCount = days*hours*quaters;
+
+            for (int i = 1; i <= days; i++)
             {
-                for (int j = 1; j < 24; j++)
+                for (int j = 1; j < hours; j++)
                 {
-                    for (int k = 1; k < 4; k++)
+                    for (int k = 1; k < quaters; k++)
                     {
+
                         var model = new WorkspaceDataModel
                         {
-                            WorkspaceId = 1,
+                            WorkspaceId = workspace.Id,
                             Timestamp = new DateTime(2023,03,i, j, k*15, 0),
                             Temperature = Random.Next(15, 25),
                             Noise = Random.Next(60, 70),
@@ -132,83 +210,95 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                             Luminosity = Random.Next(100, 400)
                         };
                         await _workspaceDataManager.Save(model);
-                    }                    
+
+                        count++;
+                        StepProgress = count * 100 / maxCount;
+                    }
                 }
             }
-        }
 
-        public bool CanDelete()
-        {
-            return !IsBusy;
-        }
-
-        private async void DeleteData()
-        {
-            try
-            {
-                IsBusy = true;
-
-                if (await ConfirmDelete("users, user images, workspaces and workspace data"))
-                {
-                    await DeleteUserImages();
-                    await DeleteUsers();
-                    await DeleteWorkspaces();
-                    await DeleteWorkspaceData();
-                }
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            StepProgress = 100;
         }
 
         private async Task DeleteUsers()
         {
             var users = await _userManager.GetList();
 
+            StepProgress = 0;
+            var count = 0;
+
             foreach (var user in users)
             {
                 await _userManager.Delete(user.Id);
+
+                count++;
+                StepProgress = count * 100 / users.Length;
             }
+
+            StepProgress = 100;
         }
 
         private async Task DeleteWorkspaces()
         {
             var workspaces = await _workspaceManager.GetList();
 
+            StepProgress = 0;
+            var count = 0;
+
             foreach (var workspace in workspaces)
             {
                 await _workspaceManager.Delete(workspace.Id);
+
+                count++;
+                StepProgress = count * 100 / workspaces.Length;
             }
+
+            StepProgress = 100;
         }
 
         private async Task DeleteUserImages()
         {
             var userImages = await _userImageManager.GetList();
 
+            StepProgress = 0;
+            var count = 0;
+
             foreach (var item in userImages)
             {
                 await _userImageManager.Delete(item.Id);
+
+                count++;
+                StepProgress = count * 100 / userImages.Length;
             }
+
+            StepProgress = 100;
         }
 
         private async Task DeleteWorkspaceData()
         {
             var workspaceData = await _workspaceDataManager.GetList();
 
+            StepProgress = 0;
+            var count = 0;
+
             foreach (var data in workspaceData)
             {
                 await _workspaceDataManager.Delete(data.Id);
+
+                count++;
+                StepProgress = count * 100 / workspaceData.Length;
             }
+
+            StepProgress = 100;
         }
 
-        private async Task<bool> ConfirmDelete(string type)
-        {
-            var confirmDelete = new ConfirmDeleteViewModel("Delete items...", $"Are you sure you want delete all {type}?", _dialogService);
+        //private async Task<bool> ConfirmDelete(string type)
+        //{
+        //    var confirmDelete = new ConfirmDeleteViewModel("Delete items...", $"Are you sure you want delete all {type}?", _dialogService);
 
-            await _dialogService.ShowDialog(confirmDelete);
+        //    await _dialogService.ShowDialog(confirmDelete);
 
-            return confirmDelete.Confirmed;
-        }
+        //    return confirmDelete.Confirmed;
+        //}
     }
 }

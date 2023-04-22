@@ -9,10 +9,12 @@ namespace Mcce22.SmartOffice.Users.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserManager _userManager;
+        private readonly IUserImageManager _userImageManager;
 
-        public UserController(IUserManager userManager)
+        public UserController(IUserManager userManager, IUserImageManager userImageManager)
         {
             _userManager = userManager;
+            _userImageManager = userImageManager;
         }
 
         [HttpGet]
@@ -22,7 +24,7 @@ namespace Mcce22.SmartOffice.Users.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async Task<UserModel> GetUser(int userId)
+        public async Task<UserModel> GetUser(string userId)
         {
             return await _userManager.GetUser(userId);
         }
@@ -34,15 +36,39 @@ namespace Mcce22.SmartOffice.Users.Controllers
         }
 
         [HttpPut("{userId}")]
-        public async Task<UserModel> UpdateUser(int userId, [FromBody] SaveUserModel model)
+        public async Task<UserModel> UpdateUser(string userId, [FromBody] SaveUserModel model)
         {
             return await _userManager.UpdateUser(userId, model);
         }
 
         [HttpDelete("{userId}")]
-        public async Task DeleteUser(int userId)
+        public async Task DeleteUser(string userId)
         {
             await _userManager.DeleteUser(userId);
+        }
+
+        [HttpGet("{userId}/image")]
+        public async Task<UserImageModel[]> GetUserImages(string userId)
+        {
+            return await _userImageManager.GetUserImages(userId);
+        }
+
+        [HttpPost("{userId}/image")]
+        public async Task<UserImageModel> GetUserImages(string userId, IFormFile file)
+        {
+            return await _userImageManager.StoreUserImage(userId, file);
+        }
+
+        [HttpDelete("{userId}/image")]
+        public async Task GetAllUserImages(string userId)
+        {
+            await _userImageManager.DeleteAllUserImage(userId);
+        }
+
+        [HttpDelete("{userId}/image/{userImageId}")]
+        public async Task GetUserImages(string userId, string userImageId)
+        {
+            await _userImageManager.DeleteUserImage(userId, userImageId);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Mcce22.SmartOffice.Client.Managers
 
         Task<WorkspaceModel> Save(WorkspaceModel workspace);
 
-        Task Delete(int workspaceId);
+        Task Delete(string workspaceId);
     }
 
     public class WorkspaceManager : ManagerBase<WorkspaceModel>, IWorkspaceManager

@@ -2,13 +2,13 @@
 {
     public class BookingModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public DateTime StartDateTime { get; set; }
 
         public DateTime EndDateTime { get; set; }
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         public string Firstname { get; set; }
 
@@ -18,7 +18,7 @@
 
         public string Email { get; set; }
 
-        public int WorkspaceId { get; set; }
+        public string WorkspaceId { get; set; }
 
         public string WorkspaceNumber { get; set; }
 

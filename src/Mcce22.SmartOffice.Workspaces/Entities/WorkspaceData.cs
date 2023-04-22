@@ -1,30 +1,38 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Mcce22.SmartOffice.Core.Entities;
+﻿using Amazon.DynamoDBv2.DataModel;
 
 namespace Mcce22.SmartOffice.Workspaces.Entities
 {
-    public class WorkspaceData : EntityBase
+    [DynamoDBTable("mcce22-smart-office-workspace-data")]
+    public class WorkspaceData
     {
-        [Required]
-        public int WorkspaceId { get; set; }
+        [DynamoDBHashKey()]
+        public string Id { get; set; }
 
-        [Required]
+        [DynamoDBProperty]
+        public string WorkspaceId { get; set; }
+
+        [DynamoDBProperty]
         public string WorkspaceNumber { get; set; }
 
-        [Required]
+        [DynamoDBProperty]
         public string RoomNumber { get; set; }
 
-        [Required]
+        [DynamoDBProperty]
         public DateTime Timestamp { get; set; }
 
+        [DynamoDBProperty]
         public int Temperature { get; set; }
 
+        [DynamoDBProperty]
         public int Noise { get; set; }
 
+        [DynamoDBProperty]
         public int Humidity { get; set; }
 
+        [DynamoDBProperty]
         public int Co2 { get; set; }
 
+        [DynamoDBProperty]
         public int Luminosity { get; set; }
     }
 }

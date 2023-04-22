@@ -2,9 +2,9 @@
 {
     public class WorkspaceDataModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public int WorkspaceId { get; set; }
+        public string WorkspaceId { get; set; }
 
         public string WorkspaceNumber { get; set; }
 

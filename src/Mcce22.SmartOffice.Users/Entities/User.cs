@@ -1,20 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Mcce22.SmartOffice.Core.Entities;
+﻿using Amazon.DynamoDBv2.DataModel;
 
 namespace Mcce22.SmartOffice.Users.Entities
 {
-    public class User : EntityBase
+    [DynamoDBTable("mcce22-smart-office-users")]
+    public class User
     {
-        [Required]
+        [DynamoDBHashKey()]
+        public string Id { get; set; }
+
+        [DynamoDBProperty]
         public string UserName { get; set; }
 
-        [Required]
+        [DynamoDBProperty]
         public string FirstName { get; set; }
 
-        [Required]
+        [DynamoDBProperty]
         public string LastName { get; set; }
 
-        [Required]
+        [DynamoDBProperty]
         public string Email { get; set; }
     }
 }
