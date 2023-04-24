@@ -192,6 +192,33 @@ Resources:
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
 
+  Mcce22SmartOfficeUserImagesTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete
+    Properties:
+      TableName: "mcce22-smart-office-userimages"
+      AttributeDefinitions: 
+        - AttributeName: "Id"
+          AttributeType: "S"
+        - AttributeName: "UserId"
+          AttributeType: "S"          
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH"          
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      GlobalSecondaryIndexes:
+        - IndexName: UserId-index
+          KeySchema:
+            - AttributeName: "UserId"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"        
+
   Mcce22SmartOfficeWorkspacesTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Delete
@@ -218,7 +245,9 @@ Resources:
         - AttributeName: "WorkspaceId" 
           AttributeType: "S"              
         - AttributeName: "UserId"
-          AttributeType: "S"          
+          AttributeType: "S"   
+        - AttributeName: "WorkspaceUser"
+          AttributeType: "S"                  
       KeySchema:
         - AttributeName: "Id"
           KeyType: "HASH"
@@ -244,6 +273,15 @@ Resources:
           ProvisionedThroughput: 
             ReadCapacityUnits: "5"
             WriteCapacityUnits: "5"
+        - IndexName: WorkspaceUser-index
+          KeySchema:
+            - AttributeName: "WorkspaceUser"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"                        
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"            
 
   Mcce22SmartOfficeWorkspaceDataTable:
     Type: AWS::DynamoDB::Table
@@ -282,6 +320,8 @@ Resources:
           AttributeType: "S"
         - AttributeName: "StartDate" 
           AttributeType: "S"         
+        - AttributeName: "ActivationCode" 
+          AttributeType: "S" 
       KeySchema:
         - AttributeName: "Id"
           KeyType: "HASH"
@@ -292,6 +332,15 @@ Resources:
         - IndexName: StartDate-index
           KeySchema:
             - AttributeName: "StartDate"
+              KeyType: "HASH"    
+          Projection:
+            ProjectionType: "ALL"        
+          ProvisionedThroughput: 
+            ReadCapacityUnits: "5"
+            WriteCapacityUnits: "5"
+        - IndexName: ActivationCode-index
+          KeySchema:
+            - AttributeName: "ActivationCode"
               KeyType: "HASH"    
           Projection:
             ProjectionType: "ALL"        
@@ -369,4 +418,67 @@ Resources:
           - AWSLambda_FullAccess
         Role: arn:aws:iam::064088109127:role/LabRole
         Runtime: dotnet6
+        Timeout: 30
+
+  Mcce22SmartOfficeNotificationsLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.Notifications/
+        Events:
+          RootGet:
+            Type: Api
+            Properties:
+              Path: /notify
+              Method: GET          
+        FunctionName: mcce22-smart-office-notifications
+        Handler: Mcce22.SmartOffice.Notifications::Mcce22.SmartOffice.Notifications.Functions::HandleRequest
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::064088109127:role/LabRole
+        Runtime: dotnet6
+        Timeout: 30
+
+  # Mcce22SmartOfficeActivatorLambda:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: ../Mcce22.SmartOffice.DeviceActivator/
+  #     Events:
+  #       RootGet:
+  #         Type: Api
+  #         Properties:
+  #           Path: /activate
+  #           Method: GET          
+  #     FunctionName: mcce22-smart-office-activator
+  #     Handler: Mcce22.SmartOffice.DeviceActivator::Mcce22.SmartOffice.DeviceActivator.Functions::HandleRequest
+  #     MemorySize: 256
+  #     Policies:
+  #       - AWSLambda_FullAccess
+  #     Role: arn:aws:iam::064088109127:role/LabRole
+  #     Runtime: dotnet6
+  #     Timeout: 30
+
+  Mcce22SmartOfficeActivatorLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.DeviceActivator/
+        Events:
+          ProxyResource:
+            Type: Api
+            Properties:
+              Path: /activatorapi/{proxy+}
+              Method: ANY
+          RootResource:
+            Type: Api
+            Properties:
+              Path: /activatorapi
+              Method: ANY
+        FunctionName: mcce22-smart-office-activator
+        Handler: Mcce22.SmartOffice.DeviceActivator
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::064088109127:role/LabRole
+        Runtime: dotnet6
         Timeout: 30         
+        

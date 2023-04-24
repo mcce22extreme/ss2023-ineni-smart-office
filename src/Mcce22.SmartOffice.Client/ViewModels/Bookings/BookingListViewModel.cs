@@ -9,8 +9,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
     public class BookingListViewModel : ListViewModelBase<BookingModel>
     {
         private readonly IBookingManager _bookingManager;
-        private readonly IUserManager _userManager;
-        private readonly IWorkspaceManager _workspaceManager;
+        private readonly IProcessBookingManager _processBookingManager;
 
         public RelayCommand ProcessBookingsCommand { get; }
 
@@ -23,15 +22,12 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         public BookingListViewModel(
             IBookingManager bookingManager,
-            IUserManager userManager,
-            IWorkspaceManager workspaceManager,
+            IProcessBookingManager processBookingManager,
             IDialogService dialogService)
             : base(dialogService)
         {
             _bookingManager = bookingManager;
-            _userManager = userManager;
-            _workspaceManager = workspaceManager;
-
+            _processBookingManager = processBookingManager;
             ProcessBookingsCommand = new RelayCommand(ProcessBookings, CanProcessBookings);
         }
 
@@ -47,7 +43,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                 try
                 {
                     IsBusy = true;
-                    await _bookingManager.ProcessBookings();
+                    await _processBookingManager.ProcessBookings();
                 }
                 finally
                 {

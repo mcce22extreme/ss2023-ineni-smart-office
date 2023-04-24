@@ -24,6 +24,8 @@ namespace Mcce22.SmartOffice.Client.Models
 
         public string UserName { get; set; }
 
+        public string Email { get; set; }
+
         public string FullUserName { get { return $"{FirstName} {LastName} ({UserName})"; } }
 
         public bool Activated { get; set; }

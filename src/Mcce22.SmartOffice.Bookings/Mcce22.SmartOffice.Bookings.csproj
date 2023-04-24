@@ -9,7 +9,6 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.6.0" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.102.31" />    
-    <PackageReference Include="MailKit" Version="3.6.0" />
   </ItemGroup>
 
   <ItemGroup>

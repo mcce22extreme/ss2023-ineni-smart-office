@@ -120,13 +120,13 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                 Users = new List<UserModel>(users);
 
                 SelectedUser = Users.FirstOrDefault();
+
+                UpdateAvailability();
             }
             finally
             {
                 IsBusy = false;
-            }
-
-            UpdateAvailability();
+            }            
         }
 
         private bool CanUpdateAvailability()

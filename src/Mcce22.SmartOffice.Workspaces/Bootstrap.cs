@@ -29,8 +29,6 @@ namespace Mcce22.SmartOffice.Workspaces
             // Configure urls (only for local debugging)
             builder.WebHost.UseUrls(appSettings.BaseAddress);
 #endif
-            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("workspacedb"));
-            //builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(appSettings.ConnectionString));
 
             builder.Services.AddScoped<IAmazonDynamoDB>(s => new AmazonDynamoDBClient());
 

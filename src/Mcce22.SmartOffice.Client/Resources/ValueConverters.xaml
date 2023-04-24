@@ -4,4 +4,5 @@
     xmlns:vc="clr-namespace:Mcce22.SmartOffice.Client.ValueConverters">
     <vc:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
     <vc:BooleanToYesNoConverter x:Key="BooleanToYesNoConverter" />
+    <vc:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 </ResourceDictionary>

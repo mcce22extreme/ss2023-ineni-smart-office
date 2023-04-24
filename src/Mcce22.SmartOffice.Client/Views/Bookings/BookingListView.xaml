@@ -18,12 +18,12 @@
             Grid.Row="0"
             Margin="5"
             Orientation="Horizontal">
-            <Button
+            <!--<Button
                 Command="{Binding EditCommand}"
                 Foreground="Orange"
                 Style="{StaticResource ToolbarButtonStyle}">
                 <iconPacks:FontAwesome Kind="EditSolid" />
-            </Button>
+            </Button>-->
             <Button
                 Command="{Binding DeleteCommand}"
                 Foreground="Red"

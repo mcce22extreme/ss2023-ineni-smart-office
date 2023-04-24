@@ -17,6 +17,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         private readonly IUserManager _userManager;
         private readonly IWorkspaceManager _workspaceManager;
         private readonly IUserImageManager _userImageManager;
+        private readonly IBookingManager _bookingManager;
         private readonly IWorkspaceDataManager _workspaceDataManager;
         private readonly IDialogService _dialogService;
 
@@ -41,18 +42,62 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             set { SetProperty(ref _progressText, value); }
         }
 
+        private bool _activateUserSeed = true;
+        public bool ActivateUserSeed
+        {
+            get { return _activateUserSeed; }
+            set { SetProperty(ref _activateUserSeed, value); }
+        }
+
+        private bool _activateUserImageSeed = true;
+        public bool ActivateUserImageSeed
+        {
+            get { return _activateUserImageSeed; }
+            set { SetProperty(ref _activateUserImageSeed, value); }
+        }
+
+        private bool _activateWorkspaceSeed = true;
+        public bool ActivateWorkspaceSeed
+        {
+            get { return _activateWorkspaceSeed; }
+            set { SetProperty(ref _activateWorkspaceSeed, value); }
+        }
+
+        private bool _activateWorkspaceConfigSeed = true;
+        public bool ActivateWorkspaceConfigSeed
+        {
+            get { return _activateWorkspaceSeed; }
+            set { SetProperty(ref _activateWorkspaceConfigSeed, value); }
+        }
+
+        private bool _activateWorkspaceDataSeed = false;
+        public bool ActivateUserDataSeed
+        {
+            get { return _activateWorkspaceDataSeed; }
+            set { SetProperty(ref _activateWorkspaceDataSeed, value); }
+        }
+
+        private bool _activateBookingSeed = true;
+        public bool ActivateBookingSeed
+        {
+            get { return _activateBookingSeed; }
+            set { SetProperty(ref _activateBookingSeed, value); }
+        }
+
         public RelayCommand SeedDataCommand { get; }
 
         public SeedDataViewModel(
             IUserManager userManager,
             IWorkspaceManager workspaceManager,
             IUserImageManager userImageManager,
+            IBookingManager bookingManager,
             IWorkspaceDataManager workspaceDataManager,
             IDialogService dialogService)
         {
             _userManager = userManager;
             _workspaceManager = workspaceManager;
             _userImageManager = userImageManager;
+            _bookingManager = bookingManager;
             _workspaceDataManager = workspaceDataManager;
             _dialogService = dialogService;
 
@@ -84,36 +129,75 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                     IsBusy = true;
 
                     Progress = 0;
-                    ProgressText = "Delete user images...";
-                    await DeleteUserImages();
+                    if (ActivateUserImageSeed)
+                    {
+                        ProgressText = "Delete user images...";
+                        await DeleteUserImages();
+                    }
 
                     Progress = 10;
-                    ProgressText = "Delete users...";
-                    await DeleteUsers();
+                    if (ActivateUserSeed)
+                    {
+                        ProgressText = "Delete users...";
+                        await DeleteUsers();
+                    }
+
 
                     Progress = 20;
-                    ProgressText = "Delete workspaces...";
-                    await DeleteWorkspaces();
+                    if (ActivateWorkspaceSeed)
+                    {
+                        ProgressText = "Delete workspaces...";
+                        await DeleteWorkspaces();
+                    }
 
                     Progress = 40;
-                    ProgressText = "Delete workspace data...";
-                    await DeleteWorkspaceData();
+                    if (ActivateUserDataSeed)
+                    {
+                        ProgressText = "Delete workspace data...";
+                        await DeleteWorkspaceData();
+                    }
+
+                    Progress = 45;
+                    if (ActivateBookingSeed)
+                    {
+                        ProgressText = "Delete booking data...";
+                        await DeleteBookings();
+                    }
 
                     Progress = 50;
-                    ProgressText = "Seed users...";
-                    await SeedUsers();
+                    if (ActivateUserSeed)
+                    {
+                        ProgressText = "Seed users...";
+                        await SeedUsers();
+                    }
 
                     Progress = 60;
-                    ProgressText = "Seed workspaces...";
-                    await SeedWorkspaces();
+                    if (ActivateUserImageSeed)
+                    {
+                        ProgressText = "Seed user images...";
+                        await SeedUserImages();
+                    }
 
                     Progress = 70;
-                    ProgressText = "Seed user images...";
-                    await SeedUserImages();
+                    if (ActivateWorkspaceSeed)
+                    {
+                        ProgressText = "Seed workspaces...";
+                        await SeedWorkspaces();
+                    }
 
                     Progress = 80;
-                    ProgressText = "Seed workspace data...";
-                    await SeedWorkspaceData();
+                    if (ActivateUserDataSeed)
+                    {
+                        ProgressText = "Seed workspace data...";
+                        await SeedWorkspaceData();
+                    }
+
+                    Progress = 90;
+                    if (ActivateBookingSeed)
+                    {
+                        ProgressText = "Seed booking data...";
+                        await SeedBookings();
+                    }
 
                     Progress = 100;
                     ProgressText = "Done";
@@ -220,6 +304,35 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             StepProgress = 100;
         }
 
+        private async Task SeedBookings()
+        {
+            StepProgress = 0;
+
+            var users = await _userManager.GetList();
+            var workspaces = await _workspaceManager.GetList();
+
+            var workspace = workspaces.FirstOrDefault();
+            var user = users.FirstOrDefault();
+
+            var booking = new BookingModel
+            {
+                StartDateTime = DateTime.Now.AddMinutes(15),
+                EndDateTime = DateTime.Now.AddHours(1),
+                WorkspaceId = workspace.Id,
+                WorkspaceNumber = workspace.WorkspaceNumber,
+                RoomNumber = workspace.RoomNumber,
+                UserId = user.Id,
+                FirstName = user.FirstName ,
+                LastName = user.LastName ,
+                UserName =  user.UserName,
+                Email = user.Email
+            };
+
+            await _bookingManager.Save(booking);
+
+            StepProgress = 100;
+        }
+
         private async Task DeleteUsers()
         {
             var users = await _userManager.GetList();
@@ -258,17 +371,17 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         private async Task DeleteUserImages()
         {
-            var userImages = await _userImageManager.GetList();
+            var users = await _userManager.GetList();
 
             StepProgress = 0;
             var count = 0;
 
-            foreach (var item in userImages)
+            foreach (var user in users)
             {
-                await _userImageManager.Delete(item.Id);
+                await _userImageManager.Delete(user.Id);
 
                 count++;
-                StepProgress = count * 100 / userImages.Length;
+                StepProgress = count * 100 / users.Length;
             }
 
             StepProgress = 100;
@@ -292,13 +405,22 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             StepProgress = 100;
         }
 
-        //private async Task<bool> ConfirmDelete(string type)
-        //{
-        //    var confirmDelete = new ConfirmDeleteViewModel("Delete items...", $"Are you sure you want delete all {type}?", _dialogService);
+        private async Task DeleteBookings()
+        {
+            var bookings = await _bookingManager.GetList();
 
-        //    await _dialogService.ShowDialog(confirmDelete);
+            StepProgress = 0;
+            var count = 0;
 
-        //    return confirmDelete.Confirmed;
-        //}
+            foreach (var booking in bookings)
+            {
+                await _bookingManager.Delete(booking.Id);
+
+                count++;
+                StepProgress = count * 100 / bookings.Length;
+            }
+
+            StepProgress = 100;
+        }
     }
 }

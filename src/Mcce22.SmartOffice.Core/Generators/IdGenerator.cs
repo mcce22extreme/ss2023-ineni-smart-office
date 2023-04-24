@@ -2,17 +2,15 @@
 {
     public interface IIdGenerator
     {
-        string GenerateId();
+        string GenerateId(int charCount = 12);
     }
 
     public class IdGenerator : IIdGenerator
     {
         private static readonly Random _random = new Random();
 
-        public string GenerateId()
+        public string GenerateId(int charCount = 12)
         {
-            var charCount = 12;
-
             // bitCount = characterCount * log (targetBase) / log(2)
             var bitCount = 6 * charCount;
             var byteCount = (int)Math.Ceiling(bitCount / 8f);

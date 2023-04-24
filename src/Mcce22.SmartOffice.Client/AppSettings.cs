@@ -35,6 +35,7 @@ namespace Mcce22.SmartOffice.Client
                     BaseAddressUsers = $"{_baseAddress}/userapi";
                     BaseAddressWorkspaces = $"{_baseAddress}/workspaceapi";
                     BaseAddressBookings = $"{_baseAddress}/bookingapi";
+                    BaseAddressNotifications = $"{_baseAddress}/notify";
                 }
             }
         }
@@ -45,5 +46,7 @@ namespace Mcce22.SmartOffice.Client
         public string BaseAddressWorkspaces { get; set; }
 
         public string BaseAddressBookings { get; set; }
+
+        public string BaseAddressNotifications { get; set; }
     }
 }

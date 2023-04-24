@@ -17,7 +17,7 @@ namespace Mcce22.SmartOffice.Core.Converters
         {
             var dateOnly = (DateOnly)value;
 
-            return dateOnly.ToLongDateString();
+            return $"{dateOnly.Year}-{dateOnly.Month}-{dateOnly.Day}";
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
 using Mcce22.SmartOffice.Bookings.Managers;
-using Mcce22.SmartOffice.Bookings.Services;
 using Mcce22.SmartOffice.Core;
 using Newtonsoft.Json;
 using Serilog;
@@ -31,11 +30,7 @@ namespace Mcce22.SmartOffice.Bookings
 #endif
             builder.Services.AddScoped<IAmazonDynamoDB>(s => new AmazonDynamoDBClient());
 
-            //builder.Services.AddSingleton(appSettings.SmptConfiguration);
-
             builder.Services.AddScoped<IBookingManager, BookingManager>();
-
-            builder.Services.AddScoped<IEmailService, EmailService>();
         }
     }
 }

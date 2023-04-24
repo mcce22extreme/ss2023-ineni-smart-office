@@ -63,6 +63,11 @@ namespace Mcce22.SmartOffice.Client
                 .LifestyleSingleton()
                 .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressWorkspaces)));
 
+            _container.Register(Component.For<IProcessBookingManager>()
+                .ImplementedBy<ProcessBookingManager>()
+                .LifestyleSingleton()
+                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressNotifications)));
+
             MainWindow = _container.Resolve<MainWindow>();
             MainWindow.Show();
         }

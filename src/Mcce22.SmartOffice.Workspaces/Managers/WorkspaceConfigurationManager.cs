@@ -82,6 +82,7 @@ namespace Mcce22.SmartOffice.Bookings.Managers
             var configuration = _mapper.Map<WorkspaceConfiguration>(model);
 
             configuration.Id = _idGenerator.GenerateId();
+            configuration.WorkspaceUser = $"{model.WorkspaceId}-{model.UserId}";
 
             await context.SaveAsync(configuration);
 

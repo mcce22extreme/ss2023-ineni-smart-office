@@ -82,11 +82,29 @@ namespace Mcce22.SmartOffice.Bookings.Managers
                 throw new ValidationException("A collision occurred during booking the workspace! The workspace has already been booked by another user in the specified time.");
             }
 
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
+            var user = await context.LoadAsync<User>(model.UserId);
+            if (user == null)
+            {
+                throw new NotFoundException($"Could not find user with id '{model.UserId}'!");
+            }
+
+            var workspace = await context.LoadAsync<Workspace>(model.WorkspaceId);
+            if (workspace == null)
+            {
+                throw new NotFoundException($"Could not find workspace with id '{model.WorkspaceId}'!");
+            }
+
             var booking = _mapper.Map<Booking>(model);
 
             booking.Id = _idGenerator.GenerateId();
-
-            using var context = new DynamoDBContext(_dynamoDbClient);
+            booking.FirstName = user.FirstName;
+            booking.LastName = user.LastName;
+            booking.UserName = user.UserName;
+            booking.Email = user.Email;
+            booking.WorkspaceNumber = workspace.WorkspaceNumber;
+            booking.RoomNumber = workspace.RoomNumber;
 
             await context.SaveAsync(booking);
 
@@ -156,23 +174,6 @@ namespace Mcce22.SmartOffice.Bookings.Managers
         //    await _dbContext.SaveChangesAsync();
 
         //    return await GetBooking(bookingId);
-        //}
-
-        //public async Task ProcessBookings()
-        //{
-        //    // Get bookings for today
-        //    var bookings = await _dbContext.Bookings
-        //        .Where(x => x.StartDateTime.Date == DateTime.Now.Date)
-        //        .ToListAsync();
-
-        //    foreach (var booking in bookings)
-        //    {
-        //        await _emailService.SendMail(booking);
-
-        //        booking.InvitationSent = true;
-        //    }
-
-        //    await _dbContext.SaveChangesAsync();
         //}
     }
 }

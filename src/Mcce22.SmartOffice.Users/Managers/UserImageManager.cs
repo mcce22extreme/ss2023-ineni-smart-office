@@ -1,6 +1,11 @@
-﻿using Amazon.S3;
+﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using AutoMapper;
+using Mcce22.SmartOffice.Core.Generators;
+using Mcce22.SmartOffice.Users.Entities;
 using Mcce22.SmartOffice.Users.Models;
 
 namespace Mcce22.SmartOffice.Users.Managers
@@ -11,90 +16,111 @@ namespace Mcce22.SmartOffice.Users.Managers
 
         Task<UserImageModel> StoreUserImage(string userId, IFormFile file);
 
-        Task DeleteAllUserImage(string userId);
-
-        Task DeleteUserImage(string userId, string userImageId);                
+        Task DeleteUserImage(string userImageId);
     }
 
     public class UserImageManager : IUserImageManager
     {
+        private readonly IAmazonDynamoDB _dynamoDbClient;
         private readonly IAmazonS3 _s3Client;
+        private readonly IIdGenerator _idGenerator;
+        private readonly IMapper _mapper;
         private readonly string _bucketName;
 
-        public UserImageManager(IAmazonS3 s3Client, IAppSettings appSettings)
+        public UserImageManager(
+            IAmazonDynamoDB dynamoDbClient,
+            IAmazonS3 s3Client,
+            IAppSettings appSettings,
+            IIdGenerator idGenerator,
+            IMapper mapper)
         {
+            _dynamoDbClient = dynamoDbClient;
             _s3Client = s3Client;
+            _idGenerator = idGenerator;
+            _mapper = mapper;
             _bucketName = appSettings.BucketName;
         }
 
         public async Task<UserImageModel[]> GetUserImages(string userId)
         {
-            var items = await _s3Client.ListObjectsAsync(_bucketName, userId);
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-            return items.S3Objects
-                .Where(x => x.Size > 0)
-                .Select(x => new UserImageModel
-                {
-                    Id = x.Key,
-                    ResourceUrl = CreateResourceKey(_bucketName, userId, x.Key),
-                    Size = x.Size
-                })
-                .ToArray();
+            var userImages = await context.QueryAsync<UserImage>(userId, new DynamoDBOperationConfig
+            {
+                IndexName = $"{nameof(UserImage.UserId)}-index"
+            }).GetRemainingAsync();
+
+            return userImages.Select(_mapper.Map<UserImageModel>).ToArray();
         }
 
         public async Task<UserImageModel> StoreUserImage(string userId, IFormFile file)
         {
+            using var context = new DynamoDBContext(_dynamoDbClient);
+
             using var ms = new MemoryStream();
 
             await file.CopyToAsync(ms);
 
-            var key = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var key = $"{userId}/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             var utility = new TransferUtility(_s3Client);
             var request = new TransferUtilityUploadRequest
             {
                 BucketName = _bucketName,
-                Key = $"{userId}/{key}",
+                Key = key,
                 InputStream = ms,
                 AutoCloseStream = true,
                 AutoResetStreamPosition = true
             };
 
+            var userImage = new UserImage
+            {
+                Id = _idGenerator.GenerateId(),
+                ResourceKey = key,
+                UserId = userId,
+                Url = $"https://{_bucketName}.s3.amazonaws.com/{key}"
+            };
+
+            await context.SaveAsync(userImage);
+
             await utility.UploadAsync(request);
 
-            return new UserImageModel
-            {
-                Id = key,
-                ResourceUrl = CreateResourceKey(_bucketName, userId, key),
-                Size = file.Length
-            };
+            return _mapper.Map<UserImageModel>(userImage);
         }
 
-        private string CreateResourceKey(string bucketName, string userId, string objectKey)
+        public async Task DeleteUserImage(string userImageId)
         {
-            return $"https://{bucketName}.s3.amazonaws.com/{userId}/{objectKey}";
-        }
+            using var context = new DynamoDBContext(_dynamoDbClient);
 
-        public async Task DeleteUserImage(string userId, string userImageId)
-        {
-            await _s3Client.DeleteObjectAsync(new DeleteObjectRequest
+            var userImage = await context.LoadAsync<UserImage>(userImageId);
+
+            if (userImage != null)
             {
-                BucketName = _bucketName,
-                Key = $"{userId}/{userImageId}"
-            });
-        }
-
-        public async Task DeleteAllUserImage(string userId)
-        {
-            var items = await _s3Client.ListObjectsAsync(_bucketName, userId);
-
-            foreach(var item in items.S3Objects)
+                await _s3Client.DeleteObjectAsync(_bucketName, userImage.ResourceKey);
+                await context.DeleteAsync(userImage);
+            }
+            else
             {
-                await _s3Client.DeleteObjectAsync(new DeleteObjectRequest
+                var response = await _s3Client.ListObjectsAsync(_bucketName, userImageId);
+
+                foreach(var s3Object in response.S3Objects)
                 {
-                    BucketName = _bucketName,
-                    Key = item.Key
-                });
-            }            
+                    await _s3Client.DeleteObjectAsync(new DeleteObjectRequest
+                    {
+                        BucketName = _bucketName,
+                        Key = s3Object.Key
+                    });
+                }
+
+                var userImages = await context.QueryAsync<UserImage>(userImageId, new DynamoDBOperationConfig
+                {
+                    IndexName = $"{nameof(UserImage.UserId)}-index"
+                }).GetRemainingAsync();
+
+                foreach (var image in userImages)
+                {
+                    await context.DeleteAsync(image);
+                }
+            }
         }
     }
 }

@@ -242,11 +242,15 @@
                 <!--  Content Area  -->
                 <mah:HamburgerMenu.ContentTemplate>
                     <DataTemplate>
-                        <mah:TransitioningContentControl
-                            Grid.Row="1"
-                            Content="{Binding Tag}"
-                            RestartTransitionOnContentChange="True"
-                            Transition="Left" />
+                        <ScrollViewer>
+                            <mah:TransitioningContentControl
+                                Grid.Row="1"
+                                Content="{Binding Tag}"
+                                RestartTransitionOnContentChange="True"
+                                ScrollViewer.CanContentScroll="True"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Transition="Left" />
+                        </ScrollViewer>
                     </DataTemplate>
                 </mah:HamburgerMenu.ContentTemplate>
             </mah:HamburgerMenu>

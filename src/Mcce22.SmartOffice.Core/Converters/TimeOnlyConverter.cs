@@ -9,8 +9,8 @@ namespace Mcce22.SmartOffice.Core.Converters
         {
             var primitive = entry as Primitive;
 
-            var timeSpan = TimeSpan.Parse(primitive.Value.ToString());
-            return TimeOnly.FromTimeSpan(timeSpan);
+            var dateTime = DateTime.Parse(primitive.Value.ToString());
+            return TimeOnly.FromDateTime(dateTime);
         }
 
         public DynamoDBEntry ToEntry(object value)

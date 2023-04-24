@@ -46,29 +46,5 @@ namespace Mcce22.SmartOffice.Users.Controllers
         {
             await _userManager.DeleteUser(userId);
         }
-
-        [HttpGet("{userId}/image")]
-        public async Task<UserImageModel[]> GetUserImages(string userId)
-        {
-            return await _userImageManager.GetUserImages(userId);
-        }
-
-        [HttpPost("{userId}/image")]
-        public async Task<UserImageModel> GetUserImages(string userId, IFormFile file)
-        {
-            return await _userImageManager.StoreUserImage(userId, file);
-        }
-
-        [HttpDelete("{userId}/image")]
-        public async Task GetAllUserImages(string userId)
-        {
-            await _userImageManager.DeleteAllUserImage(userId);
-        }
-
-        [HttpDelete("{userId}/image/{userImageId}")]
-        public async Task GetUserImages(string userId, string userImageId)
-        {
-            await _userImageManager.DeleteUserImage(userId, userImageId);
-        }
     }
 }

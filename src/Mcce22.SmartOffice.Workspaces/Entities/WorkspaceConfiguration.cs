@@ -16,5 +16,8 @@ namespace Mcce22.SmartOffice.Workspaces.Entities
 
         [DynamoDBProperty]
         public string WorkspaceId { get; set; }
+
+        [DynamoDBProperty]
+        public string WorkspaceUser { get; set; }
     }
 }
