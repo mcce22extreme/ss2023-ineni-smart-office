@@ -2,22 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Deploys the MCCE22 Smart Office AWS infrastructure
 
-Parameters:
-
-  SmtpHost:
-    Type: String
-    Default: smtp.gmail.com
-  SmtpPort:
-    Type: Number
-    Default: 587
-  SmtpUsername:
-    Type: String
-  SmtpPassword:
-    Type: String
-    NoEcho: true
-  SmtpSendername:
-    Type: String
-
 Resources:
 
   Mcce22SmartOfficeVpc:
@@ -139,10 +123,14 @@ Resources:
 
   Mcce22SmartOfficeUsersImageBucket:
     Type: AWS::S3::Bucket
-    DeletionPolicy: Delete
+    DeletionPolicy: Retain
     Properties:
       BucketName: mcce22-smart-office-images
-      AccessControl: PublicRead
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
 
   Mcce22SmartOfficeUsersImageBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -160,22 +148,6 @@ Resources:
                 - !Ref Mcce22SmartOfficeUsersImageBucket
                 - /*
             Principal: '*'    
-
-  # Mcce22SmartOfficeUsersSecret:
-  #   Type: AWS::SecretsManager::Secret
-  #   Properties:
-  #     Name: mcce22-smart-office
-  #     SecretString: !Sub |         
-  #       {
-  #         "BucketName": "${Mcce22SmartOfficeUsersImageBucket}",  
-  #         "SmptConfiguration": {
-  #           "host": "${SmtpHost}",
-  #           "port": ${SmtpPort},
-  #           "username": "${SmtpUsername}",
-  #           "password": "${SmtpPassword}",
-  #           "sendername": "${SmtpSendername}"
-  #         }  
-  #       }
 
   Mcce22SmartOfficeUsersTable:
     Type: AWS::DynamoDB::Table
@@ -439,25 +411,6 @@ Resources:
         Runtime: dotnet6
         Timeout: 30
 
-  # Mcce22SmartOfficeActivatorLambda:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: ../Mcce22.SmartOffice.DeviceActivator/
-  #     Events:
-  #       RootGet:
-  #         Type: Api
-  #         Properties:
-  #           Path: /activate
-  #           Method: GET          
-  #     FunctionName: mcce22-smart-office-activator
-  #     Handler: Mcce22.SmartOffice.DeviceActivator::Mcce22.SmartOffice.DeviceActivator.Functions::HandleRequest
-  #     MemorySize: 256
-  #     Policies:
-  #       - AWSLambda_FullAccess
-  #     Role: arn:aws:iam::064088109127:role/LabRole
-  #     Runtime: dotnet6
-  #     Timeout: 30
-
   Mcce22SmartOfficeActivatorLambda:
       Type: AWS::Serverless::Function
       Properties:
@@ -480,5 +433,24 @@ Resources:
           - AWSLambda_FullAccess
         Role: arn:aws:iam::064088109127:role/LabRole
         Runtime: dotnet6
-        Timeout: 30         
+        Timeout: 30
+
+  Mcce22SmartOfficeDataIngressLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.DataIngress/
+        Events:
+          RootGet:
+            Type: Api
+            Properties:
+              Path: /dataingress
+              Method: POST          
+        FunctionName: mcce22-smart-office-dataingress
+        Handler: Mcce22.SmartOffice.DataIngress::Mcce22.SmartOffice.DataIngress.Functions::HandleRequest
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::064088109127:role/LabRole
+        Runtime: dotnet6
+        Timeout: 30              
         

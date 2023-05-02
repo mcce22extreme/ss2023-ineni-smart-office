@@ -1,6 +1,6 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
 
-namespace Mcce22.SmartOffice.Workspaces.Entities
+namespace Mcce22.SmartOffice.DataIngress.Entities
 {
     [DynamoDBTable("mcce22-smart-office-workspace-data")]
     public class WorkspaceData
