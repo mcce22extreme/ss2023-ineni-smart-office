@@ -1,5 +1,6 @@
-﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2;
 using Amazon.S3;
+using Amazon.SimpleSystemsManagement;
 using Mcce22.SmartOffice.Core;
 using Mcce22.SmartOffice.Users.Managers;
 using Newtonsoft.Json;
@@ -16,9 +17,6 @@ namespace Mcce22.SmartOffice.Users
             await base.ConfigureBuilder(builder);
 
             var appSettings = Configuration.Get<AppSettings>();
-            await appSettings.LoadConfigFromAWSSecretsManager();
-
-            builder.Services.AddSingleton<IAppSettings>(s => appSettings);
 
             Log.Debug("Application Configuration:");
             Log.Debug(JsonConvert.SerializeObject(appSettings, Formatting.Indented, new JsonSerializerSettings
@@ -38,6 +36,8 @@ namespace Mcce22.SmartOffice.Users
             builder.Services.AddScoped<IAmazonDynamoDB>(s => new AmazonDynamoDBClient());
 
             builder.Services.AddScoped<IAmazonS3>(s => new AmazonS3Client());
+
+            builder.Services.AddScoped<IAmazonSimpleSystemsManagement>(s => new AmazonSimpleSystemsManagementClient());
 
             builder.Services.AddScoped<IUserManager, UserManager>();
 
