@@ -77,13 +77,6 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             set { SetProperty(ref _activateWorkspaceDataSeed, value); }
         }
 
-        private bool _activateBookingSeed = true;
-        public bool ActivateBookingSeed
-        {
-            get { return _activateBookingSeed; }
-            set { SetProperty(ref _activateBookingSeed, value); }
-        }
-
         public RelayCommand SeedDataCommand { get; }
 
         public SeedDataViewModel(
@@ -150,53 +143,39 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                         await DeleteWorkspaces();
                     }
 
-                    Progress = 40;
+                    Progress = 30;
                     if (ActivateUserDataSeed)
                     {
                         ProgressText = "Delete workspace data...";
                         await DeleteWorkspaceData();
                     }
 
-                    Progress = 45;
-                    if (ActivateBookingSeed)
-                    {
-                        ProgressText = "Delete booking data...";
-                        await DeleteBookings();
-                    }
-
-                    Progress = 50;
+                    Progress = 40;
                     if (ActivateUserSeed)
                     {
                         ProgressText = "Seed users...";
                         await SeedUsers();
                     }
 
-                    Progress = 60;
+                    Progress = 50;
                     if (ActivateUserImageSeed)
                     {
                         ProgressText = "Seed user images...";
                         await SeedUserImages();
                     }
 
-                    Progress = 70;
+                    Progress = 60;
                     if (ActivateWorkspaceSeed)
                     {
                         ProgressText = "Seed workspaces...";
                         await SeedWorkspaces();
                     }
 
-                    Progress = 80;
+                    Progress = 70;
                     if (ActivateUserDataSeed)
                     {
                         ProgressText = "Seed workspace data...";
                         await SeedWorkspaceData();
-                    }
-
-                    Progress = 90;
-                    if (ActivateBookingSeed)
-                    {
-                        ProgressText = "Seed booking data...";
-                        await SeedBookings();
                     }
 
                     Progress = 100;
@@ -304,35 +283,6 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             StepProgress = 100;
         }
 
-        private async Task SeedBookings()
-        {
-            StepProgress = 0;
-
-            var users = await _userManager.GetList();
-            var workspaces = await _workspaceManager.GetList();
-
-            var workspace = workspaces.FirstOrDefault();
-            var user = users.FirstOrDefault();
-
-            var booking = new BookingModel
-            {
-                StartDateTime = DateTime.Now.AddMinutes(15),
-                EndDateTime = DateTime.Now.AddHours(1),
-                WorkspaceId = workspace.Id,
-                WorkspaceNumber = workspace.WorkspaceNumber,
-                RoomNumber = workspace.RoomNumber,
-                UserId = user.Id,
-                FirstName = user.FirstName ,
-                LastName = user.LastName ,
-                UserName =  user.UserName,
-                Email = user.Email
-            };
-
-            await _bookingManager.Save(booking);
-
-            StepProgress = 100;
-        }
-
         private async Task DeleteUsers()
         {
             var users = await _userManager.GetList();
@@ -400,24 +350,6 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
                 count++;
                 StepProgress = count * 100 / workspaceData.Length;
-            }
-
-            StepProgress = 100;
-        }
-
-        private async Task DeleteBookings()
-        {
-            var bookings = await _bookingManager.GetList();
-
-            StepProgress = 0;
-            var count = 0;
-
-            foreach (var booking in bookings)
-            {
-                await _bookingManager.Delete(booking.Id);
-
-                count++;
-                StepProgress = count * 100 / bookings.Length;
             }
 
             StepProgress = 100;
