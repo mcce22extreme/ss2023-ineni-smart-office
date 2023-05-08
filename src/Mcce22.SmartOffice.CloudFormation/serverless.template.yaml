@@ -108,19 +108,6 @@ Resources:
       ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
       VpcId: !Ref Mcce22SmartOfficeVpc
 
-  Mcce22SmartOfficeVpcEndpointSecretsManager:
-    Type: 'AWS::EC2::VPCEndpoint'
-    Properties:
-      VpcEndpointType: Interface
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.secretsmanager'
-      PrivateDnsEnabled: true
-      VpcId: !Ref Mcce22SmartOfficeVpc
-      SubnetIds: 
-        - !Ref Mcce22SmartOfficePublicSubnet1
-        - !Ref Mcce22SmartOfficePublicSubnet2       
-      SecurityGroupIds:
-        - !Ref Mcce22SmartOfficeSG
-
   Mcce22SmartOfficeUsersImageBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
@@ -148,6 +135,14 @@ Resources:
                 - !Ref Mcce22SmartOfficeUsersImageBucket
                 - /*
             Principal: '*'    
+
+  Mcce22SmartOfficeImageBucketParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: bucketname
+      Type: String
+      Value: !Ref Mcce22SmartOfficeUsersImageBucket
+      Description: Name of the Smart Office S3 bucket where user images are stored.
 
   Mcce22SmartOfficeUsersTable:
     Type: AWS::DynamoDB::Table
@@ -340,7 +335,7 @@ Resources:
       MemorySize: 256
       Policies:
         - AWSLambda_FullAccess
-      Role: arn:aws:iam::064088109127:role/LabRole
+      Role: arn:aws:iam::174611956005:role/LabRole
       Runtime: dotnet6
       Timeout: 30
 
@@ -364,7 +359,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::064088109127:role/LabRole
+        Role: arn:aws:iam::174611956005:role/LabRole
         Runtime: dotnet6
         Timeout: 30
 
@@ -380,7 +375,8 @@ Resources:
               Method: ANY
           RootResource:
             Type: Api
-            Properties:
+            Properties: 
+              RestApiId: !Ref Mcce22SmartOfficeApiGateway
               Path: /bookingapi
               Method: ANY
         FunctionName: mcce22-smart-office-bookings
@@ -388,7 +384,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::064088109127:role/LabRole
+        Role: arn:aws:iam::174611956005:role/LabRole
         Runtime: dotnet6
         Timeout: 30
 
@@ -407,7 +403,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::064088109127:role/LabRole
+        Role: arn:aws:iam::174611956005:role/LabRole
         Runtime: dotnet6
         Timeout: 30
 
@@ -431,7 +427,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::064088109127:role/LabRole
+        Role: arn:aws:iam::174611956005:role/LabRole
         Runtime: dotnet6
         Timeout: 30
 
@@ -450,7 +446,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::064088109127:role/LabRole
+        Role: arn:aws:iam::174611956005:role/LabRole
         Runtime: dotnet6
         Timeout: 30              
         
