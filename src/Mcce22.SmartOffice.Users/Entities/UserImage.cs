@@ -16,5 +16,8 @@ namespace Mcce22.SmartOffice.Users.Entities
 
         [DynamoDBProperty]
         public string Url { get; set; }
+
+        [DynamoDBProperty]
+        public long Size { get; set; }
     }
 }
