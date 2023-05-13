@@ -305,96 +305,96 @@ Resources:
             ReadCapacityUnits: "5"
             WriteCapacityUnits: "5"
 
-  # Mcce22SmartOfficeUsersLambda:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: ../Mcce22.SmartOffice.Users/
-  #     Events:
-  #       ProxyResource:
-  #         Type: Api
-  #         Properties:
-  #           Path: /userapi/{proxy+}
-  #           Method: ANY
-  #       RootResource:
-  #         Type: Api
-  #         Properties:
-  #           Path: /userapi
-  #           Method: ANY
-  #     FunctionName: mcce22-smart-office-users
-  #     Handler: Mcce22.SmartOffice.Users
-  #     MemorySize: 256
-  #     Policies:
-  #       - AWSLambda_FullAccess
-  #     Role: arn:aws:iam::174611956005:role/LabRole
-  #     Runtime: dotnet6
-  #     Timeout: 30
+  Mcce22SmartOfficeUsersLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../Mcce22.SmartOffice.Users/
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /userapi/{proxy+}
+            Method: ANY
+        RootResource:
+          Type: Api
+          Properties:
+            Path: /userapi
+            Method: ANY
+      FunctionName: mcce22-smart-office-users
+      Handler: Mcce22.SmartOffice.Users
+      MemorySize: 256
+      Policies:
+        - AWSLambda_FullAccess
+      Role: arn:aws:iam::174611956005:role/LabRole
+      Runtime: dotnet6
+      Timeout: 30
 
-  # Mcce22SmartOfficeWorkspacesLambda:
-  #     Type: AWS::Serverless::Function
-  #     Properties:
-  #       CodeUri: ../Mcce22.SmartOffice.Workspaces/
-  #       Events:
-  #         ProxyResource:
-  #           Type: Api
-  #           Properties:
-  #             Path: /workspaceapi/{proxy+}
-  #             Method: ANY
-  #         RootResource:
-  #           Type: Api
-  #           Properties:
-  #             Path: /workspaceapi
-  #             Method: ANY
-  #       FunctionName: mcce22-smart-office-workspaces
-  #       Handler: Mcce22.SmartOffice.Workspaces
-  #       MemorySize: 256
-  #       Policies:
-  #         - AWSLambda_FullAccess
-  #       Role: arn:aws:iam::174611956005:role/LabRole
-  #       Runtime: dotnet6
-  #       Timeout: 30
+  Mcce22SmartOfficeWorkspacesLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.Workspaces/
+        Events:
+          ProxyResource:
+            Type: Api
+            Properties:
+              Path: /workspaceapi/{proxy+}
+              Method: ANY
+          RootResource:
+            Type: Api
+            Properties:
+              Path: /workspaceapi
+              Method: ANY
+        FunctionName: mcce22-smart-office-workspaces
+        Handler: Mcce22.SmartOffice.Workspaces
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::174611956005:role/LabRole
+        Runtime: dotnet6
+        Timeout: 30
 
-  # Mcce22SmartOfficeBookingsLambda:
-  #     Type: AWS::Serverless::Function
-  #     Properties:
-  #       CodeUri: ../Mcce22.SmartOffice.Bookings/
-  #       Events:
-  #         ProxyResource:
-  #           Type: Api
-  #           Properties:
-  #             Path: /bookingapi/{proxy+}
-  #             Method: ANY
-  #         RootResource:
-  #           Type: Api
-  #           Properties:
-  #             Path: /bookingapi
-  #             Method: ANY
-  #       FunctionName: mcce22-smart-office-bookings
-  #       Handler: Mcce22.SmartOffice.Bookings
-  #       MemorySize: 256
-  #       Policies:
-  #         - AWSLambda_FullAccess
-  #       Role: arn:aws:iam::174611956005:role/LabRole
-  #       Runtime: dotnet6
-  #       Timeout: 30
+  Mcce22SmartOfficeBookingsLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.Bookings/
+        Events:
+          ProxyResource:
+            Type: Api
+            Properties:
+              Path: /bookingapi/{proxy+}
+              Method: ANY
+          RootResource:
+            Type: Api
+            Properties:
+              Path: /bookingapi
+              Method: ANY
+        FunctionName: mcce22-smart-office-bookings
+        Handler: Mcce22.SmartOffice.Bookings
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::174611956005:role/LabRole
+        Runtime: dotnet6
+        Timeout: 30
 
-  # Mcce22SmartOfficeNotificationsLambda:
-  #     Type: AWS::Serverless::Function
-  #     Properties:
-  #       CodeUri: ../Mcce22.SmartOffice.Notifications/
-  #       Events:
-  #         RootGet:
-  #           Type: Api
-  #           Properties:
-  #             Path: /notify
-  #             Method: GET          
-  #       FunctionName: mcce22-smart-office-notifications
-  #       Handler: Mcce22.SmartOffice.Notifications::Mcce22.SmartOffice.Notifications.Functions::HandleRequest
-  #       MemorySize: 256
-  #       Policies:
-  #         - AWSLambda_FullAccess
-  #       Role: arn:aws:iam::174611956005:role/LabRole
-  #       Runtime: dotnet6
-  #       Timeout: 30
+  Mcce22SmartOfficeNotificationsLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.Notifications/
+        Events:
+          RootGet:
+            Type: Api
+            Properties:
+              Path: /notify
+              Method: GET          
+        FunctionName: mcce22-smart-office-notifications
+        Handler: Mcce22.SmartOffice.Notifications::Mcce22.SmartOffice.Notifications.Functions::HandleRequest
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::174611956005:role/LabRole
+        Runtime: dotnet6
+        Timeout: 30
 
   Mcce22SmartOfficeActivatorLambda:
       Type: AWS::Serverless::Function
@@ -420,22 +420,22 @@ Resources:
         Runtime: dotnet6
         Timeout: 30
 
-  # Mcce22SmartOfficeDataIngressLambda:
-  #     Type: AWS::Serverless::Function
-  #     Properties:
-  #       CodeUri: ../Mcce22.SmartOffice.DataIngress/
-  #       Events:
-  #         RootGet:
-  #           Type: Api
-  #           Properties:
-  #             Path: /dataingress
-  #             Method: POST          
-  #       FunctionName: mcce22-smart-office-dataingress
-  #       Handler: Mcce22.SmartOffice.DataIngress::Mcce22.SmartOffice.DataIngress.Functions::HandleRequest
-  #       MemorySize: 256
-  #       Policies:
-  #         - AWSLambda_FullAccess
-  #       Role: arn:aws:iam::174611956005:role/LabRole
-  #       Runtime: dotnet6
-  #       Timeout: 30
+  Mcce22SmartOfficeDataIngressLambda:
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: ../Mcce22.SmartOffice.DataIngress/
+        Events:
+          RootGet:
+            Type: Api
+            Properties:
+              Path: /dataingress
+              Method: POST          
+        FunctionName: mcce22-smart-office-dataingress
+        Handler: Mcce22.SmartOffice.DataIngress::Mcce22.SmartOffice.DataIngress.Functions::HandleRequest
+        MemorySize: 256
+        Policies:
+          - AWSLambda_FullAccess
+        Role: arn:aws:iam::174611956005:role/LabRole
+        Runtime: dotnet6
+        Timeout: 30
         

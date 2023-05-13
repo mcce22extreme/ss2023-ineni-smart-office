@@ -1,0 +1,23 @@
+name: CD Pipeline
+
+on:
+  release:
+    types: [published]
+
+jobs:  
+  deploy:
+    environment: mcce22-smart-office-staging    
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    - name: AWS CLI
+      run: dotnet tool install -g Amazon.Lambda.Tools
+    - name: Deploy to AWS
+      working-directory: ./src/Mcce22.SmartOffice.CloudFormation
+      run: dotnet lambda deploy-serverless -c Release --aws-access-key-id ${{ env.AWS_ACCESS_KEY_ID }} --aws-secret-key ${{ env.AWS_SECRET_KEY }} --aws-session-token ${{ env.AWS_SESSION_TOKEN }} --region us-east-1 -sb ${{ env.MCCE22_CF_BUCKETNAME }} -sn ${{ env.MCCE22_CF_STACKNAME }} -t serverless.template.yaml -tp "ImageBucketNameParameter=${{ env.MCCE22_IMAGE_BUCKETNAME }};SmtpHostParameter=${{ env.MCCE22_SMTP_HOST }};SmtpPortParameter=${{ env.MCCE22_SMTP_PORT }};SmtpUsernameParameter=${{ env.MCCE22_SMTP_USERNAME }};SmtpPasswordParameter=${{ env.MCCE22_SMTP_PASSWORD }};SmtpSendernameParameter=${{ env.MCCE22_SMTP_SENDERNAME }};IoTDataEndpointAddressParameter=${{ env.MCCE22_IOTDATAENDPOINT_ADDRESS }};"
+
+
