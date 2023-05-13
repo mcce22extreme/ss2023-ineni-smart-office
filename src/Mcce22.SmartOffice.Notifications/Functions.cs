@@ -3,11 +3,12 @@ using System.Net;
 using System.Reflection;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using Amazon.SimpleSystemsManagement;
 using Mcce22.SmartOffice.Core.Generators;
+using Mcce22.SmartOffice.Core.Providers;
 using Mcce22.SmartOffice.Notifications.Managers;
 using Mcce22.SmartOffice.Notifications.Services;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Serilog;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -15,8 +16,6 @@ using Serilog;
 namespace Mcce22.SmartOffice.Notifications;
 public class Functions
 {
-    private readonly AppSettings _appSettings;
-
     public Functions()
     {
         var config = new ConfigurationBuilder()
@@ -29,8 +28,6 @@ public class Functions
             .Enrich.FromLogContext()
             .ReadFrom.Configuration(config)
             .CreateLogger();
-
-        _appSettings = config.Get<AppSettings>();
     }
 
     public APIGatewayProxyResponse HandleRequest(APIGatewayProxyRequest request, ILambdaContext context)
@@ -38,14 +35,8 @@ public class Functions
         var stopwatch = Stopwatch.StartNew();
         Log.Information($"[In ] {nameof(HandleRequest)}");
 
-        Task.WaitAll(_appSettings.LoadConfigFromAWSSecretsManager());
-
-        Log.Debug("Application Configuration: " + JsonConvert.SerializeObject(_appSettings, Formatting.Indented, new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Ignore
-        }));
-
-        var emailService = new EmailService(_appSettings.ActivatorEndpointAddress, _appSettings.SmptConfiguration);
+        var appConfigProvider = new AppConfigProvider(new AmazonSimpleSystemsManagementClient());
+        var emailService = new EmailService(appConfigProvider);
 
         var notificationManager = new NotificationManager(emailService, new IdGenerator());
 

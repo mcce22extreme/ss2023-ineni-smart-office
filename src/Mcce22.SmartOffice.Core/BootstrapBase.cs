@@ -6,6 +6,7 @@ using Mcce22.SmartOffice.Core.Generators;
 using Mcce22.SmartOffice.Core.Handlers;
 using Mcce22.SmartOffice.Core.Providers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,8 @@ namespace Mcce22.SmartOffice.Core
 
         protected abstract string ApiPrefix { get; }
 
+        private readonly string _baseAddress;
+
         public BootstrapBase()
         {
             Configuration = new ConfigurationBuilder()
@@ -27,6 +30,8 @@ namespace Mcce22.SmartOffice.Core
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true, reloadOnChange: true)
                 .Build();
+
+            _baseAddress = Configuration.GetSection("BaseAddress")?.Value;
         }
 
         public async Task Run(string[] args)
@@ -54,6 +59,11 @@ namespace Mcce22.SmartOffice.Core
             var appInfo = new AppInfo(assembly.GetName());
 
             Log.Information($"Starting {appInfo.AppName} v{appInfo.AppVersion}...");
+
+#if DEBUG
+            // Configure urls (only for local debugging)
+            builder.WebHost.UseUrls(_baseAddress);
+#endif
 
             builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
 

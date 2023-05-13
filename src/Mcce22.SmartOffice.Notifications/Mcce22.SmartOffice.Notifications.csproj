@@ -18,7 +18,6 @@
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.3.1" />
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.6.0" />
     <PackageReference Include="AWSSDK.IotData" Version="3.7.103.15" />
-    <PackageReference Include="AWSSDK.SecretsManager" Version="3.7.102.37" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103" />
     <PackageReference Include="MailKit" Version="4.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

@@ -8,14 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="serverless.template.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="serverless.template.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.6.0" />
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103" />    
     <PackageReference Include="AWSSDK.S3" Version="3.7.104.11" />    
@@ -24,6 +16,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Mcce22.SmartOffice.Core\Mcce22.SmartOffice.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Providers\" />
   </ItemGroup>
 
 </Project>

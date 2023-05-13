@@ -2,117 +2,115 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Deploys the MCCE22 Smart Office AWS infrastructure
 
+Parameters:
+
+ ImageBucketNameParameter:
+    Type: String
+    Description: The name of the s3 image bucket in which user images are stored.
+ 
+ IoTDataEndpointAddressParameter:
+    Type: String
+    Description: The address of AWS IoT Core data endpoint.
+
+ SmtpHostParameter:
+    Type: String
+    Description: The smtp host that is used to send emails.
+
+ SmtpPortParameter:
+    Type: String
+    Description: The smtp port that is used to send emails.
+
+ SmtpUsernameParameter: 
+    Type: String
+    Description: The username that is used to authenticate on the smtp server.
+
+ SmtpPasswordParameter:
+    Type: String
+    Description: The password that is used to authenticate on the smtp server.
+
+ SmtpSendernameParameter:
+    Type: String
+    Description: The sender name that is used to send emails.
+
 Resources:
 
-  Mcce22SmartOfficeVpc:
-    Type: AWS::EC2::VPC
-    Properties:
-      CidrBlock: 10.0.0.0/16
-      EnableDnsHostnames: true
-      EnableDnsSupport: true
-      Tags:
-      - Key: Name
-        Value: mcce22-smartoffice-vpc
+  Mcce22SmartOfficeImageBucketParameter:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties: 
+      Name: ImageBucketName
+      Description: The name of the s3 image bucket in which user images are stored.      
+      Type: String
+      Value: !Ref ImageBucketNameParameter
 
-  Mcce22SmartOfficeSG:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: mcce22-smartoffice-sg
-      GroupDescription: Allows http traffic
-      VpcId: !Ref Mcce22SmartOfficeVpc
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: 1433
-          ToPort: 1433
-          CidrIp: 0.0.0.0/0
-      Tags:
-        - Key: Name
-          Value: mcce22-smartoffice-sg
+  Mcce22SmartOfficeSmtpHostParameter:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties: 
+      Name: SmtpHost
+      Description: The smtp host that is used to send emails.
+      Type: String
+      Value: !Ref SmtpHostParameter      
 
-  Mcce22SmartOfficeIgw:
-    Type: AWS::EC2::InternetGateway
-    Properties:
-      Tags:
-      - Key: Name
-        Value: mcce22-smartoffice-igw
+  Mcce22SmartOfficeSmtpPortParameter:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties: 
+      Name: SmtpPort
+      Description: The smtp port that is used to send emails.
+      Type: String
+      Value: !Ref SmtpPortParameter
 
-  Mcce22SmartOfficeAttachGateway:
-    Type: AWS::EC2::VPCGatewayAttachment
-    Properties:
-      VpcId: !Ref Mcce22SmartOfficeVpc
-      InternetGatewayId: !Ref Mcce22SmartOfficeIgw
+  Mcce22SmartOfficeSmtpUsernameParameter:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties: 
+      Name: SmtpUsername
+      Description: The username that is used to authenticate on the smtp server.
+      Type: String
+      Value: !Ref SmtpUsernameParameter
 
-  Mcce22SmartOfficePublicSubnet1:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref Mcce22SmartOfficeVpc
-      CidrBlock: 10.0.1.0/24
-      AvailabilityZone: us-east-1a
-      Tags:
-        - Key: Name
-          Value: mcce22-smartoffice-public-subnet1
+  Mcce22SmartOfficeSmtpPasswordParameter:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties: 
+      Name: SmtpPassword
+      Description: The password that is used to authenticate on the smtp server.
+      Type: String
+      Value: !Ref SmtpPasswordParameter
 
-  Mcce22SmartOfficePublicSubnet2:
-    Type: AWS::EC2::Subnet
-    Properties:
-      VpcId: !Ref Mcce22SmartOfficeVpc
-      CidrBlock: 10.0.2.0/24
-      AvailabilityZone: us-east-1b
-      Tags:
-        - Key: Name
-          Value: mcce22-smartoffice-public-subnet2           
+  Mcce22SmartOfficeSmtpSendernameParameter:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties: 
+      Name: SmtpSendername
+      Description: The sender name that is used to send emails.
+      Type: String
+      Value: !Ref SmtpSendernameParameter
 
-  Mcce22SmartOfficeRouteTable:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref Mcce22SmartOfficeVpc
-      Tags:
-        - Key: Name
-          Value: mcce22-smartoffice-public-routetable
+  Mcce22SmartOfficeIoTDataEndpointAddressParameter:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties: 
+      Name: IoTDataEndpointAddress
+      Description: The address of AWS IoT Core data endpoint.
+      Type: String
+      Value: !Ref IoTDataEndpointAddressParameter
 
-  Mcce22SmartOfficePublicRoute:
-    Type: AWS::EC2::Route
-    Properties:
-      RouteTableId: !Ref Mcce22SmartOfficeRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref Mcce22SmartOfficeIgw
-
-  Mcce22SmartOfficeSubnetRouteTableAssociation1:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref Mcce22SmartOfficePublicSubnet1
-      RouteTableId: !Ref Mcce22SmartOfficeRouteTable
-
-  Mcce22SmartOfficeSubnetRouteTableAssociation2:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref Mcce22SmartOfficePublicSubnet2
-      RouteTableId: !Ref Mcce22SmartOfficeRouteTable      
-
-  Mcce22SmartOfficeVpcEndpointS3:
-    Type: 'AWS::EC2::VPCEndpoint'
-    Properties:
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-        - Effect: Allow
-          Principal: '*'
-          Action: '*'
-          Resource: '*'
-      RouteTableIds:
-        - !Ref Mcce22SmartOfficeRouteTable
-      ServiceName: !Sub 'com.amazonaws.${AWS::Region}.s3'
-      VpcId: !Ref Mcce22SmartOfficeVpc
+  Mcce22SmartOfficeActivatorEndpointAddressParameter:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties: 
+      Name: ActivatorEndpointAddress
+      Description: The address of the MCCE22 IoT Device Activator api.
+      Type: String
+      Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/activator'
 
   Mcce22SmartOfficeUsersImageBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
-      BucketName: mcce22-smart-office-images
+      BucketName: !Ref ImageBucketNameParameter 
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
         BlockPublicPolicy: false
@@ -135,14 +133,6 @@ Resources:
                 - !Ref Mcce22SmartOfficeUsersImageBucket
                 - /*
             Principal: '*'    
-
-  Mcce22SmartOfficeImageBucketParameter:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: bucketname
-      Type: String
-      Value: !Ref Mcce22SmartOfficeUsersImageBucket
-      Description: Name of the Smart Office S3 bucket where user images are stored.
 
   Mcce22SmartOfficeUsersTable:
     Type: AWS::DynamoDB::Table
@@ -315,97 +305,96 @@ Resources:
             ReadCapacityUnits: "5"
             WriteCapacityUnits: "5"
 
-  Mcce22SmartOfficeUsersLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ../Mcce22.SmartOffice.Users/
-      Events:
-        ProxyResource:
-          Type: Api
-          Properties:
-            Path: /userapi/{proxy+}
-            Method: ANY
-        RootResource:
-          Type: Api
-          Properties:
-            Path: /userapi
-            Method: ANY
-      FunctionName: mcce22-smart-office-users
-      Handler: Mcce22.SmartOffice.Users
-      MemorySize: 256
-      Policies:
-        - AWSLambda_FullAccess
-      Role: arn:aws:iam::174611956005:role/LabRole
-      Runtime: dotnet6
-      Timeout: 30
+  # Mcce22SmartOfficeUsersLambda:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: ../Mcce22.SmartOffice.Users/
+  #     Events:
+  #       ProxyResource:
+  #         Type: Api
+  #         Properties:
+  #           Path: /userapi/{proxy+}
+  #           Method: ANY
+  #       RootResource:
+  #         Type: Api
+  #         Properties:
+  #           Path: /userapi
+  #           Method: ANY
+  #     FunctionName: mcce22-smart-office-users
+  #     Handler: Mcce22.SmartOffice.Users
+  #     MemorySize: 256
+  #     Policies:
+  #       - AWSLambda_FullAccess
+  #     Role: arn:aws:iam::174611956005:role/LabRole
+  #     Runtime: dotnet6
+  #     Timeout: 30
 
-  Mcce22SmartOfficeWorkspacesLambda:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: ../Mcce22.SmartOffice.Workspaces/
-        Events:
-          ProxyResource:
-            Type: Api
-            Properties:
-              Path: /workspaceapi/{proxy+}
-              Method: ANY
-          RootResource:
-            Type: Api
-            Properties:
-              Path: /workspaceapi
-              Method: ANY
-        FunctionName: mcce22-smart-office-workspaces
-        Handler: Mcce22.SmartOffice.Workspaces
-        MemorySize: 256
-        Policies:
-          - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
-        Runtime: dotnet6
-        Timeout: 30
+  # Mcce22SmartOfficeWorkspacesLambda:
+  #     Type: AWS::Serverless::Function
+  #     Properties:
+  #       CodeUri: ../Mcce22.SmartOffice.Workspaces/
+  #       Events:
+  #         ProxyResource:
+  #           Type: Api
+  #           Properties:
+  #             Path: /workspaceapi/{proxy+}
+  #             Method: ANY
+  #         RootResource:
+  #           Type: Api
+  #           Properties:
+  #             Path: /workspaceapi
+  #             Method: ANY
+  #       FunctionName: mcce22-smart-office-workspaces
+  #       Handler: Mcce22.SmartOffice.Workspaces
+  #       MemorySize: 256
+  #       Policies:
+  #         - AWSLambda_FullAccess
+  #       Role: arn:aws:iam::174611956005:role/LabRole
+  #       Runtime: dotnet6
+  #       Timeout: 30
 
-  Mcce22SmartOfficeBookingsLambda:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: ../Mcce22.SmartOffice.Bookings/
-        Events:
-          ProxyResource:
-            Type: Api
-            Properties:
-              Path: /bookingapi/{proxy+}
-              Method: ANY
-          RootResource:
-            Type: Api
-            Properties: 
-              RestApiId: !Ref Mcce22SmartOfficeApiGateway
-              Path: /bookingapi
-              Method: ANY
-        FunctionName: mcce22-smart-office-bookings
-        Handler: Mcce22.SmartOffice.Bookings
-        MemorySize: 256
-        Policies:
-          - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
-        Runtime: dotnet6
-        Timeout: 30
+  # Mcce22SmartOfficeBookingsLambda:
+  #     Type: AWS::Serverless::Function
+  #     Properties:
+  #       CodeUri: ../Mcce22.SmartOffice.Bookings/
+  #       Events:
+  #         ProxyResource:
+  #           Type: Api
+  #           Properties:
+  #             Path: /bookingapi/{proxy+}
+  #             Method: ANY
+  #         RootResource:
+  #           Type: Api
+  #           Properties:
+  #             Path: /bookingapi
+  #             Method: ANY
+  #       FunctionName: mcce22-smart-office-bookings
+  #       Handler: Mcce22.SmartOffice.Bookings
+  #       MemorySize: 256
+  #       Policies:
+  #         - AWSLambda_FullAccess
+  #       Role: arn:aws:iam::174611956005:role/LabRole
+  #       Runtime: dotnet6
+  #       Timeout: 30
 
-  Mcce22SmartOfficeNotificationsLambda:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: ../Mcce22.SmartOffice.Notifications/
-        Events:
-          RootGet:
-            Type: Api
-            Properties:
-              Path: /notify
-              Method: GET          
-        FunctionName: mcce22-smart-office-notifications
-        Handler: Mcce22.SmartOffice.Notifications::Mcce22.SmartOffice.Notifications.Functions::HandleRequest
-        MemorySize: 256
-        Policies:
-          - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
-        Runtime: dotnet6
-        Timeout: 30
+  # Mcce22SmartOfficeNotificationsLambda:
+  #     Type: AWS::Serverless::Function
+  #     Properties:
+  #       CodeUri: ../Mcce22.SmartOffice.Notifications/
+  #       Events:
+  #         RootGet:
+  #           Type: Api
+  #           Properties:
+  #             Path: /notify
+  #             Method: GET          
+  #       FunctionName: mcce22-smart-office-notifications
+  #       Handler: Mcce22.SmartOffice.Notifications::Mcce22.SmartOffice.Notifications.Functions::HandleRequest
+  #       MemorySize: 256
+  #       Policies:
+  #         - AWSLambda_FullAccess
+  #       Role: arn:aws:iam::174611956005:role/LabRole
+  #       Runtime: dotnet6
+  #       Timeout: 30
 
   Mcce22SmartOfficeActivatorLambda:
       Type: AWS::Serverless::Function
@@ -431,22 +420,22 @@ Resources:
         Runtime: dotnet6
         Timeout: 30
 
-  Mcce22SmartOfficeDataIngressLambda:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: ../Mcce22.SmartOffice.DataIngress/
-        Events:
-          RootGet:
-            Type: Api
-            Properties:
-              Path: /dataingress
-              Method: POST          
-        FunctionName: mcce22-smart-office-dataingress
-        Handler: Mcce22.SmartOffice.DataIngress::Mcce22.SmartOffice.DataIngress.Functions::HandleRequest
-        MemorySize: 256
-        Policies:
-          - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
-        Runtime: dotnet6
-        Timeout: 30              
+  # Mcce22SmartOfficeDataIngressLambda:
+  #     Type: AWS::Serverless::Function
+  #     Properties:
+  #       CodeUri: ../Mcce22.SmartOffice.DataIngress/
+  #       Events:
+  #         RootGet:
+  #           Type: Api
+  #           Properties:
+  #             Path: /dataingress
+  #             Method: POST          
+  #       FunctionName: mcce22-smart-office-dataingress
+  #       Handler: Mcce22.SmartOffice.DataIngress::Mcce22.SmartOffice.DataIngress.Functions::HandleRequest
+  #       MemorySize: 256
+  #       Policies:
+  #         - AWSLambda_FullAccess
+  #       Role: arn:aws:iam::174611956005:role/LabRole
+  #       Runtime: dotnet6
+  #       Timeout: 30
         

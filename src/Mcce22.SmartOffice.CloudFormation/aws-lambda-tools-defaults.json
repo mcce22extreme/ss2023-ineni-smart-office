@@ -1,8 +1,0 @@
-{
-    "configuration": "Release",
-    "profile": "default",
-    "region": "us-east-1",
-    "s3-bucket": "mcce22-smart-office-cf",
-    "stack-name": "mcce22-smart-office",
-    "template": "serverless.template.yaml"
-}
