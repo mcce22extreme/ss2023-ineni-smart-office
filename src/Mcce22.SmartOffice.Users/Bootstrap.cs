@@ -1,4 +1,5 @@
 using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.S3;
 using Amazon.SimpleSystemsManagement;
 using Mcce22.SmartOffice.Core;
@@ -17,6 +18,8 @@ namespace Mcce22.SmartOffice.Users
             builder.Services.AddAutoMapper(typeof(Bootstrap).Assembly);
 
             builder.Services.AddScoped<IAmazonDynamoDB>(s => new AmazonDynamoDBClient());
+
+            builder.Services.AddScoped<IDynamoDBContext>(s => new DynamoDBContext(new AmazonDynamoDBClient()));
 
             builder.Services.AddScoped<IAmazonS3>(s => new AmazonS3Client());
 
