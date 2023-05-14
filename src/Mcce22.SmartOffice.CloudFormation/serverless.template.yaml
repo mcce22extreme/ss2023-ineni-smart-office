@@ -32,6 +32,10 @@ Parameters:
     Type: String
     Description: The sender name that is used to send emails.
 
+ IAMRoleParameter:
+    Type: String    
+    Description: The AWS IAM role that is used as execution role for lambda functions.
+
 Resources:
 
   Mcce22SmartOfficeImageBucketParameter:
@@ -325,7 +329,7 @@ Resources:
       MemorySize: 256
       Policies:
         - AWSLambda_FullAccess
-      Role: arn:aws:iam::174611956005:role/LabRole
+      Role: !Ref IAMRoleParameter
       Runtime: dotnet6
       Timeout: 30
 
@@ -349,7 +353,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
+        Role: !Ref IAMRoleParameter
         Runtime: dotnet6
         Timeout: 30
 
@@ -373,7 +377,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
+        Role: !Ref IAMRoleParameter
         Runtime: dotnet6
         Timeout: 30
 
@@ -392,7 +396,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
+        Role: !Ref IAMRoleParameter
         Runtime: dotnet6
         Timeout: 30
 
@@ -416,7 +420,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
+        Role: !Ref IAMRoleParameter
         Runtime: dotnet6
         Timeout: 30
 
@@ -435,7 +439,7 @@ Resources:
         MemorySize: 256
         Policies:
           - AWSLambda_FullAccess
-        Role: arn:aws:iam::174611956005:role/LabRole
+        Role: !Ref IAMRoleParameter
         Runtime: dotnet6
         Timeout: 30
         
