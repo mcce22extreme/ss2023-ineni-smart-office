@@ -224,9 +224,9 @@
                             Tag="{Binding UserList}" />
                         <mah:HamburgerMenuIconItem
                             Icon="{iconPacks:FontAwesome Kind=ChartBarRegular}"
-                            IsEnabled="False"
                             IsVisible="{Binding Login.IsAdmin}"
-                            Label="Analytics" />
+                            Label="Analytics"
+                            Tag="{Binding WorkspaceDataList}" />
                         <mah:HamburgerMenuIconItem
                             Icon="{iconPacks:Material Kind=DatabaseRefresh}"
                             IsVisible="{Binding Login.IsAdmin}"
@@ -242,11 +242,15 @@
                 <!--  Content Area  -->
                 <mah:HamburgerMenu.ContentTemplate>
                     <DataTemplate>
-                        <mah:TransitioningContentControl
-                            Grid.Row="1"
-                            Content="{Binding Tag}"
-                            RestartTransitionOnContentChange="True"
-                            Transition="Left" />
+                        <ScrollViewer>
+                            <mah:TransitioningContentControl
+                                Grid.Row="1"
+                                Content="{Binding Tag}"
+                                RestartTransitionOnContentChange="True"
+                                ScrollViewer.CanContentScroll="True"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Transition="Left" />
+                        </ScrollViewer>
                     </DataTemplate>
                 </mah:HamburgerMenu.ContentTemplate>
             </mah:HamburgerMenu>

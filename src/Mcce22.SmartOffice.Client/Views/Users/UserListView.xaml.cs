@@ -15,16 +15,7 @@ namespace Mcce22.SmartOffice.Client.Views
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            ((UserListViewModel)DataContext).Reload();
-        }
-
-        private void AddPresetButton_Click(object sender, RoutedEventArgs e)
-        {
-            var addButton = sender as FrameworkElement;
-            if (addButton != null)
-            {
-                addButton.ContextMenu.IsOpen = true;
-            }
+            ((IListViewModel)DataContext).Reload();
         }
     }
 }

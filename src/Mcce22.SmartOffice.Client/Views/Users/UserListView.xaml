@@ -40,9 +40,6 @@
             <Button Command="{Binding ReloadCommand}" Style="{StaticResource ToolbarButtonStyle}">
                 <iconPacks:FontAwesome Kind="SyncSolid" />
             </Button>
-            <!--<Button Command="{Binding SeedCommand}" Style="{StaticResource ToolbarButtonStyle}">
-                <iconPacks:Material Kind="DatabaseRefresh" />
-            </Button>-->
         </StackPanel>
         <DataGrid
             Grid.Row="1"

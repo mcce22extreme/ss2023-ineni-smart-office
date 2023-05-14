@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Mcce22.SmartOffice.Client.Models;
-using Newtonsoft.Json;
 
 namespace Mcce22.SmartOffice.Client.Managers
 {
@@ -11,9 +9,7 @@ namespace Mcce22.SmartOffice.Client.Managers
 
         Task<BookingModel> Save(BookingModel booking);
 
-        Task Delete(int bookingId);
-
-        Task ProcessBookings();
+        Task Delete(string bookingId);
     }
 
     public class BookingManager : ManagerBase<BookingModel>, IBookingManager
@@ -21,11 +17,6 @@ namespace Mcce22.SmartOffice.Client.Managers
         public BookingManager(string baseUrl)
             : base($"{baseUrl}/booking")
         {
-        }
-
-        public async Task ProcessBookings()
-        {
-            await HttpClient.PostAsync($"{BaseUrl}/process", null);
         }
     }
 }

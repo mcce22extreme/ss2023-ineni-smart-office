@@ -22,6 +22,31 @@ namespace Mcce22.SmartOffice.Client
 
         public static IConfigurationRoot Config { get; }
 
-        public string BaseAddress { get; set; }
+        private string _baseAddress;
+
+        public string BaseAddress
+        {
+            get { return _baseAddress; }
+            set
+            {
+                _baseAddress = value;
+                if (!string.IsNullOrEmpty(_baseAddress))
+                {
+                    BaseAddressUsers = $"{_baseAddress}/userapi";
+                    BaseAddressWorkspaces = $"{_baseAddress}/workspaceapi";
+                    BaseAddressBookings = $"{_baseAddress}/bookingapi";
+                    BaseAddressNotifications = $"{_baseAddress}/notify";
+                }
+            }
+        }
+
+
+        public string BaseAddressUsers { get; set; }
+
+        public string BaseAddressWorkspaces { get; set; }
+
+        public string BaseAddressBookings { get; set; }
+
+        public string BaseAddressNotifications { get; set; }
     }
 }

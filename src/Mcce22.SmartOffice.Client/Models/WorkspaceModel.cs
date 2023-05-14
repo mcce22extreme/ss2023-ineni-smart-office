@@ -2,7 +2,7 @@
 {
     public class WorkspaceModel : IModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string WorkspaceNumber { get; set; }
 

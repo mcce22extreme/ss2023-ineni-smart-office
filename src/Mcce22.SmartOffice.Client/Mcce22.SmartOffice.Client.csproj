@@ -14,6 +14,7 @@
     <None Remove="Images\floorplan.png" />
     <None Remove="Images\floorplan2.png" />
     <None Remove="Images\floorplan3.png" />
+    <None Remove="Images\home_bg.png" />
     <None Remove="Images\icon.png" />
     <None Remove="Images\logo.jpg" />
     <None Remove="Images\logo.png" />
@@ -28,13 +29,14 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\floorplan.png" />
+    <Resource Include="Images\home_bg.png" />
     <Resource Include="Images\icon.png" />
     <Resource Include="Images\logo.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Castle.Windsor" Version="5.1.2" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.701" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
@@ -43,6 +45,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+    <PackageReference Include="MimeTypesMap" Version="1.0.8" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />  
   </ItemGroup>
 

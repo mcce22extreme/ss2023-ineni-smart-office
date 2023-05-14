@@ -9,13 +9,13 @@ namespace Mcce22.SmartOffice.Client.Managers
 
         Task<UserWorkspaceModel> Save(UserWorkspaceModel user);
 
-        Task Delete(int userWorkspaceId);
+        Task Delete(string userWorkspaceId);
     }
 
     public class UserWorkspaceManager : ManagerBase<UserWorkspaceModel>, IUserWorkspaceManager
     {
         public UserWorkspaceManager(string baseUrl)
-            : base($"{baseUrl}/userworkspace")
+            : base($"{baseUrl}/workspaceconfiguration")
         {
         }
     }
