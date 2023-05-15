@@ -2,71 +2,43 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class CreateBookingViewModel : ViewModelBase
+    public partial class CreateBookingViewModel : ViewModelBase
     {
-        private List<BookingModel> _allBookings = new List<BookingModel>();
-
-        private DateTime _startDateTime;
-        public DateTime StartDateTime
-        {
-            get { return _startDateTime; }
-            set { SetProperty(ref _startDateTime, value); }
-        }
-
-        private DateTime _endDateTime;
-        public DateTime EndDateTime
-        {
-            get { return _endDateTime; }
-            set { SetProperty(ref _endDateTime, value); }
-        }
-
-        private List<UserModel> _userModels;
-
-        public List<UserModel> Users
-        {
-            get { return _userModels; }
-            set { SetProperty(ref _userModels, value); }
-        }
-
-        private UserModel _selectedUser;
-        public UserModel SelectedUser
-        {
-            get { return _selectedUser; }
-            set { SetProperty(ref _selectedUser, value); }
-        }
-
-        private List<WorkspaceModel> _workspaces;
-        public List<WorkspaceModel> Workspaces
-        {
-            get { return _workspaces; }
-            set { SetProperty(ref _workspaces, value); }
-        }
-
-        private List<BookingModel> _bookings;
-        public List<BookingModel> Bookings
-        {
-            get { return _bookings; }
-            set { SetProperty(ref _bookings, value); }
-        }
-
-        private bool _workspacesAvailable;
-        public bool WorkspacesAvailable
-        {
-            get { return _workspacesAvailable; }
-            set { SetProperty(ref _workspacesAvailable, value); }
-        }
-
-        private WorkspaceModel _selectedWorkspace;
         private readonly IWorkspaceManager _workspaceManager;
         private readonly IBookingManager _bookingManager;
         private readonly IUserManager _userManager;
 
+        private List<BookingModel> _allBookings = new List<BookingModel>();
+
+        [ObservableProperty]
+        private DateTime _startDateTime;
+
+        [ObservableProperty]
+        private DateTime _endDateTime;
+
+        [ObservableProperty]
+        private List<UserModel> _users;
+
+        [ObservableProperty]
+        private UserModel _selectedUser;
+
+        [ObservableProperty]
+        private List<WorkspaceModel> _workspaces;
+
+        [ObservableProperty]
+        private List<BookingModel> _bookings;
+
+        [ObservableProperty]
+        private bool _workspacesAvailable;
+
+        private WorkspaceModel _selectedWorkspace;
         public WorkspaceModel SelectedWorkspace
         {
             get { return _selectedWorkspace; }
@@ -81,18 +53,11 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         public event EventHandler WorkspaceAvailabilityUpdated;
 
-        public RelayCommand UpdateAvailabilityCommand { get; }
-
-        public RelayCommand CreateBookingCommand { get; }
-
         public CreateBookingViewModel(IWorkspaceManager workspaceManager, IBookingManager bookingManager, IUserManager userManager)
         {
             _workspaceManager = workspaceManager;
             _bookingManager = bookingManager;
             _userManager = userManager;
-
-            UpdateAvailabilityCommand = new RelayCommand(UpdateAvailability, CanUpdateAvailability);
-            CreateBookingCommand = new RelayCommand(CreateBooking, CanCreateBooking);
 
             var dateTimeNow = DateTime.Now;
             StartDateTime = new DateTime(dateTimeNow.Year, dateTimeNow.Month, dateTimeNow.Day, 6, 0, 0);
@@ -126,7 +91,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             finally
             {
                 IsBusy = false;
-            }            
+            }
         }
 
         private bool CanUpdateAvailability()
@@ -134,6 +99,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             return !IsBusy;
         }
 
+        [RelayCommand(CanExecute = nameof(CanUpdateAvailability))]
         private async void UpdateAvailability()
         {
             try
@@ -167,6 +133,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             return !IsBusy && SelectedUser != null && SelectedWorkspace?.IsAvailable == true;
         }
 
+        [RelayCommand(CanExecute = nameof(CanCreateBooking))]
         private async void CreateBooking()
         {
             try
@@ -195,7 +162,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             {
                 IsBusy = true;
 
-                if(SelectedWorkspace == null)
+                if (SelectedWorkspace == null)
                 {
                     Bookings = new List<BookingModel>();
                 }

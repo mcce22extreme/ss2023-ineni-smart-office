@@ -3,20 +3,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class ViewModelBase : ObservableObject
+    public partial class ViewModelBase : ObservableObject
     {
+        [ObservableProperty]
         private bool _isBusy;
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set
-            {
-                if (SetProperty(ref _isBusy, value))
-                {
-                    UpdateCommandStates();
-                }
-            }
-        }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {

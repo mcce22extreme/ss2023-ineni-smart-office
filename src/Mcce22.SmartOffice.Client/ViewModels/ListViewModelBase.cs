@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mcce22.SmartOffice.Client.Services;
 
@@ -11,42 +12,20 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         void Reload();
     }
 
-    public abstract class ListViewModelBase<T> : ViewModelBase, IListViewModel
+    public abstract partial class ListViewModelBase<T> : ViewModelBase, IListViewModel
     {
+        [ObservableProperty]
         private ObservableCollection<T> _items = new ObservableCollection<T>();
-        public ObservableCollection<T> Items
-        {
-            get { return _items; }
-            set { SetProperty(ref _items, value); }
-        }
 
-        public RelayCommand AddCommand { get; }
-
-        public RelayCommand EditCommand { get; }
-
-        public RelayCommand DeleteCommand { get; }
-
-        public RelayCommand ReloadCommand { get; }
-
+        [ObservableProperty]
         private T _selectedItem;
-        public T SelectedItem
-        {
-            get { return _selectedItem; }
-            set { SetProperty(ref _selectedItem, value); }
-        }
 
         protected IDialogService DialogService { get; }
 
         public ListViewModelBase(IDialogService dialogService)
         {
             DialogService = dialogService;
-
-            AddCommand = new RelayCommand(Add, CanAdd);
-            EditCommand = new RelayCommand(Edit, CanEdit);
-            ReloadCommand = new RelayCommand(Reload, CanReload);
-            DeleteCommand = new RelayCommand(Delete, CanDelete);
         }
-
 
         protected override void UpdateCommandStates()
         {
@@ -56,11 +35,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             DeleteCommand.NotifyCanExecuteChanged();
         }
 
-        protected bool CanAdd()
-        {
-            return !IsBusy;
-        }
-
+        [RelayCommand(CanExecute = nameof(CanAdd))]
         protected async void Add()
         {
             if (CanAdd())
@@ -71,16 +46,17 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             }
         }
 
+        protected bool CanAdd()
+        {
+            return !IsBusy;
+        }
+
         protected virtual Task OnAdd()
         {
             return Task.CompletedTask;
         }
 
-        protected virtual bool CanEdit()
-        {
-            return !IsBusy && SelectedItem != null;
-        }
-
+        [RelayCommand(CanExecute = nameof(CanEdit))]
         protected async void Edit()
         {
             if (CanEdit())
@@ -91,16 +67,18 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             }
         }
 
+        protected virtual bool CanEdit()
+        {
+            return !IsBusy && SelectedItem != null;
+        }
+
         protected virtual Task OnEdit()
         {
             return Task.CompletedTask;
         }
 
-        protected bool CanDelete()
-        {
-            return !IsBusy && SelectedItem != null;
-        }
 
+        [RelayCommand(CanExecute = nameof(CanDelete))]
         protected async void Delete()
         {
             if (CanDelete())
@@ -127,16 +105,17 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             }
         }
 
+        protected bool CanDelete()
+        {
+            return !IsBusy && SelectedItem != null;
+        }
+
         protected virtual Task OnDelete()
         {
             return Task.CompletedTask;
         }
 
-        protected bool CanReload()
-        {
-            return !IsBusy;
-        }
-
+        [RelayCommand(CanExecute = nameof(CanReload))]
         public async void Reload()
         {
             if (CanReload())
@@ -153,6 +132,11 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                     IsBusy = false;
                 }
             }
+        }
+
+        protected bool CanReload()
+        {
+            return !IsBusy;
         }
 
         protected virtual Task<T[]> OnReload()
