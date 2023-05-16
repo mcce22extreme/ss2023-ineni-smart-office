@@ -341,28 +341,28 @@ Resources:
       RetentionInDays: 7
 
   Mcce22SmartOfficeWorkspacesLambda:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: ../Mcce22.SmartOffice.Workspaces/
-        Events:
-          ProxyResource:
-            Type: Api
-            Properties:
-              Path: /workspaceapi/{proxy+}
-              Method: ANY
-          RootResource:
-            Type: Api
-            Properties:
-              Path: /workspaceapi
-              Method: ANY
-        FunctionName: mcce22-smart-office-workspaces
-        Handler: Mcce22.SmartOffice.Workspaces
-        MemorySize: 256
-        Policies:
-          - AWSLambda_FullAccess
-        Role: !Ref IAMRoleParameter
-        Runtime: dotnet6
-        Timeout: 30
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../Mcce22.SmartOffice.Workspaces/
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /workspaceapi/{proxy+}
+            Method: ANY
+        RootResource:
+          Type: Api
+          Properties:
+            Path: /workspaceapi
+            Method: ANY
+      FunctionName: mcce22-smart-office-workspaces
+      Handler: Mcce22.SmartOffice.Workspaces
+      MemorySize: 256
+      Policies:
+        - AWSLambda_FullAccess
+      Role: !Ref IAMRoleParameter
+      Runtime: dotnet6
+      Timeout: 30
 
   Mcce22SmartOfficeWorkspacesLogGroup:
     Type: AWS::Logs::LogGroup
@@ -372,28 +372,28 @@ Resources:
       RetentionInDays: 7        
 
   Mcce22SmartOfficeBookingsLambda:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: ../Mcce22.SmartOffice.Bookings/
-        Events:
-          ProxyResource:
-            Type: Api
-            Properties:
-              Path: /bookingapi/{proxy+}
-              Method: ANY
-          RootResource:
-            Type: Api
-            Properties:
-              Path: /bookingapi
-              Method: ANY
-        FunctionName: mcce22-smart-office-bookings
-        Handler: Mcce22.SmartOffice.Bookings
-        MemorySize: 256
-        Policies:
-          - AWSLambda_FullAccess
-        Role: !Ref IAMRoleParameter
-        Runtime: dotnet6
-        Timeout: 30
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../Mcce22.SmartOffice.Bookings/
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /bookingapi/{proxy+}
+            Method: ANY
+        RootResource:
+          Type: Api
+          Properties:
+            Path: /bookingapi
+            Method: ANY
+      FunctionName: mcce22-smart-office-bookings
+      Handler: Mcce22.SmartOffice.Bookings
+      MemorySize: 256
+      Policies:
+        - AWSLambda_FullAccess
+      Role: !Ref IAMRoleParameter
+      Runtime: dotnet6
+      Timeout: 30
 
   Mcce22SmartOfficeBookingsLogGroup:
     Type: AWS::Logs::LogGroup
@@ -403,23 +403,23 @@ Resources:
       RetentionInDays: 7  
 
   Mcce22SmartOfficeNotificationsLambda:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: ../Mcce22.SmartOffice.Notifications/
-        Events:
-          RootGet:
-            Type: Api
-            Properties:
-              Path: /notify
-              Method: GET          
-        FunctionName: mcce22-smart-office-notifications
-        Handler: Mcce22.SmartOffice.Notifications::Mcce22.SmartOffice.Notifications.Functions::HandleRequest
-        MemorySize: 256
-        Policies:
-          - AWSLambda_FullAccess
-        Role: !Ref IAMRoleParameter
-        Runtime: dotnet6
-        Timeout: 30
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../Mcce22.SmartOffice.Notifications/
+      Events:
+        RootGet:
+          Type: Api
+          Properties:
+            Path: /notify
+            Method: GET          
+      FunctionName: mcce22-smart-office-notifications
+      Handler: Mcce22.SmartOffice.Notifications::Mcce22.SmartOffice.Notifications.Functions::HandleRequest
+      MemorySize: 256
+      Policies:
+        - AWSLambda_FullAccess
+      Role: !Ref IAMRoleParameter
+      Runtime: dotnet6
+      Timeout: 30
 
   Mcce22SmartOfficeNotificationsLogGroup:
     Type: AWS::Logs::LogGroup
@@ -429,28 +429,28 @@ Resources:
       RetentionInDays: 7           
 
   Mcce22SmartOfficeActivatorLambda:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: ../Mcce22.SmartOffice.DeviceActivator/
-        Events:
-          ProxyResource:
-            Type: Api
-            Properties:
-              Path: /activatorapi/{proxy+}
-              Method: ANY
-          RootResource:
-            Type: Api
-            Properties:
-              Path: /activatorapi
-              Method: ANY
-        FunctionName: mcce22-smart-office-activator
-        Handler: Mcce22.SmartOffice.DeviceActivator
-        MemorySize: 256
-        Policies:
-          - AWSLambda_FullAccess
-        Role: !Ref IAMRoleParameter
-        Runtime: dotnet6
-        Timeout: 30
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../Mcce22.SmartOffice.DeviceActivator/
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /activatorapi/{proxy+}
+            Method: ANY
+        RootResource:
+          Type: Api
+          Properties:
+            Path: /activatorapi
+            Method: ANY
+      FunctionName: mcce22-smart-office-activator
+      Handler: Mcce22.SmartOffice.DeviceActivator
+      MemorySize: 256
+      Policies:
+        - AWSLambda_FullAccess
+      Role: !Ref IAMRoleParameter
+      Runtime: dotnet6
+      Timeout: 30
 
   Mcce22SmartOfficeActivatorLogGroup:
     Type: AWS::Logs::LogGroup
@@ -460,6 +460,7 @@ Resources:
       RetentionInDays: 7      
 
   Mcce22SmartOfficeDataIngressLambda:
+    Type: AWS::Serverless::Function
       Type: AWS::Serverless::Function
       Properties:
         CodeUri: ../Mcce22.SmartOffice.DataIngress/
@@ -485,3 +486,22 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${Mcce22SmartOfficeDataIngressLambda}
       RetentionInDays: 7        
         
+  Mcce22SmartOfficeDataIngressTopicRule:
+    Type: AWS::IoT::TopicRule
+    Properties:
+      RuleName: mcce22dataingressrule
+      TopicRulePayload:
+        RuleDisabled: false
+        AwsIotSqlVersion: '2016-03-23'
+        Sql: SELECT * FROM 'mcce22-smart-factory/temp/value'
+        Actions:
+        - Lambda:
+            FunctionArn: !GetAtt Mcce22SmartOfficeDataIngressLambda.Arn
+
+  Mcce22SmartOfficeDataIngressPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt Mcce22SmartOfficeDataIngressLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: iot.amazonaws.com
+      SourceArn: !GetAtt Mcce22SmartOfficeDataIngressTopicRule.Arn            
