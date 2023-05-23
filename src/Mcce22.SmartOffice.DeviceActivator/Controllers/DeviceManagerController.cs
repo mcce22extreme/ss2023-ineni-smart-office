@@ -14,7 +14,7 @@ namespace Mcce22.SmartOffice.DeviceActivator.Controllers
             _deviceManager = deviceManager;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> ActivateWorkspace(string activationCode = null)
         {
             await _deviceManager.ActivateDevice(activationCode);
