@@ -19,8 +19,6 @@ namespace Mcce22.SmartOffice.Core
     {
         protected IConfiguration Configuration { get; }
 
-        protected abstract string ApiPrefix { get; }
-
         private readonly string _baseAddress;
 
         public BootstrapBase()
@@ -108,18 +106,6 @@ namespace Mcce22.SmartOffice.Core
 
         protected virtual Task ConfigureApp(WebApplication app)
         {
-            app.UseSwagger(opt =>
-            {
-                opt.RouteTemplate = $"{ApiPrefix}/swagger/{{documentName}}/swagger.json";
-            });
-
-            app.UseSwaggerUI(opt =>
-            {
-                opt.RoutePrefix = $"{ApiPrefix}/swagger";
-            });
-
-            app.UsePathBase($"/{ApiPrefix}");
-
             app.UseRouting();
 
             app.UseAuthentication();

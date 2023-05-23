@@ -9,12 +9,10 @@ namespace Mcce22.SmartOffice.Users.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserManager _userManager;
-        private readonly IUserImageManager _userImageManager;
 
-        public UserController(IUserManager userManager, IUserImageManager userImageManager)
+        public UserController(IUserManager userManager)
         {
             _userManager = userManager;
-            _userImageManager = userImageManager;
         }
 
         [HttpGet]

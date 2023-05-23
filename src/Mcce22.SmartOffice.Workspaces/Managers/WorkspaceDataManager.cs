@@ -1,5 +1,4 @@
-﻿using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
+﻿using Amazon.DynamoDBv2.DataModel;
 using AutoMapper;
 using Mcce22.SmartOffice.Core.Exceptions;
 using Mcce22.SmartOffice.Core.Generators;
@@ -20,25 +19,23 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
 
     public class WorkspaceDataManager : IWorkspaceDataManager
     {
-        private readonly IAmazonDynamoDB _dynamoDbClient;
+        private readonly IDynamoDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IIdGenerator _idGenerator;
 
-        public WorkspaceDataManager(IAmazonDynamoDB dynamoDbClient, IMapper mapper, IIdGenerator idGenerator)
+        public WorkspaceDataManager(IDynamoDBContext dbContext, IMapper mapper, IIdGenerator idGenerator)
         {
-            _dynamoDbClient = dynamoDbClient;
+            _dbContext = dbContext;
             _mapper = mapper;
             _idGenerator = idGenerator;
         }
 
         public async Task<WorkspaceDataModel[]> GetWorkspaceData(WorkspaceDataQuery query)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
             var startDate = query.StartDate ?? DateTime.Now.Date;
             var endDate = query.EndDate ?? DateTime.Now.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
 
-            var workspaceData = await context
+            var workspaceData = await _dbContext
                 .ScanAsync<WorkspaceData>(Array.Empty<ScanCondition>())
                 .GetRemainingAsync();
 
@@ -61,9 +58,7 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
 
         public async Task<WorkspaceDataModel> CreateWorkspaceData(SaveWorkspaceDataModel model)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            var workspace = await context.LoadAsync<Workspace>(model.WorkspaceId);
+            var workspace = await _dbContext.LoadAsync<Workspace>(model.WorkspaceId);
 
             if (workspace == null)
             {
@@ -83,16 +78,14 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
                 workspaceData.Timestamp = DateTime.UtcNow;
             }
 
-            await context.SaveAsync(workspaceData);
+            await _dbContext.SaveAsync(workspaceData);
 
             return _mapper.Map<WorkspaceDataModel>(workspaceData);
         }
 
         public async Task DeleteWorkspaceData(string workspaceDataId)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            await context.DeleteAsync<WorkspaceData>(workspaceDataId);
+            await _dbContext.DeleteAsync<WorkspaceData>(workspaceDataId);
         }
     }
 }

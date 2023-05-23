@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.IotData;
 using Amazon.IotData.Model;
@@ -21,12 +20,12 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
 
         private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
-        private readonly IAmazonDynamoDB _dynamoDbClient;
+        private readonly IDynamoDBContext _dbContext;
         private readonly IAmazonIotData _dataClient;
 
-        public DeviceManager(IAmazonDynamoDB dynamoDbClient, IAmazonIotData dataClient)
+        public DeviceManager(IDynamoDBContext dbContext, IAmazonIotData dataClient)
         {
-            _dynamoDbClient = dynamoDbClient;
+            _dbContext = dbContext;
             _dataClient = dataClient;
         }
 
@@ -36,9 +35,7 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
 
             try
             {
-                using var context = new DynamoDBContext(_dynamoDbClient);
-
-                var bookings = await context.QueryAsync<Booking>(activationCode,new DynamoDBOperationConfig
+                var bookings = await _dbContext.QueryAsync<Booking>(activationCode,new DynamoDBOperationConfig
                 {
                     IndexName = $"{nameof(Booking.ActivationCode)}-index"
                 })
@@ -51,13 +48,13 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
                     throw new NotFoundException($"Could not find booking for activationcode '{activationCode}'!");
                 }
 
-                var configurations = await context.QueryAsync<WorkspaceConfiguration>($"{booking.WorkspaceId}-{booking.UserId}",new DynamoDBOperationConfig
+                var configurations = await _dbContext.QueryAsync<WorkspaceConfiguration>($"{booking.WorkspaceId}-{booking.UserId}",new DynamoDBOperationConfig
                 {
                     IndexName = $"{nameof(WorkspaceConfiguration.WorkspaceUser)}-index"
                 })
                 .GetRemainingAsync();
 
-                var userImages = await context.QueryAsync<UserImage>(booking.UserId, new DynamoDBOperationConfig
+                var userImages = await _dbContext.QueryAsync<UserImage>(booking.UserId, new DynamoDBOperationConfig
                 {
                     IndexName = $"{nameof(UserImage.UserId)}-index"
                 }).GetRemainingAsync();
@@ -79,7 +76,7 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
 
                 booking.Activated = true;
 
-                await context.SaveAsync(booking);
+                await _dbContext.SaveAsync(booking);
             }
             finally
             {

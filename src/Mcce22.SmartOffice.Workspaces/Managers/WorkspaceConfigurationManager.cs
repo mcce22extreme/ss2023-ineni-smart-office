@@ -1,5 +1,4 @@
-﻿using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
+﻿using Amazon.DynamoDBv2.DataModel;
 using AutoMapper;
 using Mcce22.SmartOffice.Core.Exceptions;
 using Mcce22.SmartOffice.Core.Generators;
@@ -27,22 +26,20 @@ namespace Mcce22.SmartOffice.Bookings.Managers
 
     public class WorkspaceConfigurationManager : IWorkspaceConfigurationManager
     {
-        private readonly IAmazonDynamoDB _dynamoDbClient;
+        private readonly IDynamoDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IIdGenerator _idGenerator;
 
-        public WorkspaceConfigurationManager(IAmazonDynamoDB dynamoDbClient, IMapper mapper, IIdGenerator idGenerator)
+        public WorkspaceConfigurationManager(IDynamoDBContext dbContext, IMapper mapper, IIdGenerator idGenerator)
         {
-            _dynamoDbClient = dynamoDbClient;
+            _dbContext = dbContext;
             _mapper = mapper;
             _idGenerator = idGenerator;
         }
 
         public async Task<WorkspaceConfigurationModel[]> GetWorkspaceConfigurations(string userId, string workspaceId)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            var workspaceConfigurations = await context
+            var workspaceConfigurations = await _dbContext
                 .ScanAsync<WorkspaceConfiguration>(Array.Empty<ScanCondition>())
                 .GetRemainingAsync();
 
@@ -63,9 +60,7 @@ namespace Mcce22.SmartOffice.Bookings.Managers
 
         public async Task<WorkspaceConfigurationModel> GetWorkspaceConfiguration(string configurationId)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            var configuration = await context.LoadAsync<WorkspaceConfiguration>(configurationId);
+            var configuration = await _dbContext.LoadAsync<WorkspaceConfiguration>(configurationId);
 
             if (configuration == null)
             {
@@ -77,23 +72,19 @@ namespace Mcce22.SmartOffice.Bookings.Managers
 
         public async Task<WorkspaceConfigurationModel> CreateWorkspaceConfiguration(SaveWorkspaceConfigurationModel model)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
             var configuration = _mapper.Map<WorkspaceConfiguration>(model);
 
             configuration.Id = _idGenerator.GenerateId();
             configuration.WorkspaceUser = $"{model.WorkspaceId}-{model.UserId}";
 
-            await context.SaveAsync(configuration);
+            await _dbContext.SaveAsync(configuration);
 
             return await GetWorkspaceConfiguration(configuration.Id);
         }
 
         public async Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(string configurationId, SaveWorkspaceConfigurationModel model)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            var configuration = await context.LoadAsync<WorkspaceConfiguration>(configurationId);
+            var configuration = await _dbContext.LoadAsync<WorkspaceConfiguration>(configurationId);
 
             if (configuration == null)
             {
@@ -102,23 +93,19 @@ namespace Mcce22.SmartOffice.Bookings.Managers
 
             _mapper.Map(model, configuration);
 
-            await context.SaveAsync(configuration);
+            await _dbContext.SaveAsync(configuration);
 
             return await GetWorkspaceConfiguration(configurationId);
         }
 
         public async Task DeleteWorkspaceConfiguration(string configurationId)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            await context.DeleteAsync<WorkspaceConfiguration>(configurationId);
+            await _dbContext.DeleteAsync<WorkspaceConfiguration>(configurationId);
         }
 
         public async Task DeleteWorkspaceConfigurationsForUser(string userId)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            await context.DeleteAsync<WorkspaceConfiguration>(userId, new DynamoDBOperationConfig
+            await _dbContext.DeleteAsync<WorkspaceConfiguration>(userId, new DynamoDBOperationConfig
             {
                 IndexName = "UserId-index"
             });
@@ -126,9 +113,7 @@ namespace Mcce22.SmartOffice.Bookings.Managers
 
         public async Task DeleteWorkspaceConfigurationsForWorkspace(string workspaceId)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            await context.DeleteAsync<WorkspaceConfiguration>(workspaceId, new DynamoDBOperationConfig
+            await _dbContext.DeleteAsync<WorkspaceConfiguration>(workspaceId, new DynamoDBOperationConfig
             {
                 IndexName = "WorkspaceId-index"
             });

@@ -9,15 +9,11 @@ namespace Mcce22.SmartOffice.Users
 {
     public class Bootstrap : BootstrapBase
     {
-        protected override string ApiPrefix => "userapi";
-
         protected override async Task ConfigureBuilder(WebApplicationBuilder builder)
         {
             await base.ConfigureBuilder(builder);
 
             builder.Services.AddAutoMapper(typeof(Bootstrap).Assembly);
-
-            builder.Services.AddScoped<IAmazonDynamoDB>(s => new AmazonDynamoDBClient());
 
             builder.Services.AddScoped<IDynamoDBContext>(s => new DynamoDBContext(new AmazonDynamoDBClient()));
 
