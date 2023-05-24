@@ -1,13 +1,14 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
 using Mcce22.SmartOffice.Client.Services;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class UserWorkspaceDetailViewModel : DialogViewModelBase
+    public partial class UserWorkspaceDetailViewModel : DialogViewModelBase
     {
         private readonly IUserWorkspaceManager _userWorkspaceManager;
         private readonly IWorkspaceManager _workspaceManager;
@@ -16,48 +17,24 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         private readonly string _workspaceId;
         private readonly string _userId;
 
+        [ObservableProperty]
         private long _deskHeight;
-        public long DeskHeight
-        {
-            get { return _deskHeight; }
-            set { SetProperty(ref _deskHeight, value); }
-        }
 
+        [ObservableProperty]
         private string _slideshowResourceKey;
-        public string SlideshowResourceKey
-        {
-            get { return _slideshowResourceKey; }
-            set { SetProperty(ref _slideshowResourceKey, value); }
-        }
 
+        [ObservableProperty]
         private ObservableCollection<WorkspaceModel> _workspaces = new ObservableCollection<WorkspaceModel>();
-        public ObservableCollection<WorkspaceModel> Workspaces
-        {
-            get { return _workspaces; }
-            set { SetProperty(ref _workspaces, value); }
-        }
 
+        [ObservableProperty]
         private ObservableCollection<UserModel> _users = new ObservableCollection<UserModel>();
-        public ObservableCollection<UserModel> Users
-        {
-            get { return _users; }
-            set { SetProperty(ref _users, value); }
-        }
 
+        [ObservableProperty]
         private WorkspaceModel _selectedWorkspace;
-        public WorkspaceModel SelectedWorkspace
-        {
-            get { return _selectedWorkspace; }
-            set { SetProperty(ref _selectedWorkspace, value); }
-        }
 
+        [ObservableProperty]
         private UserModel _selectedUser;
-        public UserModel SelectedUser
-        {
-            get { return _selectedUser; }
-            set { SetProperty(ref _selectedUser, value); }
-        }
-
+        
         public string UserWorkspaceId { get; }
 
         public UserWorkspaceDetailViewModel(

@@ -333,6 +333,13 @@ Resources:
       Runtime: dotnet6
       Timeout: 30
 
+  Mcce22SmartOfficeUsersLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: [ Mcce22SmartOfficeUsersLambda ]
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${Mcce22SmartOfficeUsersLambda}
+      RetentionInDays: 7
+
   Mcce22SmartOfficeWorkspacesLambda:
       Type: AWS::Serverless::Function
       Properties:
@@ -356,6 +363,13 @@ Resources:
         Role: !Ref IAMRoleParameter
         Runtime: dotnet6
         Timeout: 30
+
+  Mcce22SmartOfficeWorkspacesLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: [ Mcce22SmartOfficeWorkspacesLambda ]
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${Mcce22SmartOfficeWorkspacesLambda}
+      RetentionInDays: 7        
 
   Mcce22SmartOfficeBookingsLambda:
       Type: AWS::Serverless::Function
@@ -381,6 +395,13 @@ Resources:
         Runtime: dotnet6
         Timeout: 30
 
+  Mcce22SmartOfficeBookingsLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: [ Mcce22SmartOfficeBookingsLambda ]
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${Mcce22SmartOfficeBookingsLambda} 
+      RetentionInDays: 7  
+
   Mcce22SmartOfficeNotificationsLambda:
       Type: AWS::Serverless::Function
       Properties:
@@ -399,6 +420,13 @@ Resources:
         Role: !Ref IAMRoleParameter
         Runtime: dotnet6
         Timeout: 30
+
+  Mcce22SmartOfficeNotificationsLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: [ Mcce22SmartOfficeNotificationsLambda ]
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${Mcce22SmartOfficeNotificationsLambda}
+      RetentionInDays: 7           
 
   Mcce22SmartOfficeActivatorLambda:
       Type: AWS::Serverless::Function
@@ -424,6 +452,13 @@ Resources:
         Runtime: dotnet6
         Timeout: 30
 
+  Mcce22SmartOfficeActivatorLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: [ Mcce22SmartOfficeActivatorLambda ]
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${Mcce22SmartOfficeActivatorLambda}  
+      RetentionInDays: 7      
+
   Mcce22SmartOfficeDataIngressLambda:
       Type: AWS::Serverless::Function
       Properties:
@@ -442,4 +477,11 @@ Resources:
         Role: !Ref IAMRoleParameter
         Runtime: dotnet6
         Timeout: 30
+
+  Mcce22SmartOfficeDataIngressLogGroup:
+    Type: AWS::Logs::LogGroup
+    DependsOn: [ Mcce22SmartOfficeDataIngressLambda ]
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${Mcce22SmartOfficeDataIngressLambda}
+      RetentionInDays: 7        
         

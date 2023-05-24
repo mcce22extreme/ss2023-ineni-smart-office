@@ -5,15 +5,11 @@ using Mcce22.SmartOffice.Client.Services;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class MainViewModel : ObservableObject
+    public partial class MainViewModel : ObservableObject
     {
+        [ObservableProperty]
         private int _selectedIndex = -1;
-        public int SelectedIndex
-        {
-            get { return _selectedIndex; }
-            set { SetProperty(ref _selectedIndex, value); }
-        }
-
+        
         public LoginViewModel Login { get; }
         public DashboardViewModel Dashboard { get; }
         public UserWorkspaceListViewModel UserWorkspaceList { get; }

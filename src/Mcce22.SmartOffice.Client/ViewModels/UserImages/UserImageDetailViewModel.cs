@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
@@ -8,44 +9,30 @@ using Microsoft.Win32;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    internal class UserImageDetailViewModel : DialogViewModelBase
+    public partial class UserImageDetailViewModel : DialogViewModelBase
     {
         private readonly IUserImageManager _userImageManager;
         private readonly IUserManager _userManager;
 
+        [ObservableProperty]
         private ObservableCollection<UserModel> _users = new ObservableCollection<UserModel>();
-        public ObservableCollection<UserModel> Users
-        {
-            get { return _users; }
-            set { SetProperty(ref _users, value); }
-        }
 
+        [ObservableProperty]
         private UserModel _selectedUser;
-        public UserModel SelectedUser
-        {
-            get { return _selectedUser; }
-            set { SetProperty(ref _selectedUser, value); }
-        }
 
+        [ObservableProperty]
         private string _filePath;
-        public string FilePath
-        {
-            get { return _filePath; }
-            set { SetProperty(ref _filePath, value); }
-        }
-
-        public RelayCommand SelectFileCommand { get; }
-
+        
         public UserImageDetailViewModel(IUserImageManager userImageManager, IUserManager userManager, IDialogService dialogService)
             : base(dialogService)
         {
             Title = "Add user image";
-            _userImageManager = userImageManager;
-            _userManager = userManager;
 
-            SelectFileCommand = new RelayCommand(SelectFile);
+            _userImageManager = userImageManager;
+            _userManager = userManager;        
         }
 
+        [RelayCommand]
         private void SelectFile()
         {
             var dialog = new OpenFileDialog();

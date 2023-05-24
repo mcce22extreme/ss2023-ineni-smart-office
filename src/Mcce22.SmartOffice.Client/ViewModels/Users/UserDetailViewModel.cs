@@ -1,44 +1,29 @@
 ﻿using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
 using Mcce22.SmartOffice.Client.Services;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class UserDetailViewModel : DialogViewModelBase
+    public partial class UserDetailViewModel : DialogViewModelBase
     {
         private readonly IUserManager _userManager;
 
         public string UserId { get; }
 
+        [ObservableProperty]
         private string _firstName;
-        public string FirstName
-        {
-            get { return _firstName; }
-            set { SetProperty(ref _firstName, value); }
-        }
 
+        [ObservableProperty]
         private string _lastName;
-        public string LastName
-        {
-            get { return _lastName; }
-            set { SetProperty(ref _lastName, value); }
-        }
 
+        [ObservableProperty]
         private string _userName;
-        public string UserName
-        {
-            get { return _userName; }
-            set { SetProperty(ref _userName, value); }
-        }
 
+        [ObservableProperty]
         private string _email;
-        public string Email
-        {
-            get { return _email; }
-            set { SetProperty(ref _email, value); }
-        }
-
+        
         public UserDetailViewModel(IUserManager userManager, IDialogService dialogService)
             : base(dialogService)
         {

@@ -1,58 +1,35 @@
 ﻿using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
 using Mcce22.SmartOffice.Client.Services;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class WorkspaceDetailViewModel : DialogViewModelBase
+    public partial class WorkspaceDetailViewModel : DialogViewModelBase
     {
         private readonly IWorkspaceManager _workspaceManager;
 
         public string WorkspaceId { get; set; }
 
+        [ObservableProperty]
         private string _workspaceNumber;
-        public string WorkspaceNumber
-        {
-            get { return _workspaceNumber; }
-            set { SetProperty(ref _workspaceNumber, value); }
-        }
 
+        [ObservableProperty]
         private string _roomNumber;
-        public string RoomNumber
-        {
-            get { return _roomNumber; }
-            set { SetProperty(ref _roomNumber, value); }
-        }
 
+        [ObservableProperty]
         private int _top;
-        public int Top
-        {
-            get { return _top; }
-            set { SetProperty(ref _top, value); }
-        }
 
+        [ObservableProperty]
         private int _left;
-        public int Left
-        {
-            get { return _left; }
-            set { SetProperty(ref _left, value); }
-        }
 
+        [ObservableProperty]
         private int _width;
-        public int Width
-        {
-            get { return _width; }
-            set { SetProperty(ref _width, value); }
-        }
 
+        [ObservableProperty]
         private int _height;
-        public int Height
-        {
-            get { return _height; }
-            set { SetProperty(ref _height, value); }
-        }
-
+        
         public WorkspaceDetailViewModel(IWorkspaceManager workspaceManager, IDialogService dialogService)
             : base(dialogService)
         {
