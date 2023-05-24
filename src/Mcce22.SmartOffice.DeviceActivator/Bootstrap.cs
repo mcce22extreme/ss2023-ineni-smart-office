@@ -1,6 +1,7 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.IotData;
+using Amazon.SimpleSystemsManagement;
 using Mcce22.SmartOffice.Core;
 using Mcce22.SmartOffice.Core.Providers;
 using Mcce22.SmartOffice.DeviceActivator.Managers;
@@ -14,6 +15,8 @@ namespace Mcce22.SmartOffice.DeviceActivator
             await base.ConfigureBuilder(builder);
 
             builder.Services.AddScoped<IAppConfigProvider, AppConfigProvider>();
+
+            builder.Services.AddScoped<IAmazonSimpleSystemsManagement>(s => new AmazonSimpleSystemsManagementClient());
 
             builder.Services.AddScoped<IDynamoDBContext>(s => new DynamoDBContext(new AmazonDynamoDBClient()));
 

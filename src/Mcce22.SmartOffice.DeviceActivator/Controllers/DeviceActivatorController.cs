@@ -5,16 +5,16 @@ namespace Mcce22.SmartOffice.DeviceActivator.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ActivateController : ControllerBase
+    public class DeviceActivatorController : ControllerBase
     {
         private readonly IDeviceManager _deviceManager;
 
-        public ActivateController(IDeviceManager deviceManager)
+        public DeviceActivatorController(IDeviceManager deviceManager)
         {
             _deviceManager = deviceManager;
         }
 
-        [HttpPost]
+        [HttpGet("activate")]
         public async Task<IActionResult> ActivateWorkspace(string activationCode = null)
         {
             await _deviceManager.ActivateDevice(activationCode);
