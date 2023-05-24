@@ -6,20 +6,22 @@ variable "aws_region" {
 
 variable "aws_access_key_id" {
   type        = string
-  default     = "ASIAQ527S6BDXX6U3O7D"
   description = "The AWS access key."
 }
 
 variable "aws_secret_access_key" {
   type        = string
-  default     = "eox38bVMhik7+YQAIkO2dB4c37YySRyivFv57Mfz"
   description = "The AWS secret."
 }
 
 variable "aws_session_token" {
   type        = string
-  default     = "FwoGZXIvYXdzEM///////////wEaDK+rQ24lx8+PC9GttyLAAcngCyyY9dsAZbYiADYwDrL3ugcSKPxcEWpFtVH3n8/oQbdrf4qSczhaFH8YE1hKvIQkTFLMOxVLHr0dIM0CXNBNio9rBprzN2uLTVtmHy4KEzzOxyWwUCvON9/fZ7K0VrA18Ugj0Vy574q42sXL05MVSX4jFm9PBoWqe1yfFnnsAFgC06Qtw+xoOksVMNwwgPUFmfYWHPyVajL81AcOtrJ+g9gLvw4wWu6sIIS6Fx817b80pMdCV5EkIoc9+//oWCjsxrajBjItJcLX+DbrbBKYi/P2cmx/d+XHItP1ECqEiaoh5KTJx8JNKRexS0EX+pgP5I9n"
   description = "The AWS session token."
+}
+
+variable "mcce22_tf_state_bucket" {
+  type        = string
+  description = "The AWS S3 bucket to store terraform state."
 }
 
 variable "mcce22_smpt_host" {

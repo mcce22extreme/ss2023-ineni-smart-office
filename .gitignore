@@ -356,3 +356,7 @@ src/Mcce22.SmartOffice.Terraform/.terraform.lock.hcl
 src/Mcce22.SmartOffice.Terraform/.terraform/
 
 src/Mcce22.SmartOffice.Terraform/dist/
+
+src/Mcce22.SmartOffice.Terraform/terraform.tfstate
+
+src/Mcce22.SmartOffice.Terraform/terraform.tfstate.backup
