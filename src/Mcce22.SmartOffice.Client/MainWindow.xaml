@@ -140,7 +140,7 @@
                     VerticalAlignment="Center"
                     FontFamily="Arial"
                     Foreground="White"
-                    Text="THE SMART OFFICE" />
+                    Text="THE SMART OFFICE MANAGER" />
             </StackPanel>
 
             <!--  Caption buttons  -->

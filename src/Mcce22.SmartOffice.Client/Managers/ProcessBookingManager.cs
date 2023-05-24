@@ -16,12 +16,12 @@ namespace Mcce22.SmartOffice.Client.Managers
 
         public ProcessBookingManager(string baseUrl)
         {
-            _baseUrl = baseUrl;
+            _baseUrl = $"{baseUrl}/notify/";
         }
 
         public async Task ProcessBookings()
         {
-            var respones = await HttpClient.GetStringAsync($"{_baseUrl}");
+            await HttpClient.PostAsync($"{_baseUrl}", new StringContent(string.Empty));
         }
     }
 }
