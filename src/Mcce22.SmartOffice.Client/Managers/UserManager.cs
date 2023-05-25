@@ -15,7 +15,7 @@ namespace Mcce22.SmartOffice.Client.Managers
     public class UserManager : ManagerBase<UserModel>, IUserManager
     {
         public UserManager(string baseUrl)
-            : base($"{baseUrl}/user")
+            : base($"{baseUrl}/user/")
         {
         }
     }

@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Mcce22.SmartOffice.Core\Mcce22.SmartOffice.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Providers\" />
-  </ItemGroup>
-
 </Project>

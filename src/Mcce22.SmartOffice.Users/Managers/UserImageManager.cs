@@ -1,5 +1,4 @@
-﻿using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
+﻿using Amazon.DynamoDBv2.DataModel;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
@@ -23,22 +22,21 @@ namespace Mcce22.SmartOffice.Users.Managers
 
     public class UserImageManager : IUserImageManager
     {
-        private const string BUCKET_PARAMETER_NAME = "bucketname";
-
-        private readonly IAmazonDynamoDB _dynamoDbClient;
+        private const string BUCKET_PARAMETER_NAME = "ImageBucketName";
+        private readonly IDynamoDBContext _dbContext;
         private readonly IAmazonS3 _s3Client;
         private readonly IIdGenerator _idGenerator;
         private readonly IAmazonSimpleSystemsManagement _systemsManagement;
         private readonly IMapper _mapper;
 
         public UserImageManager(
-            IAmazonDynamoDB dynamoDbClient,
+            IDynamoDBContext dbContext,
             IAmazonS3 s3Client,            
             IIdGenerator idGenerator,
             IAmazonSimpleSystemsManagement systemsManagement,
             IMapper mapper)
         {
-            _dynamoDbClient = dynamoDbClient;
+            _dbContext = dbContext;
             _s3Client = s3Client;
             _idGenerator = idGenerator;
             _systemsManagement = systemsManagement;
@@ -57,9 +55,7 @@ namespace Mcce22.SmartOffice.Users.Managers
 
         public async Task<UserImageModel[]> GetUserImages(string userId)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
-            var userImages = await context.QueryAsync<UserImage>(userId, new DynamoDBOperationConfig
+            var userImages = await _dbContext.QueryAsync<UserImage>(userId, new DynamoDBOperationConfig
             {
                 IndexName = $"{nameof(UserImage.UserId)}-index"
             }).GetRemainingAsync();
@@ -69,8 +65,6 @@ namespace Mcce22.SmartOffice.Users.Managers
 
         public async Task<UserImageModel> StoreUserImage(string userId, IFormFile file)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
             var bucketName = await GetBucketName();
             var key = $"{userId}/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             var utility = new TransferUtility(_s3Client);
@@ -92,7 +86,7 @@ namespace Mcce22.SmartOffice.Users.Managers
                 Size = file.Length
             };
 
-            await context.SaveAsync(userImage);
+            await _dbContext.SaveAsync(userImage);
 
             await utility.UploadAsync(request);
 
@@ -101,15 +95,13 @@ namespace Mcce22.SmartOffice.Users.Managers
 
         public async Task DeleteUserImage(string userImageId)
         {
-            using var context = new DynamoDBContext(_dynamoDbClient);
-
             var bucketName = await GetBucketName();
-            var userImage = await context.LoadAsync<UserImage>(userImageId);
+            var userImage = await _dbContext.LoadAsync<UserImage>(userImageId);
 
             if (userImage != null)
             {
                 await _s3Client.DeleteObjectAsync(bucketName, userImage.ResourceKey);
-                await context.DeleteAsync(userImage);
+                await _dbContext.DeleteAsync(userImage);
             }
             else
             {
@@ -124,14 +116,14 @@ namespace Mcce22.SmartOffice.Users.Managers
                     });
                 }
 
-                var userImages = await context.QueryAsync<UserImage>(userImageId, new DynamoDBOperationConfig
+                var userImages = await _dbContext.QueryAsync<UserImage>(userImageId, new DynamoDBOperationConfig
                 {
                     IndexName = $"{nameof(UserImage.UserId)}-index"
                 }).GetRemainingAsync();
 
                 foreach (var image in userImages)
                 {
-                    await context.DeleteAsync(image);
+                    await _dbContext.DeleteAsync(image);
                 }
             }
         }

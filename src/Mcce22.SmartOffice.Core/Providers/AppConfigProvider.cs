@@ -17,7 +17,7 @@ namespace Mcce22.SmartOffice.Core.Providers
         private const string SMTP_PASSWORD_PARAMETER = "SmtpPassword";
         private const string SMTP_SENDERNAME_PARAMETER = "SmtpSendername";
         private const string ACTIVATOR_ENDPOINTADDRESS_PARAMETER = "ActivatorEndpointAddress";
-        private const string IOTDATA_ENDPOINTADDRESS_PARAMETER = "IotDataEndpointAddress";
+        private const string IOTDATA_ENDPOINTADDRESS_PARAMETER = "IoTDataEndpointAddress";
 
         private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1);
 
@@ -55,7 +55,6 @@ namespace Mcce22.SmartOffice.Core.Providers
                             IOTDATA_ENDPOINTADDRESS_PARAMETER
                         }
                     });
-
 
                     foreach (var parameter in result.Parameters)
                     {
