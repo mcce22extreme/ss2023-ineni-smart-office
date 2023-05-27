@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		README.md = README.md
+		settings.ruleset = settings.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mcce22.SmartOffice.Core", "src\Mcce22.SmartOffice.Core\Mcce22.SmartOffice.Core.csproj", "{242C87BE-D260-44D6-B47F-13ECBC19FA8D}"
