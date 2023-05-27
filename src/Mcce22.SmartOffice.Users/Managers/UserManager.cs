@@ -7,19 +7,6 @@ using Mcce22.SmartOffice.Users.Models;
 
 namespace Mcce22.SmartOffice.Users.Managers
 {
-    public interface IUserManager
-    {
-        Task<UserModel[]> GetUsers();
-
-        Task<UserModel> GetUser(string userId);
-
-        Task<UserModel> CreateUser(SaveUserModel model);
-
-        Task<UserModel> UpdateUser(string userId, SaveUserModel model);
-
-        Task DeleteUser(string userId);
-    }
-
     public class UserManager : IUserManager
     {
         private readonly IDynamoDBContext _dbContext;
@@ -49,12 +36,7 @@ namespace Mcce22.SmartOffice.Users.Managers
         {
             var user = await _dbContext.LoadAsync<User>(userId);
 
-            if (user == null)
-            {
-                throw new NotFoundException($"Could not find user with id '{userId}'!");
-            }
-
-            return _mapper.Map<UserModel>(user);
+            return user == null ? throw new NotFoundException($"Could not find user with id '{userId}'!") : _mapper.Map<UserModel>(user);
         }
 
         public async Task<UserModel> CreateUser(SaveUserModel model)
@@ -70,12 +52,7 @@ namespace Mcce22.SmartOffice.Users.Managers
 
         public async Task<UserModel> UpdateUser(string userId, SaveUserModel model)
         {
-            var user = await _dbContext.LoadAsync<User>(userId);
-
-            if (user == null)
-            {
-                throw new NotFoundException($"Could not find user with id '{userId}'!");
-            }
+            var user = await _dbContext.LoadAsync<User>(userId) ?? throw new NotFoundException($"Could not find user with id '{userId}'!");
 
             _mapper.Map(model, user);
 

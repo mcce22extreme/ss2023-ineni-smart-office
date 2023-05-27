@@ -12,7 +12,7 @@ namespace Mcce22.SmartOffice.Client
     /// </summary>
     public partial class App : Application
     {
-        private readonly WindsorContainer _container = new WindsorContainer();
+        private readonly WindsorContainer _container = new();
 
         private void OnStartUp(object sender, StartupEventArgs e)
         {

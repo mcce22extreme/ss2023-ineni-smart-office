@@ -2,11 +2,6 @@
 
 namespace Mcce22.SmartOffice.Core.Providers
 {
-    public interface IValidationProvider
-    {
-        IValidator[] GetValidators();
-    }
-
     public class ValidationProvider : IValidationProvider
     {
         private readonly IValidator[] _validators;

@@ -7,23 +7,6 @@ using Mcce22.SmartOffice.Workspaces.Models;
 
 namespace Mcce22.SmartOffice.Bookings.Managers
 {
-    public interface IWorkspaceConfigurationManager
-    {
-        Task<WorkspaceConfigurationModel[]> GetWorkspaceConfigurations(string userId, string workspaceId);
-
-        Task<WorkspaceConfigurationModel> GetWorkspaceConfiguration(string configurationId);
-
-        Task<WorkspaceConfigurationModel> CreateWorkspaceConfiguration(SaveWorkspaceConfigurationModel model);
-
-        Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(string configurationId, SaveWorkspaceConfigurationModel model);
-
-        Task DeleteWorkspaceConfiguration(string configurationId);
-
-        Task DeleteWorkspaceConfigurationsForUser(string userId);
-
-        Task DeleteWorkspaceConfigurationsForWorkspace(string workspaceId);
-    }
-
     public class WorkspaceConfigurationManager : IWorkspaceConfigurationManager
     {
         private readonly IDynamoDBContext _dbContext;
@@ -62,12 +45,9 @@ namespace Mcce22.SmartOffice.Bookings.Managers
         {
             var configuration = await _dbContext.LoadAsync<WorkspaceConfiguration>(configurationId);
 
-            if (configuration == null)
-            {
-                throw new NotFoundException($"Could not find configuration with id '{configurationId}'!");
-            }
-
-            return _mapper.Map<WorkspaceConfigurationModel>(configuration);
+            return configuration == null
+                ? throw new NotFoundException($"Could not find configuration with id '{configurationId}'!")
+                : _mapper.Map<WorkspaceConfigurationModel>(configuration);
         }
 
         public async Task<WorkspaceConfigurationModel> CreateWorkspaceConfiguration(SaveWorkspaceConfigurationModel model)
@@ -84,12 +64,7 @@ namespace Mcce22.SmartOffice.Bookings.Managers
 
         public async Task<WorkspaceConfigurationModel> UpdateWorkspaceConfiguration(string configurationId, SaveWorkspaceConfigurationModel model)
         {
-            var configuration = await _dbContext.LoadAsync<WorkspaceConfiguration>(configurationId);
-
-            if (configuration == null)
-            {
-                throw new NotFoundException($"Could not find configuration with id '{configurationId}'!");
-            }
+            var configuration = await _dbContext.LoadAsync<WorkspaceConfiguration>(configurationId) ?? throw new NotFoundException($"Could not find configuration with id '{configurationId}'!");
 
             _mapper.Map(model, configuration);
 
@@ -107,7 +82,7 @@ namespace Mcce22.SmartOffice.Bookings.Managers
         {
             await _dbContext.DeleteAsync<WorkspaceConfiguration>(userId, new DynamoDBOperationConfig
             {
-                IndexName = "UserId-index"
+                IndexName = "UserId-index",
             });
         }
 
@@ -115,7 +90,7 @@ namespace Mcce22.SmartOffice.Bookings.Managers
         {
             await _dbContext.DeleteAsync<WorkspaceConfiguration>(workspaceId, new DynamoDBOperationConfig
             {
-                IndexName = "WorkspaceId-index"
+                IndexName = "WorkspaceId-index",
             });
         }
     }

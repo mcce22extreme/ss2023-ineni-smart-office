@@ -1,11 +1,11 @@
-﻿using FluentValidation;
+﻿using System.Net;
+using FluentValidation;
 using Mcce22.SmartOffice.Core.Exceptions;
 using Mcce22.SmartOffice.Core.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Serilog;
-using System.Net;
 
 namespace Mcce22.SmartOffice.Core.Handlers
 {
@@ -36,33 +36,30 @@ namespace Mcce22.SmartOffice.Core.Handlers
 
         private static ErrorModel CreateErrorModel(Exception exception)
         {
-            switch (exception)
+            return exception switch
             {
-                case NotFoundException nex:
-                    return new ErrorModel
+                NotFoundException nex => new ErrorModel
+                {
+                    StatusCode = HttpStatusCode.NotFound,
+                    ErrorMessage = nex.Message,
+                },
+                ValidationException vex => new ValidationErrorModel
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    ErrorMessage = vex.Message ?? "One or more validation errors occured!",
+                    Errors = vex.Errors.Select(e => new ValidationError
                     {
-                        StatusCode = HttpStatusCode.NotFound,
-                        ErrorMessage = nex.Message
-                    };
-                case ValidationException vex:
-                    return new ValidationErrorModel
-                    {
-                        StatusCode = HttpStatusCode.BadRequest,
-                        ErrorMessage = vex.Message ?? "One or more validation errors occured!",
-                        Errors = vex.Errors.Select(e => new ValidationError
-                        {
-                            ErrorCode = e.ErrorCode,
-                            ErrorMessage = e.ErrorMessage,
-                            PropertyName = e.PropertyName
-                        }).ToArray()
-                    };
-                default:
-                    return new ErrorModel
-                    {
-                        StatusCode = HttpStatusCode.InternalServerError,
-                        ErrorMessage = exception.Message + ", " + exception.StackTrace
-                    };
-            }
+                        ErrorCode = e.ErrorCode,
+                        ErrorMessage = e.ErrorMessage,
+                        PropertyName = e.PropertyName,
+                    }).ToArray(),
+                },
+                _ => new ErrorModel
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    ErrorMessage = exception.Message + ", " + exception.StackTrace,
+                },
+            };
         }
     }
 }

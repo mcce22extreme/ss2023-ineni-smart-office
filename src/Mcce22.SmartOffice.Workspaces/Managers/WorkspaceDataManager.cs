@@ -8,15 +8,6 @@ using Mcce22.SmartOffice.Workspaces.Queries;
 
 namespace Mcce22.SmartOffice.Workspaces.Managers
 {
-    public interface IWorkspaceDataManager
-    {
-        Task<WorkspaceDataModel[]> GetWorkspaceData(WorkspaceDataQuery query);
-
-        Task<WorkspaceDataModel> CreateWorkspaceData(SaveWorkspaceDataModel model);
-
-        Task DeleteWorkspaceData(string workspaceDataId);
-    }
-
     public class WorkspaceDataManager : IWorkspaceDataManager
     {
         private readonly IDynamoDBContext _dbContext;
@@ -39,36 +30,22 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
                 .ScanAsync<WorkspaceData>(Array.Empty<ScanCondition>())
                 .GetRemainingAsync();
 
-            var workspaceDataQuery =workspaceData
+            var workspaceDataQuery = workspaceData
+                .Where(x => x.Timestamp >= startDate && x.Timestamp <= endDate)
                 .OrderBy(x => x.Timestamp)
                 .AsQueryable();
-
-            if (query.StartDate.HasValue)
-            {
-                workspaceDataQuery = workspaceDataQuery.Where(x => x.Timestamp >= query.StartDate.Value);
-            }
-
-            if (query.EndDate.HasValue)
-            {
-                workspaceDataQuery = workspaceDataQuery.Where(x => x.Timestamp <= query.StartDate.Value);
-            }
 
             return workspaceDataQuery.Select(_mapper.Map<WorkspaceDataModel>).ToArray();
         }
 
         public async Task<WorkspaceDataModel> CreateWorkspaceData(SaveWorkspaceDataModel model)
         {
-            var workspace = await _dbContext.LoadAsync<Workspace>(model.WorkspaceId);
-
-            if (workspace == null)
-            {
-                throw new NotFoundException($"Could not find workspace with id '{model.WorkspaceId}'!");
-            }
+            var workspace = await _dbContext.LoadAsync<Workspace>(model.WorkspaceId) ?? throw new NotFoundException($"Could not find workspace with id '{model.WorkspaceId}'!");
 
             var workspaceData = _mapper.Map(model, new WorkspaceData
             {
                 WorkspaceNumber = workspace.WorkspaceNumber,
-                RoomNumber = workspace.RoomNumber
+                RoomNumber = workspace.RoomNumber,
             });
 
             workspaceData.Id = _idGenerator.GenerateId();

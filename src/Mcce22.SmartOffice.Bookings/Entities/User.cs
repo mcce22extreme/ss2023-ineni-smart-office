@@ -5,7 +5,7 @@ namespace Mcce22.SmartOffice.Bookings.Entities
     [DynamoDBTable("mcce22-smart-office-users")]
     public class User
     {
-        [DynamoDBHashKey()]
+        [DynamoDBHashKey]
         public string Id { get; set; }
 
         [DynamoDBProperty]

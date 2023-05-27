@@ -6,10 +6,10 @@ namespace Mcce22.SmartOffice.Bookings.Entities
     [DynamoDBTable("mcce22-smart-office-bookings")]
     public class Booking
     {
-        [DynamoDBHashKey()]
+        [DynamoDBHashKey]
         public string Id { get; set; }
 
-        [DynamoDBProperty(converter:typeof(DateOnlyConverter))]
+        [DynamoDBProperty(converter: typeof(DateOnlyConverter))]
         public DateOnly StartDate { get; set; }
 
         [DynamoDBProperty(converter: typeof(TimeOnlyConverter))]

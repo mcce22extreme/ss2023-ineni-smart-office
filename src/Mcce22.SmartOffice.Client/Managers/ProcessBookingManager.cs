@@ -10,7 +10,7 @@ namespace Mcce22.SmartOffice.Client.Managers
 
     public class ProcessBookingManager : IProcessBookingManager
     {
-        private static readonly HttpClient HttpClient = new HttpClient();
+        private static readonly HttpClient HttpClient = new();
 
         private readonly string _baseUrl;
 

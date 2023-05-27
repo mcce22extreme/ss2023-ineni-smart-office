@@ -11,15 +11,6 @@ using Mcce22.SmartOffice.Users.Models;
 
 namespace Mcce22.SmartOffice.Users.Managers
 {
-    public interface IUserImageManager
-    {
-        Task<UserImageModel[]> GetUserImages(string userId);
-
-        Task<UserImageModel> StoreUserImage(string userId, IFormFile file);
-
-        Task DeleteUserImage(string userImageId);
-    }
-
     public class UserImageManager : IUserImageManager
     {
         private const string BUCKET_PARAMETER_NAME = "ImageBucketName";
@@ -31,7 +22,7 @@ namespace Mcce22.SmartOffice.Users.Managers
 
         public UserImageManager(
             IDynamoDBContext dbContext,
-            IAmazonS3 s3Client,            
+            IAmazonS3 s3Client,
             IIdGenerator idGenerator,
             IAmazonSimpleSystemsManagement systemsManagement,
             IMapper mapper)
@@ -43,21 +34,11 @@ namespace Mcce22.SmartOffice.Users.Managers
             _mapper = mapper;
         }
 
-        private async Task<string> GetBucketName()
-        {
-            var result = await _systemsManagement.GetParameterAsync(new GetParameterRequest
-            {
-                Name = BUCKET_PARAMETER_NAME
-            });
-
-            return result.Parameter.Value;
-        }
-
         public async Task<UserImageModel[]> GetUserImages(string userId)
         {
             var userImages = await _dbContext.QueryAsync<UserImage>(userId, new DynamoDBOperationConfig
             {
-                IndexName = $"{nameof(UserImage.UserId)}-index"
+                IndexName = $"{nameof(UserImage.UserId)}-index",
             }).GetRemainingAsync();
 
             return userImages.Select(_mapper.Map<UserImageModel>).ToArray();
@@ -74,7 +55,7 @@ namespace Mcce22.SmartOffice.Users.Managers
                 Key = key,
                 InputStream = file.OpenReadStream(),
                 AutoCloseStream = true,
-                AutoResetStreamPosition = true
+                AutoResetStreamPosition = true,
             };
 
             var userImage = new UserImage
@@ -83,7 +64,7 @@ namespace Mcce22.SmartOffice.Users.Managers
                 ResourceKey = key,
                 UserId = userId,
                 Url = $"https://{bucketName}.s3.amazonaws.com/{key}",
-                Size = file.Length
+                Size = file.Length,
             };
 
             await _dbContext.SaveAsync(userImage);
@@ -107,18 +88,18 @@ namespace Mcce22.SmartOffice.Users.Managers
             {
                 var response = await _s3Client.ListObjectsAsync(bucketName, userImageId);
 
-                foreach(var s3Object in response.S3Objects)
+                foreach (var s3Object in response.S3Objects)
                 {
                     await _s3Client.DeleteObjectAsync(new DeleteObjectRequest
                     {
                         BucketName = bucketName,
-                        Key = s3Object.Key
+                        Key = s3Object.Key,
                     });
                 }
 
                 var userImages = await _dbContext.QueryAsync<UserImage>(userImageId, new DynamoDBOperationConfig
                 {
-                    IndexName = $"{nameof(UserImage.UserId)}-index"
+                    IndexName = $"{nameof(UserImage.UserId)}-index",
                 }).GetRemainingAsync();
 
                 foreach (var image in userImages)
@@ -126,6 +107,16 @@ namespace Mcce22.SmartOffice.Users.Managers
                     await _dbContext.DeleteAsync(image);
                 }
             }
+        }
+
+        private async Task<string> GetBucketName()
+        {
+            var result = await _systemsManagement.GetParameterAsync(new GetParameterRequest
+            {
+                Name = BUCKET_PARAMETER_NAME,
+            });
+
+            return result.Parameter.Value;
         }
     }
 }

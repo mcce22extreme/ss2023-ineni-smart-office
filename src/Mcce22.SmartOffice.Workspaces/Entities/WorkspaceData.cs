@@ -5,7 +5,7 @@ namespace Mcce22.SmartOffice.Workspaces.Entities
     [DynamoDBTable("mcce22-smart-office-workspace-data")]
     public class WorkspaceData
     {
-        [DynamoDBHashKey()]
+        [DynamoDBHashKey]
         public string Id { get; set; }
 
         [DynamoDBProperty]

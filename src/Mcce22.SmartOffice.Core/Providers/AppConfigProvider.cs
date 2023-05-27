@@ -1,13 +1,9 @@
 ﻿using Amazon.SimpleSystemsManagement;
 using Amazon.SimpleSystemsManagement.Model;
+using Mcce22.SmartOffice.Core.Common;
 
 namespace Mcce22.SmartOffice.Core.Providers
 {
-    public interface IAppConfigProvider
-    {
-        Task<AppConfig> GetAppConfig();
-    }
-
     public class AppConfigProvider : IAppConfigProvider
     {
         private const string IMAGE_BUCKETNAME_PARAMETER = "ImageBucketName";
@@ -30,7 +26,6 @@ namespace Mcce22.SmartOffice.Core.Providers
             _systemsManager = systemsManager;
         }
 
-
         public async Task<AppConfig> GetAppConfig()
         {
             await Semaphore.WaitAsync();
@@ -52,8 +47,8 @@ namespace Mcce22.SmartOffice.Core.Providers
                             SMTP_PASSWORD_PARAMETER,
                             SMTP_SENDERNAME_PARAMETER,
                             ACTIVATOR_ENDPOINTADDRESS_PARAMETER,
-                            IOTDATA_ENDPOINTADDRESS_PARAMETER
-                        }
+                            IOTDATA_ENDPOINTADDRESS_PARAMETER,
+                        },
                     });
 
                     foreach (var parameter in result.Parameters)
@@ -95,24 +90,5 @@ namespace Mcce22.SmartOffice.Core.Providers
                 Semaphore.Release();
             }
         }
-    }
-
-    public class AppConfig
-    {
-        public string ImageBucketName { get; set; }
-
-        public string IoTDataEndpointAddress { get; set; }
-
-        public string ActivatorEndpointAddress { get; set; }
-
-        public string SmtpHost { get; set; }
-
-        public int SmtpPort { get; set; }
-
-        public string SmtpUserName { get; set; }
-
-        public string SmtpPassword { get; set; }
-
-        public string SmtpSenderName { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace Mcce22.SmartOffice.Users.Entities
     [DynamoDBTable("mcce22-smart-office-userimages")]
     public class UserImage
     {
-        [DynamoDBHashKey()]
+        [DynamoDBHashKey]
         public string Id { get; set; }
 
         [DynamoDBProperty]

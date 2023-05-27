@@ -7,14 +7,9 @@ using Serilog;
 
 namespace Mcce22.SmartOffice.Notifications.Managers
 {
-    public interface INotificationManager
-    {
-        Task<int> ProcessPendingBookings();
-    }
-
     public class NotificationManager : INotificationManager
     {
-        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private static readonly SemaphoreSlim Semaphore = new (1);
 
         private readonly AmazonDynamoDBClient _dynamoDbClient;
         private readonly IEmailService _emailService;
@@ -29,7 +24,7 @@ namespace Mcce22.SmartOffice.Notifications.Managers
 
         public async Task<int> ProcessPendingBookings()
         {
-            await _semaphore.WaitAsync();
+            await Semaphore.WaitAsync();
 
             try
             {
@@ -41,7 +36,7 @@ namespace Mcce22.SmartOffice.Notifications.Managers
                 date,
                 new DynamoDBOperationConfig
                 {
-                    IndexName = $"{nameof(Booking.StartDate)}-index"
+                    IndexName = $"{nameof(Booking.StartDate)}-index",
                 })
                 .GetRemainingAsync();
 
@@ -58,13 +53,13 @@ namespace Mcce22.SmartOffice.Notifications.Managers
 
                     booking.InvitationSent = true;
                     await context.SaveAsync(booking);
-                }                
+                }
 
                 return pendingBookings.Count;
             }
             finally
             {
-                _semaphore.Release();
+                Semaphore.Release();
             }
         }
     }

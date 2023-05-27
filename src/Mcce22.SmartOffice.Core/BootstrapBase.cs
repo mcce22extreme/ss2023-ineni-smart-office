@@ -17,11 +17,11 @@ namespace Mcce22.SmartOffice.Core
 {
     public abstract class BootstrapBase
     {
-        protected IConfiguration Configuration { get; }
-
         private readonly string _baseAddress;
 
-        public BootstrapBase()
+        protected IConfiguration Configuration { get; }
+
+        protected BootstrapBase()
         {
             Configuration = new ConfigurationBuilder()
                 .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))

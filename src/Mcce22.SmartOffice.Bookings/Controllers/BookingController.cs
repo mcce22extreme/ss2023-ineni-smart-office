@@ -38,17 +38,5 @@ namespace Mcce22.SmartOffice.Bookings.Controllers
         {
             await _bookingManager.DeleteBooking(bookingId);
         }
-
-        //[HttpPost("activate/{bookingid}")]
-        //public async Task<BookingModel> ActivateBooking(string bookingId)
-        //{
-        //    return await _bookingManager.ActivateBooking(bookingId);
-        //}
-
-        //[HttpPost("process")]
-        //public async Task ProcessBookings()
-        //{
-        //    await _bookingManager.ProcessBookings();
-        //}
     }
 }

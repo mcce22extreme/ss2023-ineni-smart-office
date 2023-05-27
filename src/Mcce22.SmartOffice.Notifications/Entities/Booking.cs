@@ -6,7 +6,7 @@ namespace Mcce22.SmartOffice.Notifications.Entities
     [DynamoDBTable("mcce22-smart-office-bookings")]
     public class Booking
     {
-        [DynamoDBHashKey()]
+        [DynamoDBHashKey]
         public string Id { get; set; }
 
         [DynamoDBProperty(converter: typeof(DateOnlyConverter))]
