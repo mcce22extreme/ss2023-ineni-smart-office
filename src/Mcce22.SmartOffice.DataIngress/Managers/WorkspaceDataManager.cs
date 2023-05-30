@@ -7,11 +7,6 @@ using Mcce22.SmartOffice.DataIngress.Models;
 
 namespace Mcce22.SmartOffice.DataIngress.Managers
 {
-    public interface IWorkspaceDataManager
-    {
-        Task CreateWorkspaceData(SaveWorkspaceDataModel model);
-    }
-
     public class WorkspaceDataManager : IWorkspaceDataManager
     {
         private readonly IAmazonDynamoDB _dynamoDbClient;
@@ -54,7 +49,7 @@ namespace Mcce22.SmartOffice.DataIngress.Managers
                 WorkspaceId = workspace.Id,
                 WorkspaceNumber = workspace.WorkspaceNumber,
                 RoomNumber = workspace.RoomNumber,
-                Temperature = model.Temperature
+                Temperature = model.Temperature,
             };
 
             await context.SaveAsync(workspaceData);

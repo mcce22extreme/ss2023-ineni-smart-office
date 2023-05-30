@@ -2,24 +2,21 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
 using Mcce22.SmartOffice.Client.Services;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class UserImageListViewModel : ListViewModelBase<UserImageModel>
+    public partial class UserImageListViewModel : ListViewModelBase<UserImageModel>
     {
         private readonly IUserImageManager _userImageManager;
         private readonly IUserManager _userManager;
 
+        [ObservableProperty]
         private List<UserModel> _users;
-        public List<UserModel> Users
-        {
-            get { return _users; }
-            set { SetProperty(ref _users, value); }
-        }
-
+                
         private UserModel _selectedUser;
         public UserModel SelectedUser
         {

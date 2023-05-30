@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
@@ -10,7 +11,7 @@ using Newtonsoft.Json;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class SeedDataViewModel : ViewModelBase
+    public partial class SeedDataViewModel : ViewModelBase
     {
         private static readonly Random Random = new Random();
 
@@ -21,64 +22,30 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         private readonly IWorkspaceDataManager _workspaceDataManager;
         private readonly IDialogService _dialogService;
 
+        [ObservableProperty]
         private int _progress;
-        public int Progress
-        {
-            get { return _progress; }
-            set { SetProperty(ref _progress, value); }
-        }
 
+        [ObservableProperty]
         private int _stepProgress;
-        public int StepProgress
-        {
-            get { return _stepProgress; }
-            set { SetProperty(ref _stepProgress, value); }
-        }
 
+        [ObservableProperty]
         private string _progressText;
-        public string ProgressText
-        {
-            get { return _progressText; }
-            set { SetProperty(ref _progressText, value); }
-        }
 
+        [ObservableProperty]
         private bool _activateUserSeed = true;
-        public bool ActivateUserSeed
-        {
-            get { return _activateUserSeed; }
-            set { SetProperty(ref _activateUserSeed, value); }
-        }
 
+        [ObservableProperty]
         private bool _activateUserImageSeed = true;
-        public bool ActivateUserImageSeed
-        {
-            get { return _activateUserImageSeed; }
-            set { SetProperty(ref _activateUserImageSeed, value); }
-        }
 
+        [ObservableProperty]
         private bool _activateWorkspaceSeed = true;
-        public bool ActivateWorkspaceSeed
-        {
-            get { return _activateWorkspaceSeed; }
-            set { SetProperty(ref _activateWorkspaceSeed, value); }
-        }
 
+        [ObservableProperty]
         private bool _activateWorkspaceConfigSeed = true;
-        public bool ActivateWorkspaceConfigSeed
-        {
-            get { return _activateWorkspaceSeed; }
-            set { SetProperty(ref _activateWorkspaceConfigSeed, value); }
-        }
 
+        [ObservableProperty]
         private bool _activateWorkspaceDataSeed = false;
-        public bool ActivateUserDataSeed
-        {
-            get { return _activateWorkspaceDataSeed; }
-            set { SetProperty(ref _activateWorkspaceDataSeed, value); }
-        }
-
-        public RelayCommand SeedDataCommand { get; }
-
+        
         public SeedDataViewModel(
             IUserManager userManager,
             IWorkspaceManager workspaceManager,
@@ -93,8 +60,6 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             _bookingManager = bookingManager;
             _workspaceDataManager = workspaceDataManager;
             _dialogService = dialogService;
-
-            SeedDataCommand = new RelayCommand(SeedData, CanSeed);
         }
 
         protected override void UpdateCommandStates()
@@ -109,6 +74,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             return !IsBusy;
         }
 
+        [RelayCommand(CanExecute = nameof(CanSeed))]
         private async void SeedData()
         {
             try
@@ -144,7 +110,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                     }
 
                     Progress = 30;
-                    if (ActivateUserDataSeed)
+                    if (ActivateWorkspaceDataSeed)
                     {
                         ProgressText = "Delete workspace data...";
                         await DeleteWorkspaceData();
@@ -172,7 +138,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                     }
 
                     Progress = 70;
-                    if (ActivateUserDataSeed)
+                    if (ActivateWorkspaceDataSeed)
                     {
                         ProgressText = "Seed workspace data...";
                         await SeedWorkspaceData();

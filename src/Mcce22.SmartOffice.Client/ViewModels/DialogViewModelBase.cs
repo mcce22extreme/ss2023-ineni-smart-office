@@ -12,13 +12,9 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         void Load();
     }
 
-    public abstract class DialogViewModelBase : ViewModelBase, IDialogViewModel
+    public abstract partial class DialogViewModelBase : ViewModelBase, IDialogViewModel
     {
         protected IDialogService DialogService { get; }
-
-        public RelayCommand SaveCommand { get; }
-
-        public RelayCommand CancelCommand { get; }
 
         public string Title { get; protected set; }
 
@@ -27,8 +23,6 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         public DialogViewModelBase(IDialogService dialogService)
         {
             DialogService = dialogService;
-            SaveCommand = new RelayCommand(Save, CanSave);
-            CancelCommand = new RelayCommand(Cancel, CanCancel);
         }
 
         public virtual void Load()
@@ -40,6 +34,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             return !IsBusy;
         }
 
+        [RelayCommand(CanExecute = nameof(CanSave))]
         protected async void Save()
         {
             if (CanSave())
@@ -75,6 +70,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             return !IsBusy;
         }
 
+        [RelayCommand(CanExecute = nameof(CanCancel))]
         protected void Cancel()
         {
             if (CanCancel())

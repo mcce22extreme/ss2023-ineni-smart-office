@@ -17,7 +17,6 @@ namespace Mcce22.SmartOffice.Bookings.Profiles
                 .ForMember(d => d.StartTime, opt => opt.MapFrom(s => TimeOnly.FromTimeSpan(s.StartDateTime.TimeOfDay)))
                 .ForMember(d => d.EndDate, opt => opt.MapFrom(s => DateOnly.FromDateTime(s.EndDateTime)))
                 .ForMember(d => d.EndTime, opt => opt.MapFrom(s => TimeOnly.FromTimeSpan(s.EndDateTime.TimeOfDay)));
-
         }
     }
 }

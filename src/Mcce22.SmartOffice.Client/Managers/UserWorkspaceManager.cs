@@ -15,7 +15,7 @@ namespace Mcce22.SmartOffice.Client.Managers
     public class UserWorkspaceManager : ManagerBase<UserWorkspaceModel>, IUserWorkspaceManager
     {
         public UserWorkspaceManager(string baseUrl)
-            : base($"{baseUrl}/workspaceconfiguration")
+            : base($"{baseUrl}/workspaceconfiguration/")
         {
         }
     }

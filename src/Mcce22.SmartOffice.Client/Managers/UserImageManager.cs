@@ -26,7 +26,7 @@ namespace Mcce22.SmartOffice.Client.Managers
         public UserImageManager(string baseUrl)
 
         {
-            _baseUrl = $"{baseUrl}/userimage";
+            _baseUrl = $"{baseUrl}/userimage/";
         }
 
         public async Task<UserImageModel[]> GetList(string userId)

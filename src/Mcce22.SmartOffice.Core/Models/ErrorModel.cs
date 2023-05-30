@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace Mcce22.SmartOffice.Core.Models
 {
     public class ErrorModel
     {
-        internal HttpStatusCode StatusCode { get; set; }
+        public HttpStatusCode StatusCode { get; set; }
 
         public string ErrorMessage { get; set; }
 
@@ -13,19 +13,5 @@ namespace Mcce22.SmartOffice.Core.Models
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
-    }
-
-    public class ValidationErrorModel : ErrorModel
-    {
-        public ValidationError[] Errors{get; set;}
-    }
-
-    public class ValidationError
-    {
-        public string PropertyName { get; set; }
-
-        public string ErrorCode { get; set; }
-
-        public string ErrorMessage { get; set; }
     }
 }

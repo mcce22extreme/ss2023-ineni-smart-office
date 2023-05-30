@@ -18,6 +18,5 @@ namespace Mcce22.SmartOffice.Workspaces.Models
         public int Co2 { get; set; }
 
         public int Luminosity { get; set; }
-
     }
 }

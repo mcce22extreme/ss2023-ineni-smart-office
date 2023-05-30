@@ -8,11 +8,6 @@ using Serilog;
 
 namespace Mcce22.SmartOffice.Notifications.Services
 {
-    public interface IEmailService
-    {
-        Task SendMail(Booking booking);
-    }
-
     public class EmailService : IEmailService
     {
         private const string TITLE = "[MCCE22-Smart-Office] Workspace ready for activation!";
@@ -87,7 +82,6 @@ namespace Mcce22.SmartOffice.Notifications.Services
             using var reader = new StreamReader(stream);
 
             return await reader.ReadToEndAsync();
-
         }
     }
 }

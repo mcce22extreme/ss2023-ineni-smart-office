@@ -1,10 +1,5 @@
 ﻿namespace Mcce22.SmartOffice.Core.Generators
 {
-    public interface IIdGenerator
-    {
-        string GenerateId(int charCount = 12);
-    }
-
     public class IdGenerator : IIdGenerator
     {
         private static readonly Random _random = new Random();
@@ -18,8 +13,10 @@
             _random.NextBytes(buffer);
 
             string guid = Convert.ToBase64String(buffer);
+
             // Replace URL unfriendly characters
             guid = guid.Replace('+', '-').Replace('/', '_');
+
             // Trim characters to fit the count
             return guid.Substring(0, charCount);
         }

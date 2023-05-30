@@ -5,36 +5,20 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class LoginViewModel : ObservableObject
+    public partial class LoginViewModel : ObservableObject
     {
+        [ObservableProperty]
         private bool _loginVisible = true;
-        public bool LoginVisible
-        {
-            get { return _loginVisible; }
-            set { SetProperty(ref _loginVisible, value); }
-        }
 
+        [ObservableProperty]
         private string _userName = "demo";
-        public string UserName
-        {
-            get { return _userName; }
-            set { _userName = value; }
-        }
 
+        [ObservableProperty]
         private string _password;
-        public string Password
-        {
-            get { return _password; }
-            set { _password = value; }
-        }
 
+        [ObservableProperty]
         private bool _isAdmin;
-        public bool IsAdmin
-        {
-            get { return _isAdmin; }
-            set { SetProperty(ref _isAdmin, value); }
-        }
-
+        
         public ICommand LoginAsAdminCommand { get; }
 
         public ICommand LoginAsUserCommand { get; }

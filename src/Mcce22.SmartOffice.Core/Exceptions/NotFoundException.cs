@@ -1,5 +1,4 @@
-﻿
-namespace Mcce22.SmartOffice.Core.Exceptions
+﻿namespace Mcce22.SmartOffice.Core.Exceptions
 {
     public class NotFoundException : Exception
     {

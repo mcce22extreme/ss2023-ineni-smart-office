@@ -41,14 +41,14 @@ public class Functions
 
         Task.WaitAll(workspaceDataManager.CreateWorkspaceData(new Models.SaveWorkspaceDataModel
         {
-            Temperature = temperature
+            Temperature = temperature,
         }));
 
         var response = new APIGatewayProxyResponse
         {
             StatusCode = (int)HttpStatusCode.OK,
             Body = $"Successfully created workspace data for ''!",
-            Headers = new Dictionary<string, string> { { "Content-Type", "text/plain" } }
+            Headers = new Dictionary<string, string> { { "Content-Type", "text/plain" } },
         };
 
         Log.Information($"[Out ] {nameof(HandleRequest)} - {stopwatch.Elapsed}");

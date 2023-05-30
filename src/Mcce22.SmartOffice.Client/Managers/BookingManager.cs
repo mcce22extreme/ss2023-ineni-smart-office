@@ -15,7 +15,7 @@ namespace Mcce22.SmartOffice.Client.Managers
     public class BookingManager : ManagerBase<BookingModel>, IBookingManager
     {
         public BookingManager(string baseUrl)
-            : base($"{baseUrl}/booking")
+            : base($"{baseUrl}/booking/")
         {
         }
     }
