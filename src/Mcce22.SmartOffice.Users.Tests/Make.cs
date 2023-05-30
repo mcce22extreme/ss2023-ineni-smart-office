@@ -4,7 +4,7 @@ namespace Mcce22.SmartOffice.Users.Tests
 {
     internal static class Make
     {
-        private static Random _random = new Random();
+        private static readonly Random Random = new();
 
         #region String
         public static string String()
@@ -21,7 +21,7 @@ namespace Mcce22.SmartOffice.Users.Tests
         {
             var builder = new StringBuilder();
             for (int i = 0; i < length; i++)
-                builder.Append(Convert.ToChar(Convert.ToInt32(Math.Floor(26 * _random.NextDouble() + 65))));
+                builder.Append(Convert.ToChar(Convert.ToInt32(Math.Floor(26 * Random.NextDouble() + 65))));
 
             return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
@@ -30,19 +30,19 @@ namespace Mcce22.SmartOffice.Users.Tests
         #region Int
         public static int Int()
         {
-            return _random.Next();
+            return Random.Next();
         }
 
         public static int Int(int min, int max)
         {
-            return _random.Next(min, max);
+            return Random.Next(min, max);
         }
         #endregion Int
 
         #region Double
         public static double Double()
         {
-            return _random.NextDouble();
+            return Random.NextDouble();
         }
         #endregion Double
 
@@ -52,7 +52,7 @@ namespace Mcce22.SmartOffice.Users.Tests
             var start = new DateTime(1995, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             int range = (System.DateTime.Today - start).Days;
-            return start.AddDays(_random.Next(range));
+            return start.AddDays(Random.Next(range));
         }
         #endregion Date
 
@@ -75,7 +75,7 @@ namespace Mcce22.SmartOffice.Users.Tests
             where TEnum : struct
         {
             var values = System.Enum.GetValues(typeof(TEnum)).OfType<TEnum>().ToArray();
-            var index = _random.Next(0, values.Length -1);
+            var index = Random.Next(0, values.Length -1);
 
             return values[index];
 

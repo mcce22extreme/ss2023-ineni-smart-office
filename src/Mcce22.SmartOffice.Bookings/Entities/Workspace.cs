@@ -5,7 +5,7 @@ namespace Mcce22.SmartOffice.Bookings.Entities
     [DynamoDBTable("mcce22-smart-office-workspaces")]
     public class Workspace
     {
-        [DynamoDBHashKey()]
+        [DynamoDBHashKey]
         public string Id { get; set; }
 
         [DynamoDBProperty]

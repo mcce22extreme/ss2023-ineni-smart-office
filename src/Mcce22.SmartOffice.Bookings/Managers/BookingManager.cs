@@ -8,17 +8,6 @@ using Mcce22.SmartOffice.Core.Generators;
 
 namespace Mcce22.SmartOffice.Bookings.Managers
 {
-    public interface IBookingManager
-    {
-        Task<BookingModel[]> GetBookings();
-
-        Task<BookingModel> GetBooking(string bookingId);
-
-        Task<BookingModel> CreateBooking(SaveBookingModel model);
-
-        Task DeleteBooking(string bookingId);
-    }
-
     public class BookingManager : IBookingManager
     {
         private readonly IDynamoDBContext _dbContext;
@@ -49,12 +38,9 @@ namespace Mcce22.SmartOffice.Bookings.Managers
         {
             var booking = await _dbContext.LoadAsync<Booking>(bookingId);
 
-            if (booking == null)
-            {
-                throw new NotFoundException($"Could not find booking with id '{bookingId}'!");
-            }
-
-            return _mapper.Map<BookingModel>(booking);
+            return booking == null
+                ? throw new NotFoundException($"Could not find booking with id '{bookingId}'!")
+                : _mapper.Map<BookingModel>(booking);
         }
 
         public async Task<BookingModel> CreateBooking(SaveBookingModel model)
@@ -77,17 +63,9 @@ namespace Mcce22.SmartOffice.Bookings.Managers
                 throw new ValidationException("A collision occurred during booking the workspace! The workspace has already been booked by another user in the specified time.");
             }
 
-            var user = await _dbContext.LoadAsync<User>(model.UserId);
-            if (user == null)
-            {
-                throw new NotFoundException($"Could not find user with id '{model.UserId}'!");
-            }
+            var user = await _dbContext.LoadAsync<User>(model.UserId) ?? throw new NotFoundException($"Could not find user with id '{model.UserId}'!");
 
-            var workspace = await _dbContext.LoadAsync<Workspace>(model.WorkspaceId);
-            if (workspace == null)
-            {
-                throw new NotFoundException($"Could not find workspace with id '{model.WorkspaceId}'!");
-            }
+            var workspace = await _dbContext.LoadAsync<Workspace>(model.WorkspaceId) ?? throw new NotFoundException($"Could not find workspace with id '{model.WorkspaceId}'!");
 
             var booking = _mapper.Map<Booking>(model);
 
@@ -104,13 +82,18 @@ namespace Mcce22.SmartOffice.Bookings.Managers
             return await GetBooking(booking.Id);
         }
 
+        public async Task DeleteBooking(string bookingId)
+        {
+            await _dbContext.DeleteAsync<Booking>(bookingId);
+        }
+
         private async Task<bool> CheckAvailability(string workspaceId, DateTime startDateTime, DateTime endDateTime)
         {
             var bookings = await _dbContext.QueryAsync<Booking>(
                 DateOnly.FromDateTime(startDateTime),
                 new DynamoDBOperationConfig
                 {
-                    IndexName = $"{nameof(Booking.StartDate)}-index"
+                    IndexName = $"{nameof(Booking.StartDate)}-index",
                 })
                 .GetRemainingAsync();
 
@@ -118,19 +101,13 @@ namespace Mcce22.SmartOffice.Bookings.Managers
             var endTime = TimeOnly.FromDateTime(endDateTime);
 
             var collision = bookings
-                .Where(x => x.WorkspaceId == workspaceId &&
+                .Exists(x => x.WorkspaceId == workspaceId &&
                     ((startTime == x.StartTime && endTime == x.EndTime) ||
                     (startTime > x.StartTime && startTime < x.EndTime) ||
                     (endTime > x.StartTime && endTime < x.EndTime) ||
-                    (startTime < x.StartTime && endTime > x.EndTime)))
-                .Any();
+                    (startTime < x.StartTime && endTime > x.EndTime)));
 
             return collision;
         }
-
-        public async Task DeleteBooking(string bookingId)
-        {
-            await _dbContext.DeleteAsync<Booking>(bookingId);
-        }       
     }
 }

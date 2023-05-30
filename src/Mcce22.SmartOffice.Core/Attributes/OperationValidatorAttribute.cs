@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Mcce22.SmartOffice.Core.Providers;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Mcce22.SmartOffice.Core.Attributes
 {

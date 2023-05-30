@@ -4,14 +4,17 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>bf8d7d2f-6698-482f-889e-91da32168229</UserSecretsId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.6.0" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103" />    
-    <PackageReference Include="AWSSDK.S3" Version="3.7.104.11" />    
-    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.104.28" />   
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.104.11" />
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.104.28" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.1.0.70676" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
   </ItemGroup>
 
   <ItemGroup>

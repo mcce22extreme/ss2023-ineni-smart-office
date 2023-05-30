@@ -9,16 +9,11 @@ using Newtonsoft.Json;
 
 namespace Mcce22.SmartOffice.DeviceActivator.Managers
 {
-    public interface IDeviceManager
-    {
-        Task ActivateDevice(string activationCode);
-    }
-
     public class DeviceManager : IDeviceManager
     {
         private const string TOPIC = "mcce22-smart-office/activate";
 
-        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private static readonly SemaphoreSlim Semaphore = new (1);
 
         private readonly IDynamoDBContext _dbContext;
         private readonly IAmazonIotData _dataClient;
@@ -31,32 +26,27 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
 
         public async Task ActivateDevice(string activationCode)
         {
-            await _semaphore.WaitAsync();
+            await Semaphore.WaitAsync();
 
             try
             {
-                var bookings = await _dbContext.QueryAsync<Booking>(activationCode,new DynamoDBOperationConfig
+                var bookings = await _dbContext.QueryAsync<Booking>(activationCode, new DynamoDBOperationConfig
                 {
-                    IndexName = $"{nameof(Booking.ActivationCode)}-index"
+                    IndexName = $"{nameof(Booking.ActivationCode)}-index",
                 })
                 .GetRemainingAsync();
 
-                var booking = bookings.FirstOrDefault();
+                var booking = bookings.FirstOrDefault() ?? throw new NotFoundException($"Could not find booking for activationcode '{activationCode}'!");
 
-                if (booking == null)
+                var configurations = await _dbContext.QueryAsync<WorkspaceConfiguration>($"{booking.WorkspaceId}-{booking.UserId}", new DynamoDBOperationConfig
                 {
-                    throw new NotFoundException($"Could not find booking for activationcode '{activationCode}'!");
-                }
-
-                var configurations = await _dbContext.QueryAsync<WorkspaceConfiguration>($"{booking.WorkspaceId}-{booking.UserId}",new DynamoDBOperationConfig
-                {
-                    IndexName = $"{nameof(WorkspaceConfiguration.WorkspaceUser)}-index"
+                    IndexName = $"{nameof(WorkspaceConfiguration.WorkspaceUser)}-index",
                 })
                 .GetRemainingAsync();
 
                 var userImages = await _dbContext.QueryAsync<UserImage>(booking.UserId, new DynamoDBOperationConfig
                 {
-                    IndexName = $"{nameof(UserImage.UserId)}-index"
+                    IndexName = $"{nameof(UserImage.UserId)}-index",
                 }).GetRemainingAsync();
 
                 var model = new ActivateModel
@@ -65,13 +55,13 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
                     UserId = booking.UserId,
                     BookingId = booking.Id,
                     DeskHeight = configurations.FirstOrDefault()?.DeskHeight ?? 0,
-                    UserImageUrl = userImages.FirstOrDefault()?.Url
+                    UserImageUrl = userImages.FirstOrDefault()?.Url,
                 };
 
                 await _dataClient.PublishAsync(new PublishRequest
                 {
                     Topic = TOPIC,
-                    Payload = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model)))
+                    Payload = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(model))),
                 });
 
                 booking.Activated = true;
@@ -80,7 +70,7 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
             }
             finally
             {
-                _semaphore.Release();
+                Semaphore.Release();
             }
         }
     }

@@ -8,7 +8,6 @@ namespace Mcce22.SmartOffice.Workspaces.Validators
         public SaveWorkspaceDataValidator()
         {
             RuleFor(x => x.WorkspaceId).NotEmpty();
-
         }
     }
 }

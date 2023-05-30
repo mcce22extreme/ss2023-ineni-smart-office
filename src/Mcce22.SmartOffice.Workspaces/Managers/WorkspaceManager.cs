@@ -7,19 +7,6 @@ using Mcce22.SmartOffice.Workspaces.Models;
 
 namespace Mcce22.SmartOffice.Workspaces.Managers
 {
-    public interface IWorkspaceManager
-    {
-        Task<WorkspaceModel[]> GetWorkspaces();
-
-        Task<WorkspaceModel> GetWorkspace(string workspaceId);
-
-        Task<WorkspaceModel> CreateWorkspace(SaveWorkspaceModel model);
-
-        Task<WorkspaceModel> UpdateWorkspace(string workspaceId, SaveWorkspaceModel model);
-
-        Task DeleteWorkspace(string workspaceId);
-    }
-
     public class WorkspaceManager : IWorkspaceManager
     {
         private readonly IDynamoDBContext _dbContext;
@@ -49,12 +36,9 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
         {
             var workspace = await _dbContext.LoadAsync<Workspace>(workspaceId);
 
-            if (workspace == null)
-            {
-                throw new NotFoundException($"Could not find workspace with id '{workspaceId}'!");
-            }
-
-            return _mapper.Map<WorkspaceModel>(workspace);
+            return workspace == null
+                ? throw new NotFoundException($"Could not find workspace with id '{workspaceId}'!")
+                : _mapper.Map<WorkspaceModel>(workspace);
         }
 
         public async Task<WorkspaceModel> CreateWorkspace(SaveWorkspaceModel model)
@@ -70,12 +54,7 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
 
         public async Task<WorkspaceModel> UpdateWorkspace(string workspaceId, SaveWorkspaceModel model)
         {
-            var workspace = await _dbContext.LoadAsync<Workspace>(workspaceId);
-
-            if (workspace == null)
-            {
-                throw new NotFoundException($"Could not find workspace with id '{workspaceId}'!");
-            }
+            var workspace = await _dbContext.LoadAsync<Workspace>(workspaceId) ?? throw new NotFoundException($"Could not find workspace with id '{workspaceId}'!");
 
             _mapper.Map(model, workspace);
 

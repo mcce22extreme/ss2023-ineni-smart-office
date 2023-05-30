@@ -16,18 +16,14 @@ namespace Mcce22.SmartOffice.Core.Controllers
             _appInfo = appInfo;
         }
 
-        /// <summary>
-        /// Returns version information of the application.
-        /// </summary>
-        /// <response code="200">The version information of the application.</response>        
         [HttpGet]
-        [AllowAnonymous]        
+        [AllowAnonymous]
         public IActionResult GetVersionInfo()
-        {           
+        {
             return Ok(new VersionInfo
             {
                 AppName = _appInfo.AppName,
-                AppVersion = _appInfo.AppVersion
+                AppVersion = _appInfo.AppVersion,
             });
         }
     }

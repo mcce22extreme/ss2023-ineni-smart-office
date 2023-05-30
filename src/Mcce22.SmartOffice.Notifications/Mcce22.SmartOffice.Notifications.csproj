@@ -3,17 +3,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Templates\email-template.txt" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.6.0" />
     <PackageReference Include="MailKit" Version="4.0.0" />
     <PackageReference Include="MimeKit" Version="4.0.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.1.0.70676" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
   </ItemGroup>
- 
+
   <ItemGroup>
     <ProjectReference Include="..\Mcce22.SmartOffice.Core\Mcce22.SmartOffice.Core.csproj" />
   </ItemGroup>
