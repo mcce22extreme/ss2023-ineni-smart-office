@@ -1,0 +1,46 @@
+
+.tile-container {
+    display: inline-block;
+}
+
+.tile-card {    
+    width: 250px;
+    height: 140px;
+    color:white;
+    font-weight: bold;
+    border: 1px solid #595959;
+    text-align: center;
+    margin: 10px;
+    display: flex;
+    justify-content: right;
+
+    mat-card-title {
+        font-size: 18px;         
+        margin-top: 30px;        
+        display: flex;
+        justify-content: right;
+    }
+
+    mat-icon {
+        font-size: 40px;    
+        height: 50px;
+        width: 50px;
+        vertical-align: middle;
+        margin-right: 180px;
+      }
+  }
+
+  mat-card:hover {
+    background-color: #515151;
+  }
+
+// .example-card {    
+//     width: 250px;
+//     height: 140px;
+//     color:white;
+//     font-weight: bold;
+//     background-color: #3F51B5;
+//     text-align: center;
+//     margin: 10px;
+//   }
+

@@ -1,0 +1,97 @@
+<h2 *ngIf="newUser">Create new user</h2>
+<h2 *ngIf="!newUser">Edit user {{ fullName }}</h2>
+
+<form [formGroup]="userForm" (ngSubmit)="save()">
+  <mat-form-field appearance="outline">
+    <mat-label>Username</mat-label>
+    <input
+      matInput
+      placeholder="Username"
+      name="userName"
+      id="userName"
+      formControlName="userName"
+    />
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="outline">
+    <mat-label>Firstname</mat-label>
+    <input
+      matInput
+      placeholder="Firstname"
+      name="firstName"
+      id="firstName"
+      formControlName="firstName"
+    />
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="outline">
+    <mat-label>Lastname</mat-label>
+    <input
+      matInput
+      placeholder="Lastname"
+      name="lastName"
+      id="lastName"
+      formControlName="lastName"
+    />
+  </mat-form-field>
+  <br />
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      placeholder="Email"
+      name="email"
+      id="email"
+      formControlName="email"
+    />
+  </mat-form-field>
+  <br />
+  <button mat-stroked-button class="form-button save" type="submit">
+    Save
+  </button>
+  <button mat-stroked-button class="form-button" (click)="cancel()">
+    Cancel
+  </button>
+</form>
+
+<!-- <div class="container mt-5">
+  <div class="card p-2">
+    <div class="row">
+      <div class="col-6">
+        <form #userForm="ngForm" (ngSubmit)="save(userForm)">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Username</mat-label>
+            <input
+              matInput
+              placeholder="Username"
+              name="userName"
+              [(ngModel)]="user.userName"
+            />
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="outline">
+            <mat-label>Firstname</mat-label>
+            <input matInput placeholder="Firstname" />
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="outline">
+            <mat-label>Lastname</mat-label>
+            <input matInput placeholder="Lastname" />
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Email" />
+          </mat-form-field>
+          <br />
+          <button mat-stroked-button class="form-button save" type="submit">
+            Save
+          </button>
+          <button mat-stroked-button class="form-button" (click)="cancel()">
+            Cancel
+          </button>
+        </form>
+      </div>
+    </div>
+  </div> 
+</div>-->
