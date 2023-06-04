@@ -14,7 +14,7 @@
     <PackageReference Include="AWSSDK.S3" Version="3.7.104.27" />
     <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.104.42" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.1.0.70676" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.2.0.71021" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
   </ItemGroup>
 
   <ItemGroup>
