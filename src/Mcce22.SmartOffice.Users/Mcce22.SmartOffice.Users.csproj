@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.6.0" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103.13" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103.16" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.104.27" />
     <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.104.42" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
