@@ -10,9 +10,11 @@
 
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.6.0" />
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103.16" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.103.18" />
+
     <PackageReference Include="AWSSDK.S3" Version="3.7.104.29" />
-    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.104.43" />
+    <PackageReference Include="AWSSDK.SimpleSystemsManagement" Version="3.7.104.45" />
+
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.3.0.71466" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
   </ItemGroup>
