@@ -10,6 +10,7 @@
 - [Architectur](#architectur)
 - [Built with](#builtwith)
 - [Run the simulator](#runthesimulator)
+- [Set up the IoT-Device](#setupiot)
 
 ## Motivation <a name="motivation"></a>
 
@@ -57,3 +58,11 @@ By using the microservice design pattern, the services of the "Smart Office" can
 - [Raspberry PI](https://www.raspberrypi.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+## Set up the IoT-Device <a name="setupiot"></a>
+1. Download the IoT Licence Files from AWS IoT Core
+2. Start the ./setup_smartoffice
+3. Check the Bluetooth Connection | Set Bluetooth Mac Address manually
+4. Start Python Script deskkontrol.py
+5. Wait for Messages 
