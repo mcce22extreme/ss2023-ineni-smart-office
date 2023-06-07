@@ -1,6 +1,10 @@
 name: CI Pipeline
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - 'images/**'
+      - 'README.md'
 
 permissions:
   pull-requests: read # allows SonarCloud to decorate PRs with analysis results
