@@ -10,6 +10,7 @@
 - [Architectur](#architectur)
 - [Built with](#builtwith)
 - [Getting started](#gettingstarted)
+- [Set up the IoT-Device](#setupiot)
 
 ## Motivation <a name="motivation"></a>
 
@@ -44,6 +45,13 @@ The graphic below shows the different application parts of the Smart Office envi
 By using the microservice design pattern, the services of the "Smart Office" can be divided into small independent units, which contributes to better scalability as well as flexibility in the implementation of each individual service. In combination with Infrastructure as Code , this approach also helps to ensure that the individual services can be provided independently of one another. Each of the services is implemented in AWS as a standalone Lambda function. Data storage is in a relational database, assets such as user images for display in a workstation's digital picture frame are stored in AWS S3. Communication with the "Smart Office" microservices is done through a REST interface and an upstream Amazon API gateway.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Set up the IoT-Device <a name="setupiot"></a>
+1. Download the IoT Licence Files from AWS IoT Core
+2. Start the ./setup_smartoffice
+3. Check the Bluetooth Connection | Set Bluetooth Mac Address manually
+4. Start Python Script deskkontrol.py
+5. Wait for Messages 
 
 ## Built with <a name="builtwith"></a>
 
