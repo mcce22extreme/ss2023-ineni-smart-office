@@ -217,7 +217,7 @@
             VerticalAlignment="Center"
             Orientation="Horizontal"
             Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <Button IsEnabled="False">
+            <Button Command="{Binding NavigateCommand}" CommandParameter="{x:Static enum:NavigationType.WorkspaceData}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />

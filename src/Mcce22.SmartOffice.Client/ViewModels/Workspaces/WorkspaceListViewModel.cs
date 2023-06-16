@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
+using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
 using Mcce22.SmartOffice.Client.Services;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class WorkspaceListViewModel : ListViewModelBase<WorkspaceModel>
+    public partial class WorkspaceListViewModel : ListViewModelBase<WorkspaceModel>
     {
         private readonly IWorkspaceManager _workspaceManager;
 
@@ -13,6 +15,13 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             : base(dialogService)
         {
             _workspaceManager = workspaceManager;
+        }
+
+        protected override void UpdateCommandStates()
+        {
+            base.UpdateCommandStates();
+
+            CopyToClipboardCommand.NotifyCanExecuteChanged();
         }
 
         protected override async Task OnAdd()
@@ -33,6 +42,20 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         protected override async Task<WorkspaceModel[]> OnReload()
         {
             return await _workspaceManager.GetList();
+        }
+
+        [RelayCommand(CanExecute = nameof(CanCopyToClipboard))]
+        public void CopyToClipboard()
+        {
+            if (CanCopyToClipboard())
+            {
+                Clipboard.SetDataObject(SelectedItem.Id);
+            }
+        }
+
+        public bool CanCopyToClipboard()
+        {
+            return !IsBusy && SelectedItem != null;
         }
     }
 }

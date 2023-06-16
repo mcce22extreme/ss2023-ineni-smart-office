@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Models;
 using Mcce22.SmartOffice.Client.Services;
@@ -17,7 +18,8 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         protected override async Task<WorkspaceDataModel[]> OnReload()
         {
-            return await _workspaceDataManager.GetList();
+            var data = await _workspaceDataManager.GetList();
+            return data.OrderByDescending(x => x.Timestamp).ToArray();
         }
 
         protected override async Task OnDelete()
