@@ -3,6 +3,7 @@ using AutoMapper;
 using Mcce22.SmartOffice.Core.Exceptions;
 using Mcce22.SmartOffice.Core.Generators;
 using Mcce22.SmartOffice.Workspaces.Entities;
+using Mcce22.SmartOffice.Workspaces.Generators;
 using Mcce22.SmartOffice.Workspaces.Models;
 using Mcce22.SmartOffice.Workspaces.Queries;
 
@@ -13,12 +14,14 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
         private readonly IDynamoDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IIdGenerator _idGenerator;
+        private readonly IWeiGenerator _weiGenerator;
 
-        public WorkspaceDataManager(IDynamoDBContext dbContext, IMapper mapper, IIdGenerator idGenerator)
+        public WorkspaceDataManager(IDynamoDBContext dbContext, IMapper mapper, IIdGenerator idGenerator, IWeiGenerator weiGenerator)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _idGenerator = idGenerator;
+            _weiGenerator = weiGenerator;
         }
 
         public async Task<WorkspaceDataModel[]> GetWorkspaceData(WorkspaceDataQuery query)
@@ -32,7 +35,7 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
 
             var workspaceDataQuery = workspaceData
                 .Where(x => x.Timestamp >= startDate && x.Timestamp <= endDate)
-                .OrderBy(x => x.Timestamp)
+                .OrderByDescending(x => x.Timestamp)
                 .AsQueryable();
 
             return workspaceDataQuery.Select(_mapper.Map<WorkspaceDataModel>).ToArray();
@@ -49,6 +52,7 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
             });
 
             workspaceData.Id = _idGenerator.GenerateId();
+            workspaceData.Wei = _weiGenerator.GenerateWei(workspaceData);
 
             if (!model.Timestamp.HasValue)
             {
@@ -57,12 +61,43 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
 
             await _dbContext.SaveAsync(workspaceData);
 
+            await UpdateWorkspaceWei(workspace, workspaceData);
+
             return _mapper.Map<WorkspaceDataModel>(workspaceData);
         }
 
         public async Task DeleteWorkspaceData(string workspaceDataId)
         {
             await _dbContext.DeleteAsync<WorkspaceData>(workspaceDataId);
+        }
+
+        private async Task UpdateWorkspaceWei(Workspace workspace, WorkspaceData data)
+        {
+            var startDate = DateTime.Now.Subtract(TimeSpan.FromDays(10));
+            var endDate = DateTime.Now;
+
+            var workspaceData = await _dbContext.QueryAsync<WorkspaceData>(workspace.Id, new DynamoDBOperationConfig
+            {
+                IndexName = $"{nameof(WorkspaceData.WorkspaceId)}-index",
+            }).GetRemainingAsync();
+
+            var workspaceDataRange = workspaceData
+                .Where(x => x.Timestamp >= startDate && x.Timestamp <= endDate)
+                .OrderBy(x => x.Timestamp)
+                .AsQueryable()
+                .ToArray();
+
+            if (workspaceDataRange.Length > 0)
+            {
+                var avgWei = (int)Math.Round(workspaceDataRange.Select(x => x.Wei).Average());
+                workspace.Wei = avgWei > 100 ? 100 : avgWei;
+            }
+            else
+            {
+                workspace.Wei = data.Wei;
+            }
+
+            await _dbContext.SaveAsync(workspace);
         }
     }
 }

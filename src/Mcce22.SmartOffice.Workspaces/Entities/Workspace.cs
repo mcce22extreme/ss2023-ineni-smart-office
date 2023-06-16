@@ -25,5 +25,8 @@ namespace Mcce22.SmartOffice.Workspaces.Entities
 
         [DynamoDBProperty]
         public int Height { get; set; }
+
+        [DynamoDBProperty]
+        public int Wei { get; set; }
     }
 }

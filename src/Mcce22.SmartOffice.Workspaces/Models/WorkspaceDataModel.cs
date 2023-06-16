@@ -16,10 +16,8 @@
 
         public int Noise { get; set; }
 
-        public int Humidity { get; set; }
-
         public int Co2 { get; set; }
 
-        public int Luminosity { get; set; }
+        public int Wei { get; set; }
     }
 }

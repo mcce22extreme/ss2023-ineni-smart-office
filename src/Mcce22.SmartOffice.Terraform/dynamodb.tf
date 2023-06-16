@@ -104,9 +104,20 @@ resource "aws_dynamodb_table" "mcce22_smart_office_workspacedata_table" {
     name = "Timestamp"
     type = "S"
   }
+  attribute {
+    name = "WorkspaceId"
+    type = "S"
+  }
   global_secondary_index {
     name            = "Timestamp-index"
     hash_key        = "Timestamp"
+    projection_type = "ALL"
+    read_capacity   = 5
+    write_capacity  = 5
+  }
+  global_secondary_index {
+    name            = "WorkspaceId-index"
+    hash_key        = "WorkspaceId"
     projection_type = "ALL"
     read_capacity   = 5
     write_capacity  = 5

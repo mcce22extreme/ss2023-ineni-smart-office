@@ -13,10 +13,6 @@ namespace Mcce22.SmartOffice.Workspaces.Models
 
         public int Noise { get; set; }
 
-        public int Humidity { get; set; }
-
         public int Co2 { get; set; }
-
-        public int Luminosity { get; set; }
     }
 }
