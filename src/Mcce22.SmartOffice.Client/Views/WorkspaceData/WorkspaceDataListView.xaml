@@ -39,6 +39,11 @@
             SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn
+                    Width="150"
+                    Binding="{Binding Timestamp}"
+                    Header="Timestamp"
+                    SortDirection="Descending" />
+                <DataGridTextColumn
                     Width="110"
                     Binding="{Binding WorkspaceNumber}"
                     Header="Workspace" />
@@ -50,23 +55,24 @@
                     Width="110"
                     Binding="{Binding Noise, StringFormat={} {0} dB}"
                     Header="Noise" />
-                <DataGridTextColumn
+                <!--<DataGridTextColumn
                     Width="110"
                     Binding="{Binding Humidity, StringFormat={} {0} %}"
-                    Header="Humidity" />
+                    Header="Humidity" />-->
                 <DataGridTextColumn
                     Width="110"
                     Binding="{Binding Co2, StringFormat={} {0} ppm}"
                     Header="CO2" />
                 <DataGridTextColumn
                     Width="110"
+                    Binding="{Binding Wei}"
+                    Header="WEI" />
+                <!--<DataGridTextColumn
+                    Width="110"
                     Binding="{Binding Luminosity, StringFormat={} {0} LUX}"
-                    Header="Luminosity" />
+                    Header="Luminosity" />-->
 
-                <DataGridTextColumn
-                    Width="150"
-                    Binding="{Binding Timestamp}"
-                    Header="Timestamp" />
+
             </DataGrid.Columns>
         </DataGrid>
         <mah:ProgressRing Grid.RowSpan="2" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" />

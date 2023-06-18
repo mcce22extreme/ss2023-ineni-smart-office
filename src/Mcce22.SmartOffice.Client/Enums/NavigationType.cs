@@ -8,6 +8,7 @@
         Users,
         Workspaces,
         Bookings,
+        WorkspaceData,
         SeedData
     }
 }

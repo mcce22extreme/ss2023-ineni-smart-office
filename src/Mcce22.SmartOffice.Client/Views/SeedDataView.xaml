@@ -48,7 +48,7 @@
             <mah:ToggleSwitch Content="Seed user images" IsOn="{Binding ActivateUserImageSeed}" />
             <mah:ToggleSwitch Content="Seed workspaces" IsOn="{Binding ActivateWorkspaceSeed}" />
             <mah:ToggleSwitch Content="Seed workspace configurations" IsOn="{Binding ActivateWorkspaceConfigSeed}" />
-            <mah:ToggleSwitch Content="Seed workspace data (ATTENTION: Takes long time!)" IsOn="{Binding ActivateUserDataSeed}" />
+            <mah:ToggleSwitch Content="Seed workspace data (CAUTION: Takes long time!)" IsOn="{Binding ActivateWorkspaceDataSeed}" />
         </StackPanel>
         <Button Grid.Row="4" Command="{Binding SeedDataCommand}">
             <StackPanel Orientation="Horizontal">

@@ -78,6 +78,9 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                 case NavigationType.Users:
                     SelectedIndex = 7;
                     break;
+                case NavigationType.WorkspaceData:
+                    SelectedIndex = 8;
+                    break;
                 case NavigationType.SeedData:
                     SelectedIndex = 9;
                     break;
