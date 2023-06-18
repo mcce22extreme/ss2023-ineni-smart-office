@@ -2,6 +2,7 @@
 using AutoMapper;
 using Mcce22.SmartOffice.Core.Exceptions;
 using Mcce22.SmartOffice.Core.Generators;
+using Mcce22.SmartOffice.Users.Entities;
 using Mcce22.SmartOffice.Workspaces.Entities;
 using Mcce22.SmartOffice.Workspaces.Models;
 
@@ -57,6 +58,15 @@ namespace Mcce22.SmartOffice.Bookings.Managers
             configuration.Id = _idGenerator.GenerateId();
             configuration.WorkspaceUser = $"{model.WorkspaceId}-{model.UserId}";
 
+            var user = await _dbContext.LoadAsync<User>(model.UserId) ?? throw new NotFoundException($"Could not find user with id '{model.UserId}'!");
+            var workspace = await _dbContext.LoadAsync<Workspace>(model.WorkspaceId) ?? throw new NotFoundException($"Could not find workspace with id '{model.WorkspaceId}'!");
+
+            configuration.FirstName = user.FirstName;
+            configuration.LastName = user.LastName;
+            configuration.UserName = user.UserName;
+            configuration.WorkspaceNumber = workspace.WorkspaceNumber;
+            configuration.RoomNumber = workspace.RoomNumber;
+
             await _dbContext.SaveAsync(configuration);
 
             return await GetWorkspaceConfiguration(configuration.Id);
@@ -67,6 +77,15 @@ namespace Mcce22.SmartOffice.Bookings.Managers
             var configuration = await _dbContext.LoadAsync<WorkspaceConfiguration>(configurationId) ?? throw new NotFoundException($"Could not find configuration with id '{configurationId}'!");
 
             _mapper.Map(model, configuration);
+
+            var user = await _dbContext.LoadAsync<User>(model.UserId) ?? throw new NotFoundException($"Could not find user with id '{model.UserId}'!");
+            var workspace = await _dbContext.LoadAsync<Workspace>(model.WorkspaceId) ?? throw new NotFoundException($"Could not find workspace with id '{model.WorkspaceId}'!");
+
+            configuration.FirstName = user.FirstName;
+            configuration.LastName = user.LastName;
+            configuration.UserName = user.UserName;
+            configuration.WorkspaceNumber = workspace.WorkspaceNumber;
+            configuration.RoomNumber = workspace.RoomNumber;
 
             await _dbContext.SaveAsync(configuration);
 

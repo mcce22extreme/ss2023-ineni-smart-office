@@ -2,7 +2,7 @@
 {
     public class ActivateModel
     {
-        public string WorkspaceId { get; set; }
+        public string WorkspaceNumber { get; set; }
 
         public string UserId { get; set; }
 

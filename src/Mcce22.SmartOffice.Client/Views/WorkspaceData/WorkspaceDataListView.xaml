@@ -53,7 +53,7 @@
                     Header="Temperature" />
                 <DataGridTextColumn
                     Width="110"
-                    Binding="{Binding Noise, StringFormat={} {0} dB}"
+                    Binding="{Binding NoiseLevel, StringFormat={} {0} dB}"
                     Header="Noise" />
                 <!--<DataGridTextColumn
                     Width="110"
@@ -61,7 +61,7 @@
                     Header="Humidity" />-->
                 <DataGridTextColumn
                     Width="110"
-                    Binding="{Binding Co2, StringFormat={} {0} ppm}"
+                    Binding="{Binding Co2Level, StringFormat={} {0} ppm}"
                     Header="CO2" />
                 <DataGridTextColumn
                     Width="110"

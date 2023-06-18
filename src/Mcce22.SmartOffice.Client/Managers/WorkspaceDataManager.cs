@@ -9,7 +9,7 @@ namespace Mcce22.SmartOffice.Client.Managers
 
         Task<WorkspaceDataModel> Save(WorkspaceDataModel model);
 
-        Task Delete(string workspaceDataId);
+        Task DeleteAll();
     }
 
     public class WorkspaceDataManager : ManagerBase<WorkspaceDataModel>, IWorkspaceDataManager
@@ -17,6 +17,13 @@ namespace Mcce22.SmartOffice.Client.Managers
         public WorkspaceDataManager(string baseUrl)
             : base($"{baseUrl}/workspacedata/")
         {
+        }
+
+        public async Task DeleteAll()
+        {
+            var url = $"{BaseUrl}/deleteall";
+
+            await HttpClient.DeleteAsync(url);
         }
     }
 }

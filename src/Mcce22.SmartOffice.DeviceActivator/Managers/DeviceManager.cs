@@ -51,7 +51,7 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
 
                 var model = new ActivateModel
                 {
-                    WorkspaceId = booking.WorkspaceId,
+                    WorkspaceNumber = booking.WorkspaceNumber,
                     UserId = booking.UserId,
                     BookingId = booking.Id,
                     DeskHeight = configurations.FirstOrDefault()?.DeskHeight ?? 0,

@@ -14,9 +14,9 @@
 
         public int Temperature { get; set; }
 
-        public int Noise { get; set; }
+        public int NoiseLevel { get; set; }
 
-        public int Co2 { get; set; }
+        public int Co2Level { get; set; }
 
         public int Wei { get; set; }
     }

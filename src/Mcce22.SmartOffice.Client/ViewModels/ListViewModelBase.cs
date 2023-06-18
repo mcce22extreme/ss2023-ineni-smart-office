@@ -79,7 +79,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
 
         [RelayCommand(CanExecute = nameof(CanDelete))]
-        protected async void Delete()
+        protected virtual async void Delete()
         {
             if (CanDelete())
             {
@@ -105,7 +105,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             }
         }
 
-        protected bool CanDelete()
+        protected virtual bool CanDelete()
         {
             return !IsBusy && SelectedItem != null;
         }
