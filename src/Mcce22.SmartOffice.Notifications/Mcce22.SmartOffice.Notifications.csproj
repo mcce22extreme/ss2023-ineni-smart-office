@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.6.0" />
     <PackageReference Include="MailKit" Version="4.0.0" />
-    <PackageReference Include="MimeKit" Version="4.0.0" />
+    <PackageReference Include="MimeKit" Version="4.1.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.3.0.71466" PrivateAssets="all" Condition="$(MSBuildProjectExtension) == '.csproj'" />
   </ItemGroup>
