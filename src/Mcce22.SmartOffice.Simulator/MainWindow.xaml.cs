@@ -61,12 +61,14 @@ namespace Mcce22.SmartOffice.Simulator
                 ChromeGrid.Height += 8;
                 RestoreButton.Visibility = Visibility.Visible;
                 MaximizeButton.Visibility = Visibility.Collapsed;
+                MessageGrid.Margin = new Thickness(10, 0, 0, 0);
             }
             else
             {
                 ChromeGrid.Height = 30;
                 RestoreButton.Visibility = Visibility.Collapsed;
                 MaximizeButton.Visibility = Visibility.Visible;
+                MessageGrid.Margin = new Thickness(0);
             }
         }
 

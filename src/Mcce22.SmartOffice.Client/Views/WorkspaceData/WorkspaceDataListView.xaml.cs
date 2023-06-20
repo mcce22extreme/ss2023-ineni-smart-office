@@ -16,9 +16,9 @@ namespace Mcce22.SmartOffice.Client.Views
             Loaded += OnLoaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            ((IListViewModel)DataContext).Reload();
+            await ((WorkspaceDataListViewModel)DataContext).Load();
         }
     }
 }

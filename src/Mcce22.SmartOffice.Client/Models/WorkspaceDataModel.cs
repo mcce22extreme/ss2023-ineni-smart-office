@@ -14,11 +14,11 @@ namespace Mcce22.SmartOffice.Client.Models
 
         public DateTime Timestamp { get; set; }
 
-        public int Temperature { get; set; }
+        public double Temperature { get; set; }
 
-        public int NoiseLevel { get; set; }
+        public double Humidity { get; set; }
 
-        public int Co2Level { get; set; }
+        public double Co2Level { get; set; }
 
         public int Wei { get; set; }
     }

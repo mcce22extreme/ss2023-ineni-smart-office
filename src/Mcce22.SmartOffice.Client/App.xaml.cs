@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
+﻿using System;
+using System.Windows;
 using Mcce22.SmartOffice.Client.Managers;
 using Mcce22.SmartOffice.Client.Services;
 using Mcce22.SmartOffice.Client.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Mcce22.SmartOffice.Client
 {
@@ -12,63 +12,42 @@ namespace Mcce22.SmartOffice.Client
     /// </summary>
     public partial class App : Application
     {
-        private readonly WindsorContainer _container = new();
+        private ServiceProvider _serviceProvider;
+
+        //private readonly WindsorContainer _container = new();
 
         private void OnStartUp(object sender, StartupEventArgs e)
         {
-            _container.Register(Component.For<IDialogService>().ImplementedBy<DialogService>().LifestyleSingleton());
-            _container.Register(Component.For<INavigationService>().ImplementedBy<NavigationService>().LifestyleSingleton());
+            var services = new ServiceCollection();
 
-            _container.Register(Component.For<MainWindow>());
+            services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<INavigationService, NavigationService>();
 
-            _container.Register(Component.For<MainViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<LoginViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<DashboardViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<UserListViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<WorkspaceListViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<BookingListViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<WorkspaceConfigurationListViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<UserImageListViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<SeedDataViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<CreateBookingViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<WorkspaceDataListViewModel>().LifestyleSingleton());
+            services.AddSingleton<MainWindow>();
 
-            _container.Register(Component.For<IUserManager>()
-                .ImplementedBy<UserManager>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressUsers)));          
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<LoginViewModel>();
+            services.AddSingleton<DashboardViewModel>();
+            services.AddSingleton<UserListViewModel>();
+            services.AddSingleton<WorkspaceListViewModel>();
+            services.AddSingleton<BookingListViewModel>();
+            services.AddSingleton<WorkspaceConfigurationListViewModel>();
+            services.AddSingleton<UserImageListViewModel>();
+            services.AddSingleton<SeedDataViewModel>();
+            services.AddSingleton<CreateBookingViewModel>();
+            services.AddSingleton<WorkspaceDataListViewModel>();
 
-            _container.Register(Component.For<IWorkspaceManager>()
-                .ImplementedBy<WorkspaceManager>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressWorkspaces)));
+            services.AddSingleton<IUserManager, UserManager>(s => new UserManager(AppSettings.Current.BaseAddressUsers));
+            services.AddSingleton<IWorkspaceManager, WorkspaceManager>(s => new WorkspaceManager(AppSettings.Current.BaseAddressWorkspaces));
+            services.AddSingleton<IBookingManager, BookingManager>(s => new BookingManager(AppSettings.Current.BaseAddressBookings));
+            services.AddSingleton<IWorkspaceConfigurationManager, WorkspaceConfigurationManager>(s => new WorkspaceConfigurationManager(AppSettings.Current.BaseAddressWorkspaces));
+            services.AddSingleton<IUserImageManager, UserImageManager>(s => new UserImageManager(AppSettings.Current.BaseAddressUsers));
+            services.AddSingleton<IWorkspaceDataManager, WorkspaceDataManager>(s => new WorkspaceDataManager(AppSettings.Current.BaseAddressWorkspaces));
+            services.AddSingleton<IProcessBookingManager, ProcessBookingManager>(s => new ProcessBookingManager(AppSettings.Current.BaseAddressNotifications));
 
-            _container.Register(Component.For<IBookingManager>()
-                .ImplementedBy<BookingManager>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressBookings)));
+            _serviceProvider = services.BuildServiceProvider();
 
-            _container.Register(Component.For<IWorkspaceConfigurationManager>()
-                .ImplementedBy<WorkspaceConfigurationManager>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressWorkspaces)));
-
-            _container.Register(Component.For<IUserImageManager>()
-                .ImplementedBy<UserImageManager>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressUsers)));
-
-            _container.Register(Component.For<IWorkspaceDataManager>()
-                .ImplementedBy<WorkspaceDataManager>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressWorkspaces)));
-
-            _container.Register(Component.For<IProcessBookingManager>()
-                .ImplementedBy<ProcessBookingManager>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressNotifications)));
-
-            MainWindow = _container.Resolve<MainWindow>();
+            MainWindow = _serviceProvider.GetService<MainWindow>();
             MainWindow.Show();
         }
     }

@@ -25,6 +25,9 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         private readonly Timer _delayTimer;
 
         [ObservableProperty]
+        private string _workspaceNumber;
+
+        [ObservableProperty]
         private double _deskCanvasTop = DEFAULT_DESK_CANVAS_TOP;
 
         [ObservableProperty]
@@ -49,7 +52,7 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         private double _temperature = 20;
 
         [ObservableProperty]
-        private double _noiseLevel = 20;
+        private double _humidity = 20;
 
         [ObservableProperty]
         private double _co2Level = 700;
@@ -61,6 +64,9 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         {
             _mqttService = mqttService;
             _appSettings = appSettings;
+
+            _workspaceNumber = _appSettings.WorkspaceNumber;
+
             _delayTimer = new Timer();
             _delayTimer.Interval = 5000;
             _delayTimer.Elapsed += OnDelayTimerElpased;
@@ -69,7 +75,7 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Temperature) ||
-                e.PropertyName == nameof(NoiseLevel) ||
+                e.PropertyName == nameof(Humidity) ||
                 e.PropertyName == nameof(Co2Level))
             {
                 _delayTimer.Stop();
@@ -85,7 +91,7 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
             {
                 WorkspaceNumber = _appSettings.WorkspaceNumber,
                 Temperature = Temperature,
-                NoiseLevel = NoiseLevel,
+                Humidity = Humidity,
                 Co2Level = Co2Level,
             };
 

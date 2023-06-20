@@ -3,7 +3,6 @@ using Amazon.DynamoDBv2.DataModel;
 using Mcce22.SmartOffice.Core.Exceptions;
 using Mcce22.SmartOffice.Core.Generators;
 using Mcce22.SmartOffice.DataIngress.Entities;
-using Mcce22.SmartOffice.DataIngress.Generators;
 using Mcce22.SmartOffice.DataIngress.Models;
 
 namespace Mcce22.SmartOffice.DataIngress.Managers
@@ -58,43 +57,14 @@ namespace Mcce22.SmartOffice.DataIngress.Managers
                 WorkspaceNumber = workspace.WorkspaceNumber,
                 RoomNumber = workspace.RoomNumber,
                 Temperature = model.Temperature,
-                NoiseLevel = model.NoiseLevel,
+                Humidity = model.Humidity,
                 Co2Level = model.Co2Level,
             };
 
-            workspaceData.Wei = _weiGenerator.GenerateWei(workspaceData);
+            workspaceData.Wei = _weiGenerator.GenerateWei(workspaceData.Temperature, workspaceData.Humidity, workspaceData.Co2Level);
+            workspace.Wei = workspaceData.Wei;
 
             await context.SaveAsync(workspaceData);
-
-            await UpdateWorkspaceWei(context, workspace, workspaceData);
-        }
-
-        private async Task UpdateWorkspaceWei(DynamoDBContext context, Workspace workspace, WorkspaceData data)
-        {
-            var startDate = DateTime.Now.Subtract(TimeSpan.FromDays(10));
-            var endDate = DateTime.Now;
-
-            var workspaceData = await context.QueryAsync<WorkspaceData>(workspace.Id, new DynamoDBOperationConfig
-            {
-                IndexName = $"{nameof(WorkspaceData.WorkspaceId)}-index",
-            }).GetRemainingAsync();
-
-            var workspaceDataRange = workspaceData
-                .Where(x => x.Timestamp >= startDate && x.Timestamp <= endDate)
-                .OrderBy(x => x.Timestamp)
-                .AsQueryable()
-                .ToArray();
-
-            if (workspaceDataRange.Length > 0)
-            {
-                var avgWei = (int)Math.Round(workspaceDataRange.Select(x => x.Wei).Average());
-                workspace.Wei = avgWei > 100 ? 100 : avgWei;
-            }
-            else
-            {
-                workspace.Wei = data.Wei;
-            }
-
             await context.SaveAsync(workspace);
         }
     }

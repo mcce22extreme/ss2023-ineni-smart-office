@@ -74,7 +74,6 @@
                 SelectedItem="{Binding SelectedItem}"
                 SelectionMode="Single">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Id}" Header="Id" />
                     <DataGridTextColumn
                         Width="150"
                         Binding="{Binding WorkspaceNumber}"

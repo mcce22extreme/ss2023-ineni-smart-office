@@ -49,10 +49,9 @@
             SelectedItem="{Binding SelectedItem}"
             SelectionMode="Single">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Id}" Header="Id" />
                 <DataGridTextColumn
                     Width="150"
-                    Binding="{Binding DeskHeight}"
+                    Binding="{Binding DeskHeight, StringFormat={} {0} cm}"
                     Header="Desk Height" />
                 <DataGridTextColumn
                     Width="150"

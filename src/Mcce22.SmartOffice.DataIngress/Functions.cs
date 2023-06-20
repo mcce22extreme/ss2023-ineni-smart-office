@@ -6,7 +6,6 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using Mcce22.SmartOffice.Core.Generators;
-using Mcce22.SmartOffice.DataIngress.Generators;
 using Mcce22.SmartOffice.DataIngress.Managers;
 using Mcce22.SmartOffice.DataIngress.Models;
 using Microsoft.Extensions.Configuration;
