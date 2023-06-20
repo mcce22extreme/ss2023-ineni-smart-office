@@ -10,5 +10,7 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
         Task<WorkspaceDataModel> CreateWorkspaceData(SaveWorkspaceDataModel model);
 
         Task DeleteWorkspaceData(string workspaceDataId);
+
+        Task DeleteAll();
     }
 }

@@ -43,8 +43,8 @@ namespace Mcce22.SmartOffice.Workspaces.Generators
         public int GenerateWei(WorkspaceData data)
         {
             var tempWei = GenerateTemperatureWei(data.Temperature);
-            var noiseWei = GenerateNoiseWei(data.Noise);
-            var co2Wei = GenerateCo2Wei(data.Co2);
+            var noiseWei = GenerateNoiseWei(data.NoiseLevel);
+            var co2Wei = GenerateCo2Wei(data.Co2Level);
 
             return (int)Math.Round((double)(tempWei + noiseWei + co2Wei) / 3);
         }

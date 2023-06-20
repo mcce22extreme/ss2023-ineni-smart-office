@@ -71,6 +71,18 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
             await _dbContext.DeleteAsync<WorkspaceData>(workspaceDataId);
         }
 
+        public async Task DeleteAll()
+        {
+            var workspaceData = await _dbContext
+                .ScanAsync<WorkspaceData>(Array.Empty<ScanCondition>())
+                .GetRemainingAsync();
+
+            foreach (var data in workspaceData)
+            {
+                await _dbContext.DeleteAsync(data);
+            }
+        }
+
         private async Task UpdateWorkspaceWei(Workspace workspace, WorkspaceData data)
         {
             var startDate = DateTime.Now.Subtract(TimeSpan.FromDays(10));

@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using CommunityToolkit.Mvvm.Input;
 using Mcce22.SmartOffice.Client.Managers;
@@ -10,11 +13,48 @@ namespace Mcce22.SmartOffice.Client.ViewModels
     public partial class WorkspaceListViewModel : ListViewModelBase<WorkspaceModel>
     {
         private readonly IWorkspaceManager _workspaceManager;
+        private readonly Timer _updateTimer;
 
         public WorkspaceListViewModel(IWorkspaceManager workspaceManager, IDialogService dialogService)
             : base(dialogService)
         {
             _workspaceManager = workspaceManager;
+
+            _updateTimer = new Timer();
+            _updateTimer.Interval = 5000;
+            _updateTimer.Elapsed += OnTimerElapsed;
+            _updateTimer.Start();
+        }
+
+        private void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (!IsBusy)
+            {
+                Application.Current.Dispatcher.Invoke(async () =>
+                {
+                    try
+                    {
+                        IsBusy = true;
+
+                        var workspaces = await _workspaceManager.GetList();
+
+                        foreach (var workspace in workspaces)
+                        {
+                            var localWorkspace = Items.FirstOrDefault(x => x.Id == workspace.Id);
+                            if (localWorkspace != null)
+                            {
+                                localWorkspace.Wei = workspace.Wei;
+                            }
+                        }
+
+                        IsBusy = false;
+                    }
+                    finally
+                    {
+                        IsBusy = false;
+                    }
+                });
+            }
         }
 
         protected override void UpdateCommandStates()

@@ -6,8 +6,11 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using Mcce22.SmartOffice.Core.Generators;
+using Mcce22.SmartOffice.DataIngress.Generators;
 using Mcce22.SmartOffice.DataIngress.Managers;
+using Mcce22.SmartOffice.DataIngress.Models;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Serilog;
 
 [assembly: LambdaSerializer(typeof(DefaultLambdaJsonSerializer))]
@@ -30,19 +33,16 @@ public class Functions
             .CreateLogger();
     }
 
-    public APIGatewayProxyResponse HandleRequest(double temperature, ILambdaContext context)
+    public APIGatewayProxyResponse HandleRequest(SaveWorkspaceDataModel model, ILambdaContext context)
     {
         var stopwatch = Stopwatch.StartNew();
         Log.Information($"[In ] {nameof(HandleRequest)}");
 
-        Log.Debug($"Temperature:{temperature}");
+        Log.Debug($"Ingress Data:{JsonConvert.SerializeObject(model)}");
 
-        var workspaceDataManager = new WorkspaceDataManager(new AmazonDynamoDBClient(), new IdGenerator());
+        var workspaceDataManager = new WorkspaceDataManager(new AmazonDynamoDBClient(), new IdGenerator(), new WeiGenerator());
 
-        Task.WaitAll(workspaceDataManager.CreateWorkspaceData(new Models.SaveWorkspaceDataModel
-        {
-            Temperature = temperature,
-        }));
+        Task.WaitAll(workspaceDataManager.CreateWorkspaceData(model));
 
         var response = new APIGatewayProxyResponse
         {
