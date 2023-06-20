@@ -19,5 +19,20 @@ namespace Mcce22.SmartOffice.Workspaces.Entities
 
         [DynamoDBProperty]
         public string WorkspaceUser { get; set; }
+
+        [DynamoDBProperty]
+        public string FirstName { get; set; }
+
+        [DynamoDBProperty]
+        public string LastName { get; set; }
+
+        [DynamoDBProperty]
+        public string UserName { get; set; }
+
+        [DynamoDBProperty]
+        public string WorkspaceNumber { get; set; }
+
+        [DynamoDBProperty]
+        public string RoomNumber { get; set; }
     }
 }

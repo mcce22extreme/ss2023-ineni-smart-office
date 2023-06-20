@@ -229,8 +229,8 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                         WorkspaceId = workspace.Id,
                         Timestamp = new DateTime(dateTimeNow.Year,dateTimeNow.Month,dateTimeNow.Day, i, 0, 0),
                         Temperature = Random.Next(16, 30),
-                        Noise = Random.Next(20, 60),
-                        Co2 = Random.Next(600, 1000),
+                        NoiseLevel = Random.Next(20, 60),
+                        Co2Level = Random.Next(600, 1000),
                     };
                     await _workspaceDataManager.Save(model);
 
@@ -298,18 +298,9 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         private async Task DeleteWorkspaceData()
         {
-            var workspaceData = await _workspaceDataManager.GetList();
-
             StepProgress = 0;
-            var count = 0;
 
-            foreach (var data in workspaceData)
-            {
-                await _workspaceDataManager.Delete(data.Id);
-
-                count++;
-                StepProgress = count * 100 / workspaceData.Length;
-            }
+            await _workspaceDataManager.DeleteAll();
 
             StepProgress = 100;
         }

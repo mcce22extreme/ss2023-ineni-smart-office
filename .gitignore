@@ -364,3 +364,5 @@ src/Mcce22.SmartOffice.Terraform/terraform.tfstate.backup
 src/Mcce22.SmartOffice.Terraform/terraform_apply.ps1
 
 src/Mcce22.SmartOffice.Terraform/terraform_destroy.ps1
+
+src/Mcce22.SmartOffice.Simulator/Certificates/

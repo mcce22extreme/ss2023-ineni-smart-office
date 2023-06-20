@@ -96,10 +96,10 @@
     <Compile Update="Views\ErrorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\UserWorkspaces\UserWorkspaceDetailView.xaml.cs">
+    <Compile Update="Views\WorkspaceConfigurations\WorkspaceConfigurationDetailView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\UserWorkspaces\UserWorkspaceListView.xaml.cs">
+    <Compile Update="Views\WorkspaceConfigurations\WorkspaceConfigurationListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Workspaces\WorkspaceListView.xaml.cs">

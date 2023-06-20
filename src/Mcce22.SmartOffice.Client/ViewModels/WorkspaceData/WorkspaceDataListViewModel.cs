@@ -22,9 +22,40 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             return data.OrderByDescending(x => x.Timestamp).ToArray();
         }
 
+        protected override bool CanDelete()
+        {
+            return !IsBusy;
+        }
+
+        protected override async void Delete()
+        {
+            if (CanDelete())
+            {
+                try
+                {
+                    IsBusy = true;
+
+                    var confirmDelete = new ConfirmDeleteViewModel("Delete all entries?", "Do you really want to delete all entries?", DialogService);
+
+                    await DialogService.ShowDialog(confirmDelete);
+
+                    if (confirmDelete.Confirmed)
+                    {
+                        await OnDelete();
+                    }
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+
+                Reload();
+            }
+        }
+
         protected override async Task OnDelete()
         {
-            await _workspaceDataManager.Delete(SelectedItem.Id);
+            await _workspaceDataManager.DeleteAll();
         }
     }
 }

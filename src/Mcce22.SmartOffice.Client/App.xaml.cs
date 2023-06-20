@@ -27,7 +27,7 @@ namespace Mcce22.SmartOffice.Client
             _container.Register(Component.For<UserListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<WorkspaceListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<BookingListViewModel>().LifestyleSingleton());
-            _container.Register(Component.For<UserWorkspaceListViewModel>().LifestyleSingleton());
+            _container.Register(Component.For<WorkspaceConfigurationListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<UserImageListViewModel>().LifestyleSingleton());
             _container.Register(Component.For<SeedDataViewModel>().LifestyleSingleton());
             _container.Register(Component.For<CreateBookingViewModel>().LifestyleSingleton());
@@ -48,8 +48,8 @@ namespace Mcce22.SmartOffice.Client
                 .LifestyleSingleton()
                 .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressBookings)));
 
-            _container.Register(Component.For<IUserWorkspaceManager>()
-                .ImplementedBy<UserWorkspaceManager>()
+            _container.Register(Component.For<IWorkspaceConfigurationManager>()
+                .ImplementedBy<WorkspaceConfigurationManager>()
                 .LifestyleSingleton()
                 .DependsOn(Dependency.OnValue("baseUrl", AppSettings.Current.BaseAddressWorkspaces)));
 

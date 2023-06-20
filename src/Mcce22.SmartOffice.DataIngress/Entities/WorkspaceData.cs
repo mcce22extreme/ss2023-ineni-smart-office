@@ -24,10 +24,10 @@ namespace Mcce22.SmartOffice.DataIngress.Entities
         public double Temperature { get; set; }
 
         [DynamoDBProperty]
-        public int Noise { get; set; }
+        public double NoiseLevel { get; set; }
 
         [DynamoDBProperty]
-        public int Co2 { get; set; }
+        public double Co2Level { get; set; }
 
         [DynamoDBProperty]
         public int Wei { get; set; }

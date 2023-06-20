@@ -5,7 +5,7 @@
         "roomnumber": "room-001",
         "top": 16,
         "width": 24,
-        "workspacenumber": "workpsace-001"
+        "workspacenumber": "workspace-001"
     },
     {
         "height": 43,
@@ -13,7 +13,7 @@
         "roomnumber": "room-001",
         "top": 16,
         "width": 24,
-        "workspacenumber": "workpsace-002"
+        "workspacenumber": "workspace-002"
     },
     {
         "height": 43,
@@ -21,7 +21,7 @@
         "roomnumber": "room-001",
         "top": 86,
         "width": 24,
-        "workspacenumber": "workpsace-003"
+        "workspacenumber": "workspace-003"
     },
     {
         "height": 43,
@@ -29,7 +29,7 @@
         "roomnumber": "room-001",
         "top": 86,
         "width": 24,
-        "workspacenumber": "workpsace-004"
+        "workspacenumber": "workspace-004"
     },
     {
         "height": 43,
@@ -37,7 +37,7 @@
         "roomnumber": "room-001",
         "top": 16,
         "width": 24,
-        "workspacenumber": "workpsace-005"
+        "workspacenumber": "workspace-005"
     },
     {
         "height": 43,
@@ -45,7 +45,7 @@
         "roomnumber": "room-001",
         "top": 16,
         "width": 24,
-        "workspacenumber": "workpsace-006"
+        "workspacenumber": "workspace-006"
     },
     {
         "height": 43,
@@ -53,7 +53,7 @@
         "roomnumber": "room-001",
         "top": 86,
         "width": 24,
-        "workspacenumber": "workpsace-007"
+        "workspacenumber": "workspace-007"
     },
     {
         "height": 43,
@@ -61,7 +61,7 @@
         "roomnumber": "room-002",
         "top": 198,
         "width": 24,
-        "workspacenumber": "workpsace-008"
+        "workspacenumber": "workspace-008"
     },
     {
         "height": 43,
@@ -69,7 +69,7 @@
         "roomnumber": "room-002",
         "top": 198,
         "width": 24,
-        "workspacenumber": "workpsace-009"
+        "workspacenumber": "workspace-009"
     },
     {
         "height": 43,
@@ -77,7 +77,7 @@
         "roomnumber": "room-002",
         "top": 268,
         "width": 24,
-        "workspacenumber": "workpsace-010"
+        "workspacenumber": "workspace-010"
     },
     {
         "height": 43,
@@ -85,7 +85,7 @@
         "roomnumber": "room-002",
         "top": 268,
         "width": 24,
-        "workspacenumber": "workpsace-011"
+        "workspacenumber": "workspace-011"
     },
     {
         "height": 43,
@@ -93,7 +93,7 @@
         "roomnumber": "room-002",
         "top": 198,
         "width": 24,
-        "workspacenumber": "workpsace-012"
+        "workspacenumber": "workspace-012"
     },
     {
         "height": 43,
@@ -101,7 +101,7 @@
         "roomnumber": "room-002",
         "top": 268,
         "width": 24,
-        "workspacenumber": "workpsace-013"
+        "workspacenumber": "workspace-013"
     },
     {
         "height": 43,
@@ -109,7 +109,7 @@
         "roomnumber": "room-002",
         "top": 268,
         "width": 24,
-        "workspacenumber": "workpsace-014"
+        "workspacenumber": "workspace-014"
     },
     {
         "height": 43,
@@ -117,7 +117,7 @@
         "roomnumber": "room-003",
         "top": 268,
         "width": 24,
-        "workspacenumber": "workpsace-015"
+        "workspacenumber": "workspace-015"
     },
     {
         "height": 43,
@@ -125,7 +125,7 @@
         "roomnumber": "room-003",
         "top": 268,
         "width": 24,
-        "workspacenumber": "workpsace-016"
+        "workspacenumber": "workspace-016"
     },
     {
         "height": 43,
@@ -133,7 +133,7 @@
         "roomnumber": "room-003",
         "top": 268,
         "width": 24,
-        "workspacenumber": "workpsace-017"
+        "workspacenumber": "workspace-017"
     },
     {
         "height": 43,
@@ -141,7 +141,7 @@
         "roomnumber": "room-003",
         "top": 197,
         "width": 24,
-        "workspacenumber": "workpsace-018"
+        "workspacenumber": "workspace-018"
     },
     {
         "height": 43,
@@ -149,6 +149,6 @@
         "roomnumber": "room-003",
         "top": 197,
         "width": 24,
-        "workspacenumber": "workpsace-019"
+        "workspacenumber": "workspace-019"
     }
 ]

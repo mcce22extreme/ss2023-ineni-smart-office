@@ -30,15 +30,9 @@ namespace Mcce22.SmartOffice.Notifications.Managers
             {
                 using var context = new DynamoDBContext(_dynamoDbClient);
 
-                var date = DateOnly.FromDateTime(DateTime.Now);
-
-                var bookings = await context.QueryAsync<Booking>(
-                date,
-                new DynamoDBOperationConfig
-                {
-                    IndexName = $"{nameof(Booking.StartDate)}-index",
-                })
-                .GetRemainingAsync();
+                var bookings = await context
+                    .ScanAsync<Booking>(Array.Empty<ScanCondition>())
+                    .GetRemainingAsync();
 
                 var pendingBookings = bookings
                     .Where(x => !x.Activated && !x.InvitationSent)
