@@ -1,7 +1,7 @@
 resource "aws_iot_topic_rule" "mcce22_dataingress_rule" {
   name        = "mcce22dataingressrule"
   enabled     = true
-  sql         = "SELECT * FROM 'mcce22-smart-factory/temp/value'"
+  sql         = "SELECT * FROM 'mcce22-smart-office/dataingress'"
   sql_version = "2016-03-23"
   lambda {
     function_arn = module.mcce22_smart_office_dataingress.function_arn

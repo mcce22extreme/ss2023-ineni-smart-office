@@ -11,11 +11,13 @@ namespace Mcce22.SmartOffice.DataIngress.Managers
     {
         private readonly IAmazonDynamoDB _dynamoDbClient;
         private readonly IIdGenerator _idGenerator;
+        private readonly IWeiGenerator _weiGenerator;
 
-        public WorkspaceDataManager(IAmazonDynamoDB dynamoDbClient, IIdGenerator idGenerator)
+        public WorkspaceDataManager(IAmazonDynamoDB dynamoDbClient, IIdGenerator idGenerator, IWeiGenerator weiGenerator)
         {
             _dynamoDbClient = dynamoDbClient;
             _idGenerator = idGenerator;
+            _weiGenerator = weiGenerator;
         }
 
         public async Task CreateWorkspaceData(SaveWorkspaceDataModel model)
@@ -24,7 +26,7 @@ namespace Mcce22.SmartOffice.DataIngress.Managers
 
             var workspace = default(Workspace);
 
-            if (model.WorkspaceId == null)
+            if (string.IsNullOrEmpty(model.WorkspaceNumber))
             {
                 var workspaces = await context
                     .ScanAsync<Workspace>(Array.Empty<ScanCondition>())
@@ -34,12 +36,17 @@ namespace Mcce22.SmartOffice.DataIngress.Managers
             }
             else
             {
-                workspace = await context.LoadAsync<Workspace>(model.WorkspaceId);
+                var result = await context.QueryAsync<Workspace>(model.WorkspaceNumber, new DynamoDBOperationConfig
+                {
+                    IndexName = $"{nameof(Workspace.WorkspaceNumber)}-index",
+                }).GetRemainingAsync();
+
+                workspace = result.FirstOrDefault();
             }
 
             if (workspace == null)
             {
-                throw new NotFoundException($"Could not find workspace with id '{model.WorkspaceId}'!");
+                throw new NotFoundException($"Could not find workspace '{model.WorkspaceNumber}'!");
             }
 
             var workspaceData = new WorkspaceData
@@ -50,9 +57,15 @@ namespace Mcce22.SmartOffice.DataIngress.Managers
                 WorkspaceNumber = workspace.WorkspaceNumber,
                 RoomNumber = workspace.RoomNumber,
                 Temperature = model.Temperature,
+                Humidity = model.Humidity,
+                Co2Level = model.Co2Level,
             };
 
+            workspaceData.Wei = _weiGenerator.GenerateWei(workspaceData.Temperature, workspaceData.Humidity, workspaceData.Co2Level);
+            workspace.Wei = workspaceData.Wei;
+
             await context.SaveAsync(workspaceData);
+            await context.SaveAsync(workspace);
         }
     }
 }

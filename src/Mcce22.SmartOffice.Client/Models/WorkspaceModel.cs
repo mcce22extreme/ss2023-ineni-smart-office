@@ -1,6 +1,8 @@
-﻿namespace Mcce22.SmartOffice.Client.Models
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace Mcce22.SmartOffice.Client.Models
 {
-    public class WorkspaceModel : IModel
+    public partial class WorkspaceModel : ObservableObject, IModel
     {
         public string Id { get; set; }
 
@@ -17,5 +19,8 @@
         public int Width { get; set; }
 
         public int Height { get; set; }
+
+        [ObservableProperty]
+        private int _wei;
     }
 }

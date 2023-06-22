@@ -4,9 +4,9 @@ using Mcce22.SmartOffice.Client.ViewModels;
 
 namespace Mcce22.SmartOffice.Client.Views
 {
-    public partial class UserWorkspaceDetailView : UserControl
+    public partial class WorkspaceConfigurationListView : UserControl
     {
-        public UserWorkspaceDetailView()
+        public WorkspaceConfigurationListView()
         {
             InitializeComponent();
 
@@ -15,9 +15,7 @@ namespace Mcce22.SmartOffice.Client.Views
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            NUDDeskHeight.Focus();
-
-            ((IDialogViewModel)DataContext).Load();
+            ((IListViewModel)DataContext).Reload();
         }
     }
 }

@@ -13,27 +13,30 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
         private readonly IDynamoDBContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IIdGenerator _idGenerator;
+        private readonly IWeiGenerator _weiGenerator;
 
-        public WorkspaceDataManager(IDynamoDBContext dbContext, IMapper mapper, IIdGenerator idGenerator)
+        public WorkspaceDataManager(IDynamoDBContext dbContext, IMapper mapper, IIdGenerator idGenerator, IWeiGenerator weiGenerator)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _idGenerator = idGenerator;
+            _weiGenerator = weiGenerator;
         }
 
         public async Task<WorkspaceDataModel[]> GetWorkspaceData(WorkspaceDataQuery query)
         {
-            var startDate = query.StartDate ?? DateTime.Now.Date;
-            var endDate = query.EndDate ?? DateTime.Now.Date.AddHours(23).AddMinutes(59).AddSeconds(59);
-
             var workspaceData = await _dbContext
                 .ScanAsync<WorkspaceData>(Array.Empty<ScanCondition>())
                 .GetRemainingAsync();
 
             var workspaceDataQuery = workspaceData
-                .Where(x => x.Timestamp >= startDate && x.Timestamp <= endDate)
-                .OrderBy(x => x.Timestamp)
+                .OrderByDescending(x => x.Timestamp)
                 .AsQueryable();
+
+            if (!string.IsNullOrEmpty(query.WorkspaceId))
+            {
+                workspaceDataQuery = workspaceDataQuery.Where(x => x.WorkspaceId == query.WorkspaceId);
+            }
 
             return workspaceDataQuery.Select(_mapper.Map<WorkspaceDataModel>).ToArray();
         }
@@ -49,6 +52,8 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
             });
 
             workspaceData.Id = _idGenerator.GenerateId();
+            workspaceData.Wei = _weiGenerator.GenerateWei(workspaceData.Temperature, workspaceData.Humidity, workspaceData.Co2Level);
+            workspace.Wei = workspaceData.Wei;
 
             if (!model.Timestamp.HasValue)
             {
@@ -56,6 +61,7 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
             }
 
             await _dbContext.SaveAsync(workspaceData);
+            await _dbContext.SaveAsync(workspace);
 
             return _mapper.Map<WorkspaceDataModel>(workspaceData);
         }
@@ -63,6 +69,18 @@ namespace Mcce22.SmartOffice.Workspaces.Managers
         public async Task DeleteWorkspaceData(string workspaceDataId)
         {
             await _dbContext.DeleteAsync<WorkspaceData>(workspaceDataId);
+        }
+
+        public async Task DeleteAll()
+        {
+            var workspaceData = await _dbContext
+                .ScanAsync<WorkspaceData>(Array.Empty<ScanCondition>())
+                .GetRemainingAsync();
+
+            foreach (var data in workspaceData)
+            {
+                await _dbContext.DeleteAsync(data);
+            }
         }
     }
 }

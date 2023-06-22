@@ -5,14 +5,14 @@ using Mcce22.SmartOffice.Client.Services;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public class UserWorkspaceListViewModel : ListViewModelBase<UserWorkspaceModel>
+    public class WorkspaceConfigurationListViewModel : ListViewModelBase<WorkspaceConfigurationModel>
     {
-        private readonly IUserWorkspaceManager _userWorkspaceManager;
+        private readonly IWorkspaceConfigurationManager _userWorkspaceManager;
         private readonly IWorkspaceManager _workspaceManager;
         private readonly IUserManager _userManager;
 
-        public UserWorkspaceListViewModel(
-            IUserWorkspaceManager userWorkspaceManager,
+        public WorkspaceConfigurationListViewModel(
+            IWorkspaceConfigurationManager userWorkspaceManager,
             IWorkspaceManager workspaceManager,
             IUserManager userManager,
             IDialogService dialogService)
@@ -25,20 +25,20 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         protected override async Task OnAdd()
         {
-            await DialogService.ShowDialog(new UserWorkspaceDetailViewModel(_userWorkspaceManager, _workspaceManager, _userManager, DialogService));
+            await DialogService.ShowDialog(new WorkspaceConfigurationDetailViewModel(_userWorkspaceManager, _workspaceManager, _userManager, DialogService));
         }
 
         protected override async Task OnEdit()
         {
-            await DialogService.ShowDialog(new UserWorkspaceDetailViewModel(SelectedItem, _userWorkspaceManager, _workspaceManager, _userManager, DialogService));
+            await DialogService.ShowDialog(new WorkspaceConfigurationDetailViewModel(SelectedItem, _userWorkspaceManager, _workspaceManager, _userManager, DialogService));
         }
 
         protected override async Task OnDelete()
         {
-            await _userManager.Delete(SelectedItem.Id);
+            await _userWorkspaceManager.Delete(SelectedItem.Id);
         }
 
-        protected override async Task<UserWorkspaceModel[]> OnReload()
+        protected override async Task<WorkspaceConfigurationModel[]> OnReload()
         {
             return await _userWorkspaceManager.GetList();
         }

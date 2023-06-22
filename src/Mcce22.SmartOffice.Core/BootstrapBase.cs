@@ -17,7 +17,9 @@ namespace Mcce22.SmartOffice.Core
 {
     public abstract class BootstrapBase
     {
+#if DEBUG
         private readonly string _baseAddress;
+#endif
 
         protected IConfiguration Configuration { get; }
 
@@ -29,7 +31,9 @@ namespace Mcce22.SmartOffice.Core
                 .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true, reloadOnChange: true)
                 .Build();
 
+#if DEBUG
             _baseAddress = Configuration.GetSection("BaseAddress")?.Value;
+#endif
         }
 
         public async Task Run(string[] args)
@@ -85,6 +89,8 @@ namespace Mcce22.SmartOffice.Core
             builder.Services.AddSingleton<IAppInfo>(appInfo);
 
             builder.Services.AddSingleton<IIdGenerator, IdGenerator>();
+
+            builder.Services.AddSingleton<IWeiGenerator, WeiGenerator>();
 
             // Configure dependency injection
             builder.Services.AddSingleton<IAppInfo>(appInfo);

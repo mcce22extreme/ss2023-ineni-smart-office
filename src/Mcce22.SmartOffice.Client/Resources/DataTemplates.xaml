@@ -51,11 +51,11 @@
     <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
         <v:DashboardView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:UserWorkspaceListViewModel}">
-        <v:UserWorkspaceListView />
+    <DataTemplate DataType="{x:Type vm:WorkspaceConfigurationListViewModel}">
+        <v:WorkspaceConfigurationListView />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type vm:UserWorkspaceDetailViewModel}">
-        <v:UserWorkspaceDetailView />
+    <DataTemplate DataType="{x:Type vm:WorkspaceConfigurationDetailViewModel}">
+        <v:WorkspaceConfigurationDetailView />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:UserImageListViewModel}">
         <v:UserImageListView />

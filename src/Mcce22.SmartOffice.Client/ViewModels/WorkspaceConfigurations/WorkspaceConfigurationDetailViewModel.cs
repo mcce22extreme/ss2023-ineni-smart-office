@@ -8,9 +8,9 @@ using Mcce22.SmartOffice.Client.Services;
 
 namespace Mcce22.SmartOffice.Client.ViewModels
 {
-    public partial class UserWorkspaceDetailViewModel : DialogViewModelBase
+    public partial class WorkspaceConfigurationDetailViewModel : DialogViewModelBase
     {
-        private readonly IUserWorkspaceManager _userWorkspaceManager;
+        private readonly IWorkspaceConfigurationManager _userWorkspaceManager;
         private readonly IWorkspaceManager _workspaceManager;
         private readonly IUserManager _userManager;
 
@@ -37,8 +37,8 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         
         public string UserWorkspaceId { get; }
 
-        public UserWorkspaceDetailViewModel(
-            IUserWorkspaceManager userWorkspaceManager,
+        public WorkspaceConfigurationDetailViewModel(
+            IWorkspaceConfigurationManager userWorkspaceManager,
             IWorkspaceManager workspaceManager,
             IUserManager userManager,
             IDialogService dialogService)
@@ -51,9 +51,9 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             _userManager = userManager;
         }
 
-        public UserWorkspaceDetailViewModel(
-            UserWorkspaceModel model,
-            IUserWorkspaceManager userWorkspaceManager,
+        public WorkspaceConfigurationDetailViewModel(
+            WorkspaceConfigurationModel model,
+            IWorkspaceConfigurationManager userWorkspaceManager,
             IWorkspaceManager workspaceManager,
             IUserManager userManager,
             IDialogService dialogService)
@@ -91,7 +91,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         protected override async Task OnSave()
         {
-            await _userWorkspaceManager.Save(new UserWorkspaceModel
+            await _userWorkspaceManager.Save(new WorkspaceConfigurationModel
             {
                 Id = UserWorkspaceId,
                 DeskHeight = DeskHeight,

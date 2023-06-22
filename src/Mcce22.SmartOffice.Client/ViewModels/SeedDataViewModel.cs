@@ -45,7 +45,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         [ObservableProperty]
         private bool _activateWorkspaceDataSeed = false;
-        
+
         public SeedDataViewModel(
             IUserManager userManager,
             IWorkspaceManager workspaceManager,
@@ -211,38 +211,31 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         private async Task SeedWorkspaceData()
         {
             var workspaces = await _workspaceManager.GetList();
-            var workspace = workspaces.FirstOrDefault();
-
-            var days= 30;
-            var hours = 24;
-            var quaters = 4;
 
             StepProgress = 0;
+
+            var hours = 24;
             var count = 0;
-            var maxCount = days*hours*quaters;
+            var maxCount = workspaces.Length * hours;
 
-            for (int i = 1; i <= days; i++)
+            var dateTimeNow = DateTime.Now;
+
+            foreach (var workspace in workspaces)
             {
-                for (int j = 1; j < hours; j++)
+                for (int i = 1; i < hours; i++)
                 {
-                    for (int k = 1; k < quaters; k++)
+                    var model = new WorkspaceDataModel
                     {
+                        WorkspaceId = workspace.Id,
+                        Timestamp = new DateTime(dateTimeNow.Year,dateTimeNow.Month,dateTimeNow.Day, i - 1, 0, 0),
+                        Temperature = Random.Next(16, 30),
+                        Humidity = Random.Next(10, 70),
+                        Co2Level = Random.Next(600, 1000),
+                    };
+                    await _workspaceDataManager.Save(model);
 
-                        var model = new WorkspaceDataModel
-                        {
-                            WorkspaceId = workspace.Id,
-                            Timestamp = new DateTime(2023,03,i, j, k*15, 0),
-                            Temperature = Random.Next(15, 25),
-                            Noise = Random.Next(60, 70),
-                            Humidity= Random.Next(40, 60),
-                            Co2 = Random.Next(400, 999),
-                            Luminosity = Random.Next(100, 400)
-                        };
-                        await _workspaceDataManager.Save(model);
-
-                        count++;
-                        StepProgress = count * 100 / maxCount;
-                    }
+                    count++;
+                    StepProgress = count * 100 / maxCount;
                 }
             }
 
@@ -305,18 +298,9 @@ namespace Mcce22.SmartOffice.Client.ViewModels
 
         private async Task DeleteWorkspaceData()
         {
-            var workspaceData = await _workspaceDataManager.GetList();
-
             StepProgress = 0;
-            var count = 0;
 
-            foreach (var data in workspaceData)
-            {
-                await _workspaceDataManager.Delete(data.Id);
-
-                count++;
-                StepProgress = count * 100 / workspaceData.Length;
-            }
+            await _workspaceDataManager.DeleteAll();
 
             StepProgress = 100;
         }

@@ -43,6 +43,17 @@ resource "aws_dynamodb_table" "mcce22_smart_office_workspaces_table" {
     name = "Id"
     type = "S"
   }
+  attribute {
+    name = "WorkspaceNumber"
+    type = "S"
+  }
+  global_secondary_index {
+    name            = "WorkspaceNumber-index"
+    hash_key        = "WorkspaceNumber"
+    projection_type = "ALL"
+    read_capacity   = 5
+    write_capacity  = 5
+  }
 }
 
 resource "aws_dynamodb_table" "mcce22_smart_office_workspaces_configuration_table" {
@@ -104,9 +115,20 @@ resource "aws_dynamodb_table" "mcce22_smart_office_workspacedata_table" {
     name = "Timestamp"
     type = "S"
   }
+  attribute {
+    name = "WorkspaceId"
+    type = "S"
+  }
   global_secondary_index {
     name            = "Timestamp-index"
     hash_key        = "Timestamp"
+    projection_type = "ALL"
+    read_capacity   = 5
+    write_capacity  = 5
+  }
+  global_secondary_index {
+    name            = "WorkspaceId-index"
+    hash_key        = "WorkspaceId"
     projection_type = "ALL"
     read_capacity   = 5
     write_capacity  = 5

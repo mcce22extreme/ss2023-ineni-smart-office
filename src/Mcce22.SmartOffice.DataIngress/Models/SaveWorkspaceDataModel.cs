@@ -2,8 +2,12 @@
 {
     public class SaveWorkspaceDataModel
     {
-        public string WorkspaceId { get; set; }
+        public string WorkspaceNumber { get; set; }
 
         public double Temperature { get; set; }
+
+        public double Humidity { get; set; }
+
+        public double Co2Level { get; set; }
     }
 }

@@ -13,5 +13,8 @@ namespace Mcce22.SmartOffice.DataIngress.Entities
 
         [DynamoDBProperty]
         public string RoomNumber { get; set; }
+
+        [DynamoDBProperty]
+        public int Wei { get; set; }
     }
 }

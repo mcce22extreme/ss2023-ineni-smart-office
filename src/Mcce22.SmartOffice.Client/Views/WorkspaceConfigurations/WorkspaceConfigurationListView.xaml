@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Mcce22.SmartOffice.Client.Views.UserWorkspaceListView"
+    x:Class="Mcce22.SmartOffice.Client.Views.WorkspaceConfigurationListView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -49,10 +49,9 @@
             SelectedItem="{Binding SelectedItem}"
             SelectionMode="Single">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Id}" Header="Id" />
                 <DataGridTextColumn
                     Width="150"
-                    Binding="{Binding DeskHeight}"
+                    Binding="{Binding DeskHeight, StringFormat={} {0} cm}"
                     Header="Desk Height" />
                 <DataGridTextColumn
                     Width="150"

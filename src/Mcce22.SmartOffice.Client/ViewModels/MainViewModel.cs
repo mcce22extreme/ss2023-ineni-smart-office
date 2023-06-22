@@ -12,7 +12,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
         
         public LoginViewModel Login { get; }
         public DashboardViewModel Dashboard { get; }
-        public UserWorkspaceListViewModel UserWorkspaceList { get; }
+        public WorkspaceConfigurationListViewModel UserWorkspaceList { get; }
         public UserListViewModel UserList { get; }        
         public WorkspaceListViewModel WorkspaceList { get; }
         public BookingListViewModel BookingList { get; }
@@ -25,7 +25,7 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             INavigationService navigationService,
             LoginViewModel login,
             DashboardViewModel dashboard,
-            UserWorkspaceListViewModel userWorkspaceList,
+            WorkspaceConfigurationListViewModel userWorkspaceList,
             UserListViewModel userList,            
             WorkspaceListViewModel workspaceList,
             BookingListViewModel bookingList,
@@ -77,6 +77,9 @@ namespace Mcce22.SmartOffice.Client.ViewModels
                     break;
                 case NavigationType.Users:
                     SelectedIndex = 7;
+                    break;
+                case NavigationType.WorkspaceData:
+                    SelectedIndex = 8;
                     break;
                 case NavigationType.SeedData:
                     SelectedIndex = 9;

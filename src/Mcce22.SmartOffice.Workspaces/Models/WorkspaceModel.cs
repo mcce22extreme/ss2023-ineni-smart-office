@@ -15,5 +15,7 @@
         public int Width { get; set; }
 
         public int Height { get; set; }
+
+        public int Wei { get; set; }
     }
 }
