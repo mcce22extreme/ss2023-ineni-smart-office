@@ -1,5 +1,5 @@
 data "archive_file" "lambda_archive" {
-  type = "zip"
+  type        = "zip"
   source_dir  = var.publish_dir
   output_path = "${path.module}/../../${var.zip_file}"
 }
@@ -21,6 +21,7 @@ resource "aws_lambda_function" "function" {
   source_code_hash = data.archive_file.lambda_archive.output_base64sha256
   role             = var.lambda_execution_role
   timeout          = 30
+  memory_size      = 512
 }
 
 resource "aws_cloudwatch_log_group" "aggregator" {
@@ -28,24 +29,3 @@ resource "aws_cloudwatch_log_group" "aggregator" {
 
   retention_in_days = 30
 }
-
-# resource "aws_iam_role" "lambda_function_role" {
-#   name = "FunctionIamRole_${var.function_name}"
-#   assume_role_policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [{
-#       Action = "sts:AssumeRole"
-#       Effect = "Allow"
-#       Sid    = ""
-#       Principal = {
-#         Service = "lambda.amazonaws.com"
-#       }
-#       }
-#     ]
-#   })
-# }
-
-# resource "aws_iam_role_policy_attachment" "lambda_policy_attach" {
-#   role       = aws_iam_role.lambda_function_role.name
-#   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-# }
