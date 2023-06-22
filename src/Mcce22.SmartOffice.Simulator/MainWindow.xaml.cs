@@ -94,8 +94,8 @@ namespace Mcce22.SmartOffice.Simulator
                     var imageFrameAnimation = new DoubleAnimation(viewModel.ImageFrameCanvasTop, TimeSpan.FromSeconds(1));
                     ImageFrame.BeginAnimation(Canvas.TopProperty, imageFrameAnimation);
 
-                    var imageAnimation = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(1));
-                    ImageFrame.BeginAnimation(OpacityProperty, imageAnimation);
+                    //var imageAnimation = new DoubleAnimation(0, 1, TimeSpan.FromSeconds(1));
+                    //ImageFrame.BeginAnimation(OpacityProperty, imageAnimation);
 
                     var wifiAnimation = new DoubleAnimation(viewModel.WifiCanvasTop, TimeSpan.FromSeconds(1));
                     WifiSign.BeginAnimation(Canvas.TopProperty, wifiAnimation);

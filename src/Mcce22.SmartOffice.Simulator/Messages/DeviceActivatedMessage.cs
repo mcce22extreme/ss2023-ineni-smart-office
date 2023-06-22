@@ -10,6 +10,6 @@
 
         public double DeskHeight { get; set; }
 
-        public string UserImageUrl { get; set; }
+        public string[] UserImageUrls { get; set; }
     }
 }

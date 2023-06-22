@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="The Smart Office Simulator"
     Width="800"
@@ -262,14 +263,29 @@
                                 <ImageBrush ImageSource="/Images/leg.png" />
                             </Rectangle.Fill>
                         </Rectangle>
-                        <Image
+                        <mah:TransitioningContentControl
+                            x:Name="ImageFrame"
+                            Canvas.Left="699"
+                            Canvas.Top="336"
+                            Width="78"
+                            Height="46"
+                            Background="Black"
+                            Content="{Binding ImageSource}"
+                            Transition="Normal">
+                            <mah:TransitioningContentControl.ContentTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding ., IsAsync=True}" Stretch="UniformToFill" />
+                                </DataTemplate>
+                            </mah:TransitioningContentControl.ContentTemplate>
+                        </mah:TransitioningContentControl>
+                        <!--<Image
                             x:Name="ImageFrame"
                             Canvas.Left="699"
                             Canvas.Top="336"
                             Width="78"
                             Height="46"
                             Source="{Binding ImageUrl, IsAsync=True}"
-                            Stretch="UniformToFill" />
+                            Stretch="UniformToFill" />-->
                         <ContentControl
                             x:Name="WifiSign"
                             Canvas.Left="290"
