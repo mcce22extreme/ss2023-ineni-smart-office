@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mcce22.SmartOffice.Simulator.Messages;
@@ -23,6 +27,10 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         private readonly IMqttService _mqttService;
         private readonly AppSettings _appSettings;
         private readonly Timer _delayTimer;
+        private readonly Timer _imageTimer;
+
+        private List<string> _imageUrls = new List<string>();
+        private int _currentImageIndex;
 
         [ObservableProperty]
         private string _workspaceNumber;
@@ -46,9 +54,6 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         private double _wifiCanvasTop = DEFAULT_WIFI_CANVAS_TOP;
 
         [ObservableProperty]
-        private string _imageUrl;
-
-        [ObservableProperty]
         private double _temperature = 20;
 
         [ObservableProperty]
@@ -60,6 +65,9 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         [ObservableProperty]
         private string _messageLog;
 
+        [ObservableProperty]
+        private ImageSource _imageSource;
+
         public MainViewModel(IMqttService mqttService, AppSettings appSettings)
         {
             _mqttService = mqttService;
@@ -69,7 +77,13 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
 
             _delayTimer = new Timer();
             _delayTimer.Interval = 5000;
-            _delayTimer.Elapsed += OnDelayTimerElpased;
+            _delayTimer.Elapsed += OnDelayTimerElapsed;
+
+            _imageTimer = new Timer();
+            _imageTimer.Interval = 5000;
+            _imageTimer.Elapsed += OnImageTimerElapsed;
+
+            UpdateImageSource();
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -85,7 +99,7 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
             base.OnPropertyChanged(e);
         }
 
-        private async void OnDelayTimerElpased(object sender, ElapsedEventArgs e)
+        private async void OnDelayTimerElapsed(object sender, ElapsedEventArgs e)
         {
             var msg = new DataIngressMessage
             {
@@ -100,6 +114,43 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
             MessageLog += $"[OUT] {JsonConvert.SerializeObject(msg)}" + Environment.NewLine;
 
             _delayTimer.Stop();
+        }
+
+        private void SetImageSource(string resourcePath)
+        {
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(resourcePath, UriKind.RelativeOrAbsolute);
+                bitmap.EndInit();
+
+                ImageSource = bitmap;
+            });
+        }
+
+        private void OnImageTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            UpdateImageSource();
+        }
+
+        private void UpdateImageSource()
+        {
+            if (_imageUrls.Count > 0)
+            {
+                if(_currentImageIndex == _imageUrls.Count)
+                {
+                    _currentImageIndex = 0;
+                }
+
+                SetImageSource(_imageUrls[_currentImageIndex]);
+
+                _currentImageIndex++;
+            }
+            else
+            {
+                SetImageSource("/Mcce22.SmartOffice.Simulator;component/images/smartoffice.png");
+            }
         }
 
         public async Task Connect()
@@ -126,11 +177,15 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
                     DeskHeight = e.Message.DeskHeight;
                 }
 
-                ImageUrl = e.Message.UserImageUrl;
+                _imageUrls.Clear();
+                _imageUrls.AddRange(e.Message.UserImageUrls);
 
                 MessageLog += $"[IN ] {JsonConvert.SerializeObject(e.Message)}" + Environment.NewLine;
 
+                UpdateImageSource();
                 UpdateDeskParams(DeskHeight);
+
+                _imageTimer.Start();
             }
         }
 

@@ -14,6 +14,7 @@
     <None Remove="Images\desk_legs.png" />
     <None Remove="Images\icon.png" />
     <None Remove="Images\leg.png" />
+    <None Remove="Images\smartoffice.png" />
     <None Remove="Images\workspace.png" />
   </ItemGroup>
 
@@ -41,6 +42,7 @@
     <Resource Include="Images\desk_legs.png" />
     <Resource Include="Images\icon.png" />
     <Resource Include="Images\leg.png" />
+    <Resource Include="Images\smartoffice.png" />
     <Resource Include="Images\workspace.png" />
   </ItemGroup>
 
