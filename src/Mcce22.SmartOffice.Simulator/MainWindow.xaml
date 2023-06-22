@@ -173,7 +173,7 @@
                     VerticalAlignment="Center"
                     FontFamily="Arial"
                     Foreground="White"
-                    Text="THE SMART OFFICE SIMULATOR" />
+                    Text="{Binding Path=WorkspaceNumber, StringFormat={} THE SMART OFFICE SIMULATOR ({0})}" />
             </StackPanel>
 
             <!--  Caption buttons  -->
@@ -302,7 +302,7 @@
                 Grid.Row="1"
                 Grid.Column="0"
                 Height="5" />
-            <Grid Grid.Row="2">
+            <Grid x:Name="MessageGrid" Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
@@ -356,14 +356,14 @@
                     Minimum="15"
                     TickFrequency="0.1"
                     Value="{Binding Temperature}" />
-                <TextBlock Grid.Row="6" Text="{Binding Path=NoiseLevel, StringFormat={}Noise Level ({0:#.#} dB)}" />
+                <TextBlock Grid.Row="6" Text="{Binding Path=Humidity, StringFormat={}Humidity ({0:#.#} %)}" />
                 <Slider
                     Grid.Row="7"
                     IsSnapToTickEnabled="True"
-                    Maximum="65"
+                    Maximum="70"
                     Minimum="10"
-                    TickFrequency="1"
-                    Value="{Binding NoiseLevel}" />
+                    TickFrequency="10"
+                    Value="{Binding Humidity}" />
                 <TextBlock Grid.Row="8" Text="{Binding Path=Co2Level, StringFormat={}CO2 Level ({0:#.#} ppm)}" />
                 <Slider
                     Grid.Row="9"

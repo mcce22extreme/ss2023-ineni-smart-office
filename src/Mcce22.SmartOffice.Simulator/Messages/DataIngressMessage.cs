@@ -6,7 +6,7 @@
 
         public double Temperature { get; set; }
 
-        public double NoiseLevel { get; set; }
+        public double Humidity { get; set; }
 
         public double Co2Level { get; set; }
     }

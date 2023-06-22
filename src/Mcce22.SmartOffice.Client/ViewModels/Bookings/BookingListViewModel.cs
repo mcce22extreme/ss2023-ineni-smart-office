@@ -28,6 +28,18 @@ namespace Mcce22.SmartOffice.Client.ViewModels
             ProcessBookingsCommand = new RelayCommand(ProcessBookings, CanProcessBookings);
         }
 
+        public async Task Load()
+        {
+            try
+            {
+
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
         private bool CanProcessBookings()
         {
             return !IsBusy;

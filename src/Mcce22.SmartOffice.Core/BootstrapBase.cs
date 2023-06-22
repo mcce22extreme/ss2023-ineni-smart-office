@@ -90,6 +90,8 @@ namespace Mcce22.SmartOffice.Core
 
             builder.Services.AddSingleton<IIdGenerator, IdGenerator>();
 
+            builder.Services.AddSingleton<IWeiGenerator, WeiGenerator>();
+
             // Configure dependency injection
             builder.Services.AddSingleton<IAppInfo>(appInfo);
 

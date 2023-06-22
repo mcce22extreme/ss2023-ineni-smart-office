@@ -50,7 +50,6 @@
             SelectedItem="{Binding SelectedItem}"
             SelectionMode="Single">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Id}" Header="Id" />
                 <DataGridTextColumn Binding="{Binding FirstName}" Header="Firstname" />
                 <DataGridTextColumn Binding="{Binding LastName}" Header="LastName" />
                 <DataGridTextColumn Binding="{Binding UserName}" Header="UserName" />

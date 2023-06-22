@@ -2,7 +2,6 @@
 using Amazon.DynamoDBv2.DataModel;
 using Mcce22.SmartOffice.Bookings.Managers;
 using Mcce22.SmartOffice.Core;
-using Mcce22.SmartOffice.Workspaces.Generators;
 using Mcce22.SmartOffice.Workspaces.Managers;
 
 namespace Mcce22.SmartOffice.Workspaces
@@ -22,8 +21,6 @@ namespace Mcce22.SmartOffice.Workspaces
             builder.Services.AddScoped<IWorkspaceConfigurationManager, WorkspaceConfigurationManager>();
 
             builder.Services.AddScoped<IWorkspaceDataManager, WorkspaceDataManager>();
-
-            builder.Services.AddScoped<IWeiGenerator, WeiGenerator>();
         }
     }
 }

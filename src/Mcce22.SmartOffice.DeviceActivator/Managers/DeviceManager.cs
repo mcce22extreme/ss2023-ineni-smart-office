@@ -53,9 +53,11 @@ namespace Mcce22.SmartOffice.DeviceActivator.Managers
                 {
                     WorkspaceNumber = booking.WorkspaceNumber,
                     UserId = booking.UserId,
+                    FirstName = booking.FirstName,
+                    LastName = booking.LastName,
                     BookingId = booking.Id,
                     DeskHeight = configurations.FirstOrDefault()?.DeskHeight ?? 0,
-                    UserImageUrl = userImages.FirstOrDefault()?.Url,
+                    UserImageUrls = userImages.Select(x => x.Url).ToArray(),
                 };
 
                 await _dataClient.PublishAsync(new PublishRequest
