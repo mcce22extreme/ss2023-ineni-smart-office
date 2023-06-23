@@ -8,6 +8,7 @@ import time
 from uuid import uuid4
 import json
 from gpiozero import CPUTemperature
+import subprocess
 
 from grove_dht import Dht # from a custom made grovepi-based library import our needed class
 import datetime # that's for printing the current date
@@ -73,6 +74,12 @@ def on_resubscribe_complete(resubscribe_future):
 # Callback when the subscribed topic receives a message
 def on_message_received(topic, payload, dup, qos, retain, **kwargs):
     print("Received message from topic '{}': {}".format(topic, payload))
+
+    data = json.loads(payload)
+    if data['WorkspaceNumber'] == 'workspace-002':
+        cmd = ['/home/pi/display_picture.sh'] + data['UserImageUrls']
+        subprocess.Popen(cmd)
+
     global received_count
     received_count += 1
     if received_count == cmdUtils.get_command("count"):
@@ -111,7 +118,8 @@ if __name__ == '__main__':
     print("Subscribed with {}".format(str(subscribe_result['qos'])))
 
 
-    demomsg='{"WorkspaceNumber":"workspace-001","UserId":"n7mEXnzoc1ga","BookingId":"C8ac--1Kxhwv","DeskHeight":90,"UserImageUrls":["https://mcce-smart-office-userimage-bbvd.s3.amazonaws.com/n7mEXnzoc1ga/3c0c86d1-e76b-4bc2-bf57-ff0a27b2c868.jpg","https://mcce-smart-office-userimage-bbvd.s3.amazonaws.com/n7mEXnzoc1ga/75f826d2-d3f4-4e9e-8ee0-5798105ca274.jpg","https://mcce-smart-office-userimage-bbvd.s3.amazonaws.com/n7mEXnzoc1ga/47b1ec1b-d2dd-45cd-9690-3785226a970c.jpg"]}'
+#    demomsg='{"WorkspaceNumber":"workspace-002","UserId":"n7mEXnzoc1ga","BookingId":"C8ac--1Kxhwv","DeskHeight":90,"UserImageUrls":["https://mcce-smart-office-userimage-bbvd.s3.amazonaws.com/n7mEXnzoc1ga/3c0c86d1-e76b-4bc2-bf57-ff0a27b2c868.jpg","https://mcce-smart-office-userimage-bbvd.s3.amazonaws.com/n7mEXnzoc1ga/75f826d2-d3f4-4e9e-8ee0-5798105ca274.jpg","https://mcce-smart-office-userimage-bbvd.s3.amazonaws.com/n7mEXnzoc1ga/47b1ec1b-d2dd-45cd-9690-3785226a970c.jpg"]}'
+    demomsg='{"WorkspaceNumber":"workspace-002","UserId":"n7mEXnzoc1ga","BookingId":"C8ac--1Kxhwv","DeskHeight":90,"UserImageUrls":["https://cdn.shopify.com/s/files/1/0071/8946/3091/files/adolescent-dog-with-stick.jpg","https://www.rd.com/wp-content/uploads/2021/03/GettyImages-1133605325-scaled-e1617227898456.jpg","https://hips.hearstapps.com/wdy.h-cdn.co/assets/17/39/1600x1066/gallery-1506709524-cola-0247.jpg"]}'
     mqtt_connection.publish(
         topic=message_topic+"/activate",
         payload=demomsg,
