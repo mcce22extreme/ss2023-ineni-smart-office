@@ -36,56 +36,64 @@ namespace Mcce22.SmartOffice.Simulator.Services
         {
             _appSettings = appSettings;
 
-            _mqttClient = Factory.CreateMqttClient();            
+            _mqttClient = Factory.CreateMqttClient();
         }
 
         public async Task Connect()
         {
             if (!_mqttClient.IsConnected)
             {
-                var deviceCertPEMString = await  File.ReadAllTextAsync(@$"certificates\certificate.pem.crt");
-                var devicePrivateCertPEMString = await File.ReadAllTextAsync(@$"certificates\private.pem.key");
-                var certificateAuthorityCertPEMString = await File.ReadAllTextAsync(@$"certificates\AmazonRootCA1.pem");
+                try
+                {
+                    var deviceCertPEMString = await  File.ReadAllTextAsync(@$"certificates\certificate.pem.crt");
+                    var devicePrivateCertPEMString = await File.ReadAllTextAsync(@$"certificates\private.pem.key");
+                    var certificateAuthorityCertPEMString = await File.ReadAllTextAsync(@$"certificates\AmazonRootCA1.pem");
 
-                //Converting from PEM to X509 certs in C# is hard
-                //Load the CA certificate
-                //https://gist.github.com/ChrisTowles/f8a5358a29aebcc23316605dd869e839
-                var certBytes = Encoding.UTF8.GetBytes(certificateAuthorityCertPEMString);
-                var signingcert = new X509Certificate2(certBytes);
+                    //Converting from PEM to X509 certs in C# is hard
+                    //Load the CA certificate
+                    //https://gist.github.com/ChrisTowles/f8a5358a29aebcc23316605dd869e839
+                    var certBytes = Encoding.UTF8.GetBytes(certificateAuthorityCertPEMString);
+                    var signingcert = new X509Certificate2(certBytes);
 
-                //Load the device certificate
-                //Use Oocx.ReadX509CertificateFromPem to load cert from pem
-                var reader = new CertificateFromPemReader();
-                var deviceCertificate = reader.LoadCertificateWithPrivateKeyFromStrings(deviceCertPEMString, devicePrivateCertPEMString);
+                    //Load the device certificate
+                    //Use Oocx.ReadX509CertificateFromPem to load cert from pem
+                    var reader = new CertificateFromPemReader();
+                    var deviceCertificate = reader.LoadCertificateWithPrivateKeyFromStrings(deviceCertPEMString, devicePrivateCertPEMString);
 
-                // Certificate based authentication
-                var certs = new List<X509Certificate>
+                    // Certificate based authentication
+                    var certs = new List<X509Certificate>
                 {
                     signingcert,
                     deviceCertificate
                 };
 
-                //Set things up for our MQTTNet client
-                var tlsOptions = new MqttClientOptionsBuilderTlsParameters
-                {
-                    Certificates = certs,
-                    SslProtocol = SslProtocols.Tls12,
-                    UseTls = true,
-                    AllowUntrustedCertificates = true,
-                    IgnoreCertificateChainErrors = true,
-                    IgnoreCertificateRevocationErrors = true
-                };
+                    //Set things up for our MQTTNet client
+                    var tlsOptions = new MqttClientOptionsBuilderTlsParameters
+                    {
+                        Certificates = certs,
+                        SslProtocol = SslProtocols.Tls12,
+                        UseTls = true,
+                        AllowUntrustedCertificates = true,
+                        IgnoreCertificateChainErrors = true,
+                        IgnoreCertificateRevocationErrors = true
+                    };
 
-                var options = new MqttClientOptionsBuilder()
+                    var options = new MqttClientOptionsBuilder()
                 .WithTcpServer(_appSettings.EndpointAddress, _appSettings.EndpointPort)
                 .WithTls(tlsOptions)
                 .Build();
 
-                _mqttClient.ApplicationMessageReceivedAsync += OnMqttMessageReceived;
+                    _mqttClient.ApplicationMessageReceivedAsync += OnMqttMessageReceived;
 
-                await _mqttClient.ConnectAsync(options, CancellationToken.None);
+                    await _mqttClient.ConnectAsync(options, CancellationToken.None);
 
-                await _mqttClient.SubscribeAsync(Topics.DEVICE_ACTIVATED);
+                    await _mqttClient.SubscribeAsync(Topics.DEVICE_ACTIVATED);
+                }
+                catch (Exception)
+                {
+                    await Task.Delay(5000);
+                    await Connect();
+                }
             }
         }
 

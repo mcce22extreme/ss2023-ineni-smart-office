@@ -174,7 +174,7 @@
                     VerticalAlignment="Center"
                     FontFamily="Arial"
                     Foreground="White"
-                    Text="{Binding Path=WorkspaceNumber, StringFormat={} THE SMART OFFICE SIMULATOR ({0})}" />
+                    Text="{Binding Path=SelectedWorkspace, StringFormat={} THE SMART OFFICE SIMULATOR ({0})}" />
             </StackPanel>
 
             <!--  Caption buttons  -->
@@ -358,31 +358,39 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Content="Desk Height" />
-                <TextBlock Grid.Row="1" Text="{Binding DeskHeight, StringFormat={}{0:#.#} cm}" />
-                <Label Grid.Row="2" Content="Image URL" />
-                <TextBlock Grid.Row="3" Text="{Binding ImageUrl}" />
-                <TextBlock Grid.Row="4" Text="{Binding Path=Temperature, StringFormat={}Temperature ({0:#.#} °C)}" />
+                <Label Grid.Row="0" Content="Workspace" />
+                <ComboBox
+                    Grid.Row="1"
+                    Margin="5,0"
+                    ItemsSource="{Binding Workspaces}"
+                    SelectedItem="{Binding SelectedWorkspace}" />
+                <Label Grid.Row="2" Content="Desk Height" />
+                <TextBlock Grid.Row="3" Text="{Binding DeskHeight, StringFormat={}{0:#.#} cm}" />
+                <Label Grid.Row="4" Content="Image URL" />
+                <TextBlock Grid.Row="5" Text="{Binding ImageUrl}" />
+                <TextBlock Grid.Row="6" Text="{Binding Path=Temperature, StringFormat={}Temperature ({0:#.#} °C)}" />
                 <Slider
-                    Grid.Row="5"
+                    Grid.Row="7"
                     IsSnapToTickEnabled="True"
                     Maximum="35"
                     Minimum="15"
                     TickFrequency="0.1"
                     Value="{Binding Temperature}" />
-                <TextBlock Grid.Row="6" Text="{Binding Path=Humidity, StringFormat={}Humidity ({0:#.#} %)}" />
+                <TextBlock Grid.Row="8" Text="{Binding Path=Humidity, StringFormat={}Humidity ({0:#.#} %)}" />
                 <Slider
-                    Grid.Row="7"
+                    Grid.Row="9"
                     IsSnapToTickEnabled="True"
                     Maximum="70"
                     Minimum="10"
                     TickFrequency="10"
                     Value="{Binding Humidity}" />
-                <TextBlock Grid.Row="8" Text="{Binding Path=Co2Level, StringFormat={}CO2 Level ({0:#.#} ppm)}" />
+                <TextBlock Grid.Row="10" Text="{Binding Path=Co2Level, StringFormat={}CO2 Level ({0:#.#} ppm)}" />
                 <Slider
-                    Grid.Row="9"
+                    Grid.Row="11"
                     IsSnapToTickEnabled="True"
                     Maximum="1100"
                     Minimum="400"
