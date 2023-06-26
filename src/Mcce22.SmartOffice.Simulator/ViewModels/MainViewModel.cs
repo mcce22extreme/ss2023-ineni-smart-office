@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -23,6 +25,8 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         private const double DEFAULT_LEG_HEIGHT = 80;
         private const double DEFAULT_IMAGEFRAME_CANVAS_TOP = 336;
         private const double DEFAULT_WIFI_CANVAS_TOP = 315;
+
+        private static HttpClient _httpClient = new HttpClient();
 
         private readonly IMqttService _mqttService;
         private readonly AppSettings _appSettings;
@@ -66,6 +70,12 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         private string _messageLog;
 
         [ObservableProperty]
+        private string[] _workspaces;
+
+        [ObservableProperty]
+        private string _selectedWorkspace;
+
+        [ObservableProperty]
         private ImageSource _imageSource;
 
         public MainViewModel(IMqttService mqttService, AppSettings appSettings)
@@ -84,7 +94,21 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
             _imageTimer.Elapsed += OnImageTimerElapsed;
 
             UpdateImageSource();
+
+            LoadWorkspaces();
         }
+
+        private async void LoadWorkspaces()
+        {
+            var json = await _httpClient.GetStringAsync($"{_appSettings.BaseAddress}/workspace/");
+
+            var workspaces = JsonConvert.DeserializeObject<WorkspaceModel[]>(json);
+
+            Workspaces = workspaces.Select(x => x.WorkspaceNumber).ToArray();
+            SelectedWorkspace = Workspaces.FirstOrDefault();
+        }
+
+        private bool _updateSendInProgress;
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
@@ -92,28 +116,39 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
                 e.PropertyName == nameof(Humidity) ||
                 e.PropertyName == nameof(Co2Level))
             {
-                _delayTimer.Stop();
-                _delayTimer.Start();
+                if (!_updateSendInProgress)
+                {
+                    _updateSendInProgress = true;
+                    _delayTimer.Stop();
+                    _delayTimer.Start();
+                }
             }
 
             base.OnPropertyChanged(e);
         }
 
-        private async void OnDelayTimerElapsed(object sender, ElapsedEventArgs e)
+        private void OnDelayTimerElapsed(object sender, ElapsedEventArgs e)
         {
-            var msg = new DataIngressMessage
+            Application.Current.Dispatcher.BeginInvoke(async () =>
             {
-                WorkspaceNumber = _appSettings.WorkspaceNumber,
-                Temperature = Temperature,
-                Humidity = Humidity,
-                Co2Level = Co2Level,
-            };
+                if (SelectedWorkspace != null)
+                {
+                    var msg = new DataIngressMessage
+                    {
+                        WorkspaceNumber = SelectedWorkspace,
+                        Temperature = Temperature,
+                        Humidity = Humidity,
+                        Co2Level = Co2Level,
+                    };
 
-            await _mqttService.PublishMessage(msg);
+                    await _mqttService.PublishMessage(msg);
 
-            MessageLog += $"[OUT] {JsonConvert.SerializeObject(msg)}" + Environment.NewLine;
+                    MessageLog += $"[OUT] {JsonConvert.SerializeObject(msg)}" + Environment.NewLine;
+                }
 
-            _delayTimer.Stop();
+                _delayTimer.Stop();
+                _updateSendInProgress = false;
+            });
         }
 
         private void SetImageSource(string resourcePath)
@@ -138,7 +173,7 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
         {
             if (_imageUrls.Count > 0)
             {
-                if(_currentImageIndex == _imageUrls.Count)
+                if (_currentImageIndex == _imageUrls.Count)
                 {
                     _currentImageIndex = 0;
                 }
@@ -162,7 +197,7 @@ namespace Mcce22.SmartOffice.Simulator.ViewModels
 
         private void OnMessageReceived(object sender, MessageReceivedArgs e)
         {
-            if (e.Message.WorkspaceNumber == _appSettings.WorkspaceNumber)
+            if (e.Message.WorkspaceNumber == SelectedWorkspace)
             {
                 if (e.Message.DeskHeight > MAX_DESK_HEIGHT)
                 {
