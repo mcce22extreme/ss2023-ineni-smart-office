@@ -3,6 +3,8 @@
   <h1  align="center">Smart Office</h1>
 </p>
 
+![Build Status](https://github.com/mcce22extreme/ss2023-ineni-smart-office/workflows/CI%20Pipeline/badge.svg)
+![Deployment Status](https://github.com/mcce22extreme/ss2023-ineni-smart-office/workflows/CD%20Pipeline/badge.svg)
 
 ## Table of Contents
 
