@@ -1,0 +1,21 @@
+<testsuites>
+  <testsuite name="Mcce22.SmartOffice.Users.Tests.dll" tests="8" skipped="0" failures="0" errors="0" time="0.15615800000000002" timestamp="2023-06-27T09:33:46" hostname="DESKTOP-ANDREAS" id="0" package="Mcce22.SmartOffice.Users.Tests.dll">
+    <properties />
+    <testcase classname="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="CreateUser_MapsAllInformation" time="0.1248290" />
+    <testcase classname="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="Createuser_UsesIdGenerator" time="0.0057770" />
+    <testcase classname="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="DeleteUsers_CallsContextDelete" time="0.0041910" />
+    <testcase classname="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="GetUser_ForUnknownUser_ThrowsException" time="0.0048060" />
+    <testcase classname="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="GetUser_ReturnsExistingUser" time="0.0046750" />
+    <testcase classname="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="GetUsers_ReturnsUsers" time="0.0089460" />
+    <testcase classname="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="UpdateUser_ForUnknownUser_ThrowsException" time="0.0011060" />
+    <testcase classname="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="UpdateUser_MapsAllInformation" time="0.0018280" />
+    <system-out>
+Test Framework Informational Messages:
+NUnit Adapter 4.5.0.0: Test execution started
+Running all tests in C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll
+   NUnit3TestExecutor discovered 8 of 8 NUnit test cases using Current Discovery mode, Non-Explicit run
+NUnit Adapter 4.5.0.0: Test execution complete
+</system-out>
+    <system-err></system-err>
+  </testsuite>
+</testsuites>
