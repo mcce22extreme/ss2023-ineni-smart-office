@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="a2ae56bd-e48a-41f0-b79c-c24a062dcafc" name="Andreas@DESKTOP-ANDREAS 2023-06-26 23:19:56" runUser="DESKTOP-ANDREAS\Andreas" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2023-06-26T23:19:56.7564695+02:00" queuing="2023-06-26T23:19:56.7564700+02:00" start="2023-06-26T23:19:53.5127215+02:00" finish="2023-06-26T23:19:56.7693424+02:00" />
+  <TestSettings name="default" id="d7c7bf34-cf4b-4fcb-95da-d5254cc7d7d5">
+    <Deployment runDeploymentRoot="Andreas_DESKTOP-ANDREAS_2023-06-26_23_19_56" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="0fd1ce7d-b3a5-4448-aa8a-09d36bb3018c" testId="8b07c7a3-a11a-a39c-b5fe-7629fb2fb448" testName="UpdateUser_MapsAllInformation" computerName="DESKTOP-ANDREAS" duration="00:00:00.0020040" startTime="2023-06-26T23:19:56.6802265+02:00" endTime="2023-06-26T23:19:56.6822289+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0fd1ce7d-b3a5-4448-aa8a-09d36bb3018c" />
+    <UnitTestResult executionId="cd0d7bbf-d416-4291-b3b6-e6822e175009" testId="db711f37-0052-eac7-1e5b-20d9d0b08d84" testName="GetUser_ReturnsExistingUser" computerName="DESKTOP-ANDREAS" duration="00:00:00.0097470" startTime="2023-06-26T23:19:56.6503160+02:00" endTime="2023-06-26T23:19:56.6600620+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cd0d7bbf-d416-4291-b3b6-e6822e175009" />
+    <UnitTestResult executionId="ea4c77ac-a7b5-4ad1-87bc-fbf49dc9b5d9" testId="827c0baf-d8e0-869c-d702-26bf2de6c906" testName="CreateUser_MapsAllInformation" computerName="DESKTOP-ANDREAS" duration="00:00:00.3633010" startTime="2023-06-26T23:19:56.2693075+02:00" endTime="2023-06-26T23:19:56.6325528+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ea4c77ac-a7b5-4ad1-87bc-fbf49dc9b5d9" />
+    <UnitTestResult executionId="ab7f1d5e-36c9-4b1f-8078-26d3c7c677cf" testId="3ef4a667-37d1-e08a-bbf5-555468ad6750" testName="GetUsers_ReturnsUsers" computerName="DESKTOP-ANDREAS" duration="00:00:00.0114960" startTime="2023-06-26T23:19:56.6600953+02:00" endTime="2023-06-26T23:19:56.6715907+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ab7f1d5e-36c9-4b1f-8078-26d3c7c677cf" />
+    <UnitTestResult executionId="eccca5ae-f0c4-4183-9796-494d30369ce9" testId="7d6835e9-8f03-1cd4-ac2f-530877882b61" testName="Createuser_UsesIdGenerator" computerName="DESKTOP-ANDREAS" duration="00:00:00.0068100" startTime="2023-06-26T23:19:56.6337178+02:00" endTime="2023-06-26T23:19:56.6405271+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eccca5ae-f0c4-4183-9796-494d30369ce9" />
+    <UnitTestResult executionId="e1f83683-4885-4bdb-9fca-bf9682835601" testId="dd6fe79f-4997-ba7e-f16a-462740f08271" testName="GetUser_ForUnknownUser_ThrowsException" computerName="DESKTOP-ANDREAS" duration="00:00:00.0069720" startTime="2023-06-26T23:19:56.6432820+02:00" endTime="2023-06-26T23:19:56.6502521+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e1f83683-4885-4bdb-9fca-bf9682835601" />
+    <UnitTestResult executionId="169b4361-648d-450d-837f-a9c485f5f4f7" testId="ed83f0ee-5e1a-5762-c1a8-fac1f9f5ecbc" testName="DeleteUsers_CallsContextDelete" computerName="DESKTOP-ANDREAS" duration="00:00:00.0026880" startTime="2023-06-26T23:19:56.6405631+02:00" endTime="2023-06-26T23:19:56.6432507+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="169b4361-648d-450d-837f-a9c485f5f4f7" />
+    <UnitTestResult executionId="6621f2a0-172f-4c1c-a3bc-ff080bf4adb3" testId="d9713376-1173-716a-9ca0-a87249999c46" testName="UpdateUser_ForUnknownUser_ThrowsException" computerName="DESKTOP-ANDREAS" duration="00:00:00.0085710" startTime="2023-06-26T23:19:56.6716273+02:00" endTime="2023-06-26T23:19:56.6801976+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6621f2a0-172f-4c1c-a3bc-ff080bf4adb3" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="UpdateUser_ForUnknownUser_ThrowsException" storage="c:\work\ss2023-ineni-smart-office\src\mcce22.smartoffice.users.tests\bin\debug\net6.0\mcce22.smartoffice.users.tests.dll" id="d9713376-1173-716a-9ca0-a87249999c46">
+      <Execution id="6621f2a0-172f-4c1c-a3bc-ff080bf4adb3" />
+      <TestMethod codeBase="C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="UpdateUser_ForUnknownUser_ThrowsException" />
+    </UnitTest>
+    <UnitTest name="GetUser_ForUnknownUser_ThrowsException" storage="c:\work\ss2023-ineni-smart-office\src\mcce22.smartoffice.users.tests\bin\debug\net6.0\mcce22.smartoffice.users.tests.dll" id="dd6fe79f-4997-ba7e-f16a-462740f08271">
+      <Execution id="e1f83683-4885-4bdb-9fca-bf9682835601" />
+      <TestMethod codeBase="C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="GetUser_ForUnknownUser_ThrowsException" />
+    </UnitTest>
+    <UnitTest name="GetUsers_ReturnsUsers" storage="c:\work\ss2023-ineni-smart-office\src\mcce22.smartoffice.users.tests\bin\debug\net6.0\mcce22.smartoffice.users.tests.dll" id="3ef4a667-37d1-e08a-bbf5-555468ad6750">
+      <Execution id="ab7f1d5e-36c9-4b1f-8078-26d3c7c677cf" />
+      <TestMethod codeBase="C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="GetUsers_ReturnsUsers" />
+    </UnitTest>
+    <UnitTest name="CreateUser_MapsAllInformation" storage="c:\work\ss2023-ineni-smart-office\src\mcce22.smartoffice.users.tests\bin\debug\net6.0\mcce22.smartoffice.users.tests.dll" id="827c0baf-d8e0-869c-d702-26bf2de6c906">
+      <Execution id="ea4c77ac-a7b5-4ad1-87bc-fbf49dc9b5d9" />
+      <TestMethod codeBase="C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="CreateUser_MapsAllInformation" />
+    </UnitTest>
+    <UnitTest name="UpdateUser_MapsAllInformation" storage="c:\work\ss2023-ineni-smart-office\src\mcce22.smartoffice.users.tests\bin\debug\net6.0\mcce22.smartoffice.users.tests.dll" id="8b07c7a3-a11a-a39c-b5fe-7629fb2fb448">
+      <Execution id="0fd1ce7d-b3a5-4448-aa8a-09d36bb3018c" />
+      <TestMethod codeBase="C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="UpdateUser_MapsAllInformation" />
+    </UnitTest>
+    <UnitTest name="Createuser_UsesIdGenerator" storage="c:\work\ss2023-ineni-smart-office\src\mcce22.smartoffice.users.tests\bin\debug\net6.0\mcce22.smartoffice.users.tests.dll" id="7d6835e9-8f03-1cd4-ac2f-530877882b61">
+      <Execution id="eccca5ae-f0c4-4183-9796-494d30369ce9" />
+      <TestMethod codeBase="C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="Createuser_UsesIdGenerator" />
+    </UnitTest>
+    <UnitTest name="DeleteUsers_CallsContextDelete" storage="c:\work\ss2023-ineni-smart-office\src\mcce22.smartoffice.users.tests\bin\debug\net6.0\mcce22.smartoffice.users.tests.dll" id="ed83f0ee-5e1a-5762-c1a8-fac1f9f5ecbc">
+      <Execution id="169b4361-648d-450d-837f-a9c485f5f4f7" />
+      <TestMethod codeBase="C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="DeleteUsers_CallsContextDelete" />
+    </UnitTest>
+    <UnitTest name="GetUser_ReturnsExistingUser" storage="c:\work\ss2023-ineni-smart-office\src\mcce22.smartoffice.users.tests\bin\debug\net6.0\mcce22.smartoffice.users.tests.dll" id="db711f37-0052-eac7-1e5b-20d9d0b08d84">
+      <Execution id="cd0d7bbf-d416-4291-b3b6-e6822e175009" />
+      <TestMethod codeBase="C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll" adapterTypeName="executor://nunit3testexecutor/" className="Mcce22.SmartOffice.Users.Tests.Managers.UserManagerTests" name="GetUser_ReturnsExistingUser" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="8b07c7a3-a11a-a39c-b5fe-7629fb2fb448" executionId="0fd1ce7d-b3a5-4448-aa8a-09d36bb3018c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="db711f37-0052-eac7-1e5b-20d9d0b08d84" executionId="cd0d7bbf-d416-4291-b3b6-e6822e175009" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="827c0baf-d8e0-869c-d702-26bf2de6c906" executionId="ea4c77ac-a7b5-4ad1-87bc-fbf49dc9b5d9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3ef4a667-37d1-e08a-bbf5-555468ad6750" executionId="ab7f1d5e-36c9-4b1f-8078-26d3c7c677cf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7d6835e9-8f03-1cd4-ac2f-530877882b61" executionId="eccca5ae-f0c4-4183-9796-494d30369ce9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dd6fe79f-4997-ba7e-f16a-462740f08271" executionId="e1f83683-4885-4bdb-9fca-bf9682835601" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ed83f0ee-5e1a-5762-c1a8-fac1f9f5ecbc" executionId="169b4361-648d-450d-837f-a9c485f5f4f7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d9713376-1173-716a-9ca0-a87249999c46" executionId="6621f2a0-172f-4c1c-a3bc-ff080bf4adb3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Ergebnisse nicht in einer Liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Alle geladenen Ergebnisse" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="8" executed="8" passed="8" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>NUnit Adapter 4.5.0.0: Test execution started&#xD;
+Running all tests in C:\work\ss2023-ineni-smart-office\src\Mcce22.SmartOffice.Users.Tests\bin\Debug\net6.0\Mcce22.SmartOffice.Users.Tests.dll&#xD;
+   NUnit3TestExecutor discovered 8 of 8 NUnit test cases using Current Discovery mode, Non-Explicit run&#xD;
+NUnit Adapter 4.5.0.0: Test execution complete&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
