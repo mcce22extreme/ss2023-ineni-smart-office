@@ -5,6 +5,7 @@
 
 ![Build Status](https://github.com/mcce22extreme/ss2023-ineni-smart-office/workflows/CI%20Pipeline/badge.svg)
 ![Deployment Status](https://github.com/mcce22extreme/ss2023-ineni-smart-office/workflows/CD%20Pipeline/badge.svg)
+![Test Status](https://gist.githubusercontent.com/andygruber/add6c09c9d685d2a2533a4d500b047f9/raw/badge.svg)
 
 ## Table of Contents
 
