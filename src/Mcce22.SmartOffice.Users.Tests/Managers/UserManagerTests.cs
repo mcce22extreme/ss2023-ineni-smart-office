@@ -69,7 +69,7 @@ namespace Mcce22.SmartOffice.Users.Tests.Managers
                 var otherUser = otherUsers.FirstOrDefault(x => x.Id == expectedUser.Id);
 
                 Assert.IsNotNull(otherUser);
-                Assert.That(otherUser.FirstName, Is.EqualTo(expectedUser.FirstName));
+                Assert.That(otherUser.FirstName, Is.EqualTo(expectedUser.LastName));
                 Assert.That(otherUser.LastName, Is.EqualTo(expectedUser.LastName));
                 Assert.That(otherUser.Email, Is.EqualTo(expectedUser.Email));
                 Assert.That(otherUser.UserName, Is.EqualTo(expectedUser.UserName));
